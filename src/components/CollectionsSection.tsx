@@ -1,4 +1,4 @@
-import { Heart, Star } from "lucide-react";
+import { Heart, Star, ShoppingCart } from "lucide-react";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
@@ -71,20 +71,20 @@ const products: Product[] = [
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <div className="group">
+    <div className="group cursor-pointer">
       {/* Image Container */}
       <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-secondary/30 aspect-[4/5]">
         {/* Badge */}
         {product.badge && (
           <span
-            className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${product.badgeColor} text-white text-xs font-medium px-3 py-1.5 rounded-full`}
+            className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${product.badgeColor} text-white text-xs font-medium px-3 py-1.5 rounded-full transition-transform duration-300 group-hover:scale-110`}
           >
             {product.badge}
           </span>
         )}
 
         {/* Wishlist Button */}
-        <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-foreground/60 hover:bg-foreground/80 text-white rounded-full p-2 sm:p-2.5 transition-colors">
+        <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-foreground/60 hover:bg-coral text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110">
           <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
         </button>
 
@@ -92,14 +92,22 @@ const ProductCard = ({ product }: { product: Product }) => {
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
+
+        {/* Hover Overlay with Add to Cart */}
+        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-all duration-300 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
+          <button className="bg-white text-foreground font-medium px-6 py-3 rounded-full flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-coral hover:text-white shadow-lg">
+            <ShoppingCart className="h-4 w-4" />
+            Add to Cart
+          </button>
+        </div>
       </div>
 
       {/* Product Info */}
       <div className="mt-4 sm:mt-5 space-y-2 sm:space-y-3">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-foreground text-base sm:text-lg">
+          <h3 className="font-semibold text-foreground text-base sm:text-lg group-hover:text-coral transition-colors duration-300">
             {product.name}
           </h3>
           {/* Color Options */}
@@ -107,7 +115,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             {product.colors.map((color, index) => (
               <span
                 key={index}
-                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border"
+                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border hover:scale-125 transition-transform duration-200 cursor-pointer"
                 style={{ backgroundColor: color }}
               />
             ))}
@@ -143,7 +151,7 @@ const ProductCard = ({ product }: { product: Product }) => {
 const CollectionsSection = () => {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">

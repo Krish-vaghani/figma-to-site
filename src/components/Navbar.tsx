@@ -29,10 +29,10 @@ const Navbar = () => {
             <li key={link.label} className="flex items-center">
               <a
                 href={link.href}
-                className={`px-3 xl:px-4 py-2 text-sm font-medium transition-colors relative ${
+                className={`px-3 xl:px-4 py-2 text-sm font-medium transition-all duration-300 relative ${
                   link.active
                     ? "text-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-foreground after:rounded-full"
-                    : "text-muted-foreground hover:text-foreground"
+                    : "text-muted-foreground hover:text-coral hover:scale-105"
                 }`}
               >
                 {link.label}
@@ -46,16 +46,16 @@ const Navbar = () => {
 
         {/* Right Side Icons */}
         <div className="flex items-center gap-1 sm:gap-2">
-          <Button variant="ghost" size="icon" className="hidden sm:flex rounded-full border border-border h-9 w-9">
+          <Button variant="ghost" size="icon" className="hidden sm:flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
             <Search className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="rounded-full border border-border h-9 w-9">
+          <Button variant="ghost" size="icon" className="rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
             <ShoppingCart className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="hidden sm:flex rounded-full border border-border h-9 w-9">
+          <Button variant="ghost" size="icon" className="hidden sm:flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
             <Heart className="h-4 w-4" />
           </Button>
-          <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-foreground/90 px-4 sm:px-6 text-sm">
+          <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral hover:scale-105 px-4 sm:px-6 text-sm transition-all duration-300">
             Sign In
           </Button>
           
