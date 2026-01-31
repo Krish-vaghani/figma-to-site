@@ -55,18 +55,17 @@ const HeroSection = () => {
 
           {/* Right Content - Product Image with Floating Cards */}
           <div className="relative order-1 lg:order-2 flex justify-center lg:justify-end">
-            {/* Main Product Image */}
-            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden group">
+            {/* Main Product Image - No rounded corners to match reference */}
+            <div className="relative overflow-hidden group">
               <img
                 src={heroProduct}
                 alt="Elegant silver clutch purse"
                 className="w-full h-[350px] sm:h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px] 2xl:h-[650px] object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </div>
 
-            {/* Floating Card - Top Left overlapping image */}
-            <div className="absolute top-8 sm:top-12 lg:top-16 -left-4 sm:left-0 lg:-left-12 z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 max-w-[200px] sm:max-w-[250px] transition-all duration-300 hover:-translate-y-1 cursor-pointer">
+            {/* Floating Card - Top positioned near image */}
+            <div className="absolute top-12 sm:top-16 lg:top-20 left-1/2 -translate-x-1/2 lg:translate-x-0 lg:left-auto lg:right-[40%] z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 max-w-[220px] sm:max-w-[260px] transition-all duration-300 hover:-translate-y-1 cursor-pointer">
               <img
                 src={avatar}
                 alt="Customer"
@@ -80,8 +79,8 @@ const HeroSection = () => {
               </div>
             </div>
 
-            {/* Floating Card - Bottom Left overlapping image */}
-            <div className="absolute bottom-8 sm:bottom-12 lg:bottom-16 -left-4 sm:left-0 lg:-left-16 z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-4 sm:p-5 max-w-[180px] sm:max-w-[220px] transition-all duration-300 hover:-translate-y-1 cursor-pointer group/card">
+            {/* Floating Card - Bottom positioned on image */}
+            <div className="absolute bottom-8 sm:bottom-12 lg:bottom-16 left-1/2 -translate-x-1/2 lg:translate-x-0 lg:left-auto lg:right-8 z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-4 sm:p-5 max-w-[180px] sm:max-w-[220px] transition-all duration-300 hover:-translate-y-1 cursor-pointer group/card">
               <p className="text-muted-foreground text-xs uppercase tracking-wide">
                 Purse Name
               </p>
