@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 type Direction = "left" | "right";
 
@@ -8,8 +8,6 @@ interface Options {
   speedSeconds: number;
   /** How many sets are rendered; designed for 3. */
   sets?: number;
-  /** Pixels from edges before we wrap. */
-  edgeThresholdPx?: number;
 }
 
 /**
@@ -22,137 +20,165 @@ export function useInfiniteMarquee({
   direction,
   speedSeconds,
   sets = 3,
-  edgeThresholdPx = 48,
 }: Options) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [isPaused, setIsPaused] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  // Use refs so the animation loop doesn't need to restart on state changes
+  const isPausedRef = useRef(false);
+  const isDraggingRef = useRef(false);
+  const directionRef = useRef(direction);
+  const speedRef = useRef(speedSeconds);
   const dragStart = useRef({ x: 0, scrollLeft: 0 });
 
-  const getSetWidth = () => {
+  // Keep refs in sync
+  directionRef.current = direction;
+  speedRef.current = speedSeconds;
+  isDraggingRef.current = isDragging;
+
+  const getSetWidth = useCallback(() => {
     const el = wrapperRef.current;
     if (!el) return 0;
     return el.scrollWidth / sets;
-  };
+  }, [sets]);
 
-  const wrapIfNeeded = () => {
+  const wrapIfNeeded = useCallback(() => {
     const el = wrapperRef.current;
     if (!el) return;
     const setWidth = getSetWidth();
     if (!setWidth) return;
 
     // Keep the viewport inside the middle copy for stability.
-    const min = setWidth - edgeThresholdPx;
-    const max = setWidth * 2 + edgeThresholdPx;
-
-    if (el.scrollLeft <= min) el.scrollLeft += setWidth;
-    if (el.scrollLeft >= max) el.scrollLeft -= setWidth;
-  };
+    // We wrap when we're about to leave the middle set
+    if (el.scrollLeft < setWidth * 0.5) {
+      el.scrollLeft += setWidth;
+    } else if (el.scrollLeft > setWidth * 1.5) {
+      el.scrollLeft -= setWidth;
+    }
+  }, [getSetWidth]);
 
   // Initialize scroll position into the middle set.
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
-    const raf = requestAnimationFrame(() => {
+    
+    // Wait for content to render
+    const timer = setTimeout(() => {
       const setWidth = getSetWidth();
-      if (setWidth) el.scrollLeft = setWidth;
-    });
-    return () => cancelAnimationFrame(raf);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+      if (setWidth) {
+        el.scrollLeft = setWidth;
+      }
+    }, 50);
+    
+    return () => clearTimeout(timer);
+  }, [getSetWidth]);
 
-  // Auto-scroll using requestAnimationFrame so manual scroll + loop share the same mechanism.
+  // Auto-scroll using requestAnimationFrame - runs continuously without restart
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el) return;
 
     let raf = 0;
-    let last = performance.now();
+    let lastTime = 0;
 
-    const tick = (now: number) => {
+    const tick = (timestamp: number) => {
       raf = requestAnimationFrame(tick);
 
-      if (isPaused || isDragging) {
-        last = now;
+      // Skip if paused or dragging
+      if (isPausedRef.current || isDraggingRef.current) {
+        lastTime = timestamp;
         return;
       }
 
-      const dt = (now - last) / 1000;
-      last = now;
+      // Calculate delta time, cap at 100ms to prevent large jumps
+      const dt = lastTime ? Math.min((timestamp - lastTime) / 1000, 0.1) : 0;
+      lastTime = timestamp;
+
+      if (dt === 0) return;
 
       const setWidth = getSetWidth();
       if (!setWidth) return;
 
-      const pxPerSec = setWidth / Math.max(1, speedSeconds);
+      // Calculate smooth movement
+      const pxPerSec = setWidth / Math.max(1, speedRef.current);
       const delta = pxPerSec * dt;
-      const sign = direction === "left" ? 1 : -1;
+      const sign = directionRef.current === "left" ? 1 : -1;
+
       el.scrollLeft += sign * delta;
       wrapIfNeeded();
     };
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [direction, isDragging, isPaused, speedSeconds]);
+  }, [getSetWidth, wrapIfNeeded]);
 
-  const onMouseDown = (e: React.MouseEvent) => {
+  const setPaused = useCallback((paused: boolean) => {
+    isPausedRef.current = paused;
+  }, []);
+
+  const onMouseDown = useCallback((e: React.MouseEvent) => {
     const el = wrapperRef.current;
     if (!el) return;
     setIsDragging(true);
-    setIsPaused(true);
+    isPausedRef.current = true;
     dragStart.current = {
       x: e.clientX,
       scrollLeft: el.scrollLeft,
     };
-  };
+  }, []);
 
-  const onMouseMove = (e: React.MouseEvent) => {
+  const onMouseMove = useCallback((e: React.MouseEvent) => {
     const el = wrapperRef.current;
-    if (!isDragging || !el) return;
+    if (!isDraggingRef.current || !el) return;
     e.preventDefault();
     const walk = (e.clientX - dragStart.current.x) * 1.25;
     el.scrollLeft = dragStart.current.scrollLeft - walk;
     wrapIfNeeded();
-  };
+  }, [wrapIfNeeded]);
 
-  const endDrag = () => {
+  const endDrag = useCallback(() => {
     setIsDragging(false);
-    // small delay so it doesn't feel like it "fights" the user
-    window.setTimeout(() => setIsPaused(false), 700);
-  };
+    // Small delay so it doesn't feel like it "fights" the user
+    window.setTimeout(() => {
+      isPausedRef.current = false;
+    }, 500);
+  }, []);
 
-  const onTouchStart = (e: React.TouchEvent) => {
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
     const el = wrapperRef.current;
     if (!el) return;
     setIsDragging(true);
-    setIsPaused(true);
+    isPausedRef.current = true;
     dragStart.current = {
       x: e.touches[0].clientX,
       scrollLeft: el.scrollLeft,
     };
-  };
+  }, []);
 
-  const onTouchMove = (e: React.TouchEvent) => {
+  const onTouchMove = useCallback((e: React.TouchEvent) => {
     const el = wrapperRef.current;
-    if (!isDragging || !el) return;
+    if (!isDraggingRef.current || !el) return;
     const walk = (e.touches[0].clientX - dragStart.current.x) * 1.25;
     el.scrollLeft = dragStart.current.scrollLeft - walk;
     wrapIfNeeded();
-  };
+  }, [wrapIfNeeded]);
 
-  const onTouchEnd = () => {
+  const onTouchEnd = useCallback(() => {
     setIsDragging(false);
-    window.setTimeout(() => setIsPaused(false), 900);
-  };
+    window.setTimeout(() => {
+      isPausedRef.current = false;
+    }, 600);
+  }, []);
 
-  const onScroll = () => {
+  const onScroll = useCallback(() => {
     // If user uses trackpad/scrollbar, keep it looping too.
     wrapIfNeeded();
-  };
+  }, [wrapIfNeeded]);
 
   return {
     wrapperRef,
     isDragging,
-    setIsPaused,
+    setPaused,
     handlers: {
       onMouseDown,
       onMouseMove,
