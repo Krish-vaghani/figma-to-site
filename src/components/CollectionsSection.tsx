@@ -20,28 +20,32 @@ interface Product {
 const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "hot" }) => {
   const badgeStyles = {
     bestseller: {
-      bg: "bg-gradient-to-r from-amber-500 to-orange-500",
-      shadow: "shadow-lg shadow-amber-500/40",
+      bg: "bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600",
+      glow: "before:bg-amber-400/30",
       icon: Award,
       text: "Best Seller",
+      iconColor: "text-amber-100",
     },
     trending: {
-      bg: "bg-gradient-to-r from-emerald-500 to-teal-500",
-      shadow: "shadow-lg shadow-emerald-500/40",
+      bg: "bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600",
+      glow: "before:bg-emerald-400/30",
       icon: TrendingUp,
       text: "Trending",
+      iconColor: "text-emerald-100",
     },
     new: {
-      bg: "bg-gradient-to-r from-coral to-rose-500",
-      shadow: "shadow-lg shadow-coral/40",
+      bg: "bg-gradient-to-br from-coral via-rose-500 to-pink-600",
+      glow: "before:bg-coral/30",
       icon: Sparkles,
       text: "New",
+      iconColor: "text-rose-100",
     },
     hot: {
-      bg: "bg-gradient-to-r from-red-500 to-pink-500",
-      shadow: "shadow-lg shadow-red-500/40",
+      bg: "bg-gradient-to-br from-red-400 via-red-500 to-rose-600",
+      glow: "before:bg-red-400/30",
       icon: Flame,
       text: "Hot",
+      iconColor: "text-red-100",
     },
   };
 
@@ -50,10 +54,10 @@ const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "h
 
   return (
     <span
-      className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${style.bg} ${style.shadow} text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl animate-pulse`}
+      className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${style.bg} text-white text-[10px] sm:text-xs font-semibold tracking-wide uppercase px-3 sm:px-4 py-1.5 sm:py-2 rounded-full flex items-center gap-1.5 sm:gap-2 transition-all duration-500 group-hover:scale-105 shadow-lg backdrop-blur-sm before:absolute before:inset-0 before:rounded-full ${style.glow} before:blur-xl before:-z-10 before:animate-pulse border border-white/20`}
     >
-      <Icon className="h-3 w-3" />
-      {style.text}
+      <Icon className={`h-3 w-3 sm:h-3.5 sm:w-3.5 ${style.iconColor} drop-shadow-sm`} />
+      <span className="drop-shadow-sm">{style.text}</span>
     </span>
   );
 };
