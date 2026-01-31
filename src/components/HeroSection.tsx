@@ -6,7 +6,7 @@ import avatar from "@/assets/avatar.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[calc(100vh-80px)] overflow-hidden">
+    <section className="relative min-h-[calc(100vh-80px)] lg:min-h-0 overflow-hidden">
       {/* Background Pattern */}
       <div
         className="absolute inset-0 z-0"
