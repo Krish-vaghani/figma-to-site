@@ -1,5 +1,5 @@
 import { Quote } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import avatarMale from "@/assets/avatar-male.jpg";
 import avatarFemale from "@/assets/avatar-female.png";
 
@@ -40,70 +40,42 @@ const testimonialsRow1: Testimonial[] = [
     title: "Ecom Business Owner",
     avatar: avatarMale,
   },
-  {
-    id: 5,
-    quote: "The Quality Of The Purse Exceeded My Expectations. It Feels Premium And Is Perfect For Special Occasions.",
-    name: "Sarah Williamson",
-    title: "Fashion Blogger, USA",
-    avatar: avatarFemale,
-  },
-  {
-    id: 6,
-    quote: "I Love How Lightweight Yet Spacious The Bag Is. The Design Is Elegant, And I've Received So Many Compliments Already.",
-    name: "Ahmad Korsgaard",
-    title: "Ecom Business Owner",
-    avatar: avatarMale,
-  },
 ];
 
 const testimonialsRow2: Testimonial[] = [
   {
-    id: 7,
+    id: 5,
     quote: "Beautiful Detailing And Premium Material. The Purse Feels Comfortable To Carry And Adds A Classy Touch To Any Outfit.",
     name: "Ahmad Korsgaard",
     title: "Ecom Business Owner",
     avatar: avatarMale,
   },
   {
-    id: 8,
+    id: 6,
     quote: "I'm Really Impressed With The Craftsmanship. It Feels High Quality And Is Ideal For Everyday Use As Well As Events.",
     name: "Cameron Williamson",
     title: "Agency Owner, USA",
     avatar: avatarFemale,
   },
   {
-    id: 9,
+    id: 7,
     quote: "The Purse Has A Premium Look And Feel. It's Versatile Enough To Carry Every Day Or For Special Occasions.",
     name: "Ahmad Korsgaard",
     title: "Ecom Business Owner",
     avatar: avatarMale,
   },
   {
-    id: 10,
+    id: 8,
     quote: "The Detailing Is Exquisite. It's A Great Choice For Formal And Casual Outings.",
     name: "Sarah Williamson",
     title: "Fashion Blogger, USA",
-    avatar: avatarFemale,
-  },
-  {
-    id: 11,
-    quote: "Beautiful Detailing And Premium Material. The Purse Feels Comfortable To Carry And Adds A Classy Touch To Any Outfit.",
-    name: "Ahmad Korsgaard",
-    title: "Ecom Business Owner",
-    avatar: avatarMale,
-  },
-  {
-    id: 12,
-    quote: "I'm Really Impressed With The Craftsmanship. It Feels High Quality And Is Ideal For Everyday Use As Well As Events.",
-    name: "Cameron Williamson",
-    title: "Agency Owner, USA",
     avatar: avatarFemale,
   },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
-    <div className="flex-shrink-0 w-[320px] sm:w-[380px] bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300">
+    <div className="flex-shrink-0 w-[320px] sm:w-[380px] bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 select-none">
       {/* Quote Icon */}
       <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4" />
 
@@ -117,7 +89,8 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
         <img
           src={testimonial.avatar}
           alt={testimonial.name}
-          className="w-12 h-12 rounded-full object-cover"
+          className="w-12 h-12 rounded-full object-cover pointer-events-none"
+          draggable={false}
         />
         <div>
           <h4 className="font-semibold text-foreground text-sm sm:text-base">
@@ -132,84 +105,45 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   );
 };
 
-const ScrollableRow = ({ 
+const MarqueeRow = ({ 
   testimonials, 
-  direction 
+  direction,
+  speed = 25
 }: { 
   testimonials: Testimonial[]; 
   direction: "left" | "right";
+  speed?: number;
 }) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
-  const [scrollLeft, setScrollLeft] = useState(0);
 
-  const handleMouseDown = (e: React.MouseEvent) => {
-    setIsDragging(true);
-    setIsPaused(true);
-    setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollRef.current?.scrollLeft || 0);
-  };
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging) return;
-    e.preventDefault();
-    const x = e.pageX - (scrollRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2;
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-    setTimeout(() => setIsPaused(false), 1000);
-  };
-
-  const handleMouseLeave = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      setTimeout(() => setIsPaused(false), 1000);
-    }
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setIsPaused(true);
-    setStartX(e.touches[0].pageX - (scrollRef.current?.offsetLeft || 0));
-    setScrollLeft(scrollRef.current?.scrollLeft || 0);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    const x = e.touches[0].pageX - (scrollRef.current?.offsetLeft || 0);
-    const walk = (x - startX) * 2;
-    if (scrollRef.current) {
-      scrollRef.current.scrollLeft = scrollLeft - walk;
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setTimeout(() => setIsPaused(false), 1000);
-  };
+  // Triple the items for seamless infinite scroll
+  const items = [...testimonials, ...testimonials, ...testimonials];
 
   return (
     <div 
-      ref={scrollRef}
-      className={`flex gap-6 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing ${
-        !isPaused ? (direction === "left" ? "animate-scroll-left" : "animate-scroll-right") : ""
-      }`}
-      style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseLeave}
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
+      className="relative overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onTouchStart={() => setIsPaused(true)}
+      onTouchEnd={() => setTimeout(() => setIsPaused(false), 2000)}
     >
-      {[...testimonials, ...testimonials].map((testimonial, index) => (
-        <TestimonialCard key={`${direction}-${index}`} testimonial={testimonial} />
-      ))}
+      {/* Gradient overlays for smooth edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-secondary/30 to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-secondary/30 to-transparent z-10 pointer-events-none" />
+      
+      <div
+        ref={containerRef}
+        className="flex gap-6 py-2"
+        style={{
+          animation: `${direction === "left" ? "marquee-left" : "marquee-right"} ${speed}s linear infinite`,
+          animationPlayState: isPaused ? "paused" : "running",
+        }}
+      >
+        {items.map((testimonial, index) => (
+          <TestimonialCard key={`${direction}-${testimonial.id}-${index}`} testimonial={testimonial} />
+        ))}
+      </div>
     </div>
   );
 };
@@ -230,12 +164,30 @@ const TestimonialsSection = () => {
 
       {/* Scrolling Rows */}
       <div className="space-y-6">
-        {/* Row 1 - Scroll Left to Right */}
-        <ScrollableRow testimonials={testimonialsRow1} direction="left" />
-
-        {/* Row 2 - Scroll Right to Left */}
-        <ScrollableRow testimonials={testimonialsRow2} direction="right" />
+        <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35} />
+        <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={40} />
       </div>
+
+      {/* Custom CSS for smooth marquee */}
+      <style>{`
+        @keyframes marquee-left {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-33.333%);
+          }
+        }
+        
+        @keyframes marquee-right {
+          0% {
+            transform: translateX(-33.333%);
+          }
+          100% {
+            transform: translateX(0);
+          }
+        }
+      `}</style>
     </section>
   );
 };
