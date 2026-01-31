@@ -130,7 +130,8 @@ const MarqueeRow = ({
         "relative overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing" +
         (isDragging ? " select-none" : "")
       }
-      style={{ scrollBehavior: isDragging ? "auto" : "smooth" }}
+      // Keep scroll behavior "auto" so RAF-based auto-scroll never fights CSS smooth scrolling.
+      style={{ scrollBehavior: "auto" }}
       {...handlers}
     >
       {/* Gradient overlays for smooth edges */}

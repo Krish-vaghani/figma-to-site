@@ -8,6 +8,8 @@ interface Options {
   speedSeconds: number;
   /** How many sets are rendered; designed for 3. */
   sets?: number;
+  /** Pixels from edges before we wrap (larger = less frequent wrapping). */
+  edgeThresholdPx?: number;
 }
 
 /**
@@ -20,6 +22,7 @@ export function useInfiniteMarquee({
   direction,
   speedSeconds,
   sets = 3,
+  edgeThresholdPx = 140,
 }: Options) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -49,13 +52,12 @@ export function useInfiniteMarquee({
     if (!setWidth) return;
 
     // Keep the viewport inside the middle copy for stability.
-    // We wrap when we're about to leave the middle set
-    if (el.scrollLeft < setWidth * 0.5) {
-      el.scrollLeft += setWidth;
-    } else if (el.scrollLeft > setWidth * 1.5) {
-      el.scrollLeft -= setWidth;
-    }
-  }, [getSetWidth]);
+    // We only wrap when we're well into the neighbor sets to avoid visible "tremor".
+    const min = setWidth - edgeThresholdPx;
+    const max = setWidth * 2 + edgeThresholdPx;
+    if (el.scrollLeft <= min) el.scrollLeft += setWidth;
+    else if (el.scrollLeft >= max) el.scrollLeft -= setWidth;
+  }, [edgeThresholdPx, getSetWidth]);
 
   // Initialize scroll position into the middle set.
   useEffect(() => {
