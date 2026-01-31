@@ -2,6 +2,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import CollectionsSection from "@/components/CollectionsSection";
 import CategoriesSection from "@/components/CategoriesSection";
+import ElevateSection from "@/components/ElevateSection";
 
 const Index = () => {
   return (
@@ -10,6 +11,7 @@ const Index = () => {
       <HeroSection />
       <CollectionsSection />
       <CategoriesSection />
+      <ElevateSection />
     </div>
   );
 };
