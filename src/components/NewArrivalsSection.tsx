@@ -1,8 +1,10 @@
-import { Heart, ArrowRight } from "lucide-react";
+import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Zap } from "lucide-react";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
 import product4 from "@/assets/product-4.png";
+
+type BadgeType = "new" | "hot" | "trending" | "bestseller" | "limited";
 
 interface NewProduct {
   id: number;
@@ -11,7 +13,55 @@ interface NewProduct {
   originalPrice: number;
   image: string;
   colors: string[];
+  badge: BadgeType;
 }
+
+const BadgeComponent = ({ type }: { type: BadgeType }) => {
+  const badgeStyles = {
+    new: {
+      bg: "bg-gradient-to-r from-coral to-rose-500",
+      shadow: "shadow-lg shadow-coral/40",
+      icon: Sparkles,
+      text: "New",
+    },
+    hot: {
+      bg: "bg-gradient-to-r from-red-500 to-pink-500",
+      shadow: "shadow-lg shadow-red-500/40",
+      icon: Flame,
+      text: "Hot",
+    },
+    trending: {
+      bg: "bg-gradient-to-r from-emerald-500 to-teal-500",
+      shadow: "shadow-lg shadow-emerald-500/40",
+      icon: TrendingUp,
+      text: "Trending",
+    },
+    bestseller: {
+      bg: "bg-gradient-to-r from-amber-500 to-orange-500",
+      shadow: "shadow-lg shadow-amber-500/40",
+      icon: Award,
+      text: "Best Seller",
+    },
+    limited: {
+      bg: "bg-gradient-to-r from-purple-500 to-indigo-500",
+      shadow: "shadow-lg shadow-purple-500/40",
+      icon: Zap,
+      text: "Limited",
+    },
+  };
+
+  const style = badgeStyles[type];
+  const Icon = style.icon;
+
+  return (
+    <span
+      className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${style.bg} ${style.shadow} text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl animate-pulse`}
+    >
+      <Icon className="h-3 w-3" />
+      {style.text}
+    </span>
+  );
+};
 
 const newProducts: NewProduct[] = [
   {
@@ -21,6 +71,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 800,
     image: product1,
     colors: ["#374151", "#F5D0C5", "#F3C677"],
+    badge: "new",
   },
   {
     id: 2,
@@ -29,6 +80,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 4025,
     image: product2,
     colors: ["#374151", "#F5D0C5", "#F3C677"],
+    badge: "hot",
   },
   {
     id: 3,
@@ -37,6 +89,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 3250,
     image: product3,
     colors: ["#374151", "#E8B4B8", "#D4A574"],
+    badge: "trending",
   },
   {
     id: 4,
@@ -45,6 +98,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 29999,
     image: product4,
     colors: ["#374151", "#F3C677", "#E8B4B8"],
+    badge: "bestseller",
   },
   {
     id: 5,
@@ -53,6 +107,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 800,
     image: product1,
     colors: ["#374151", "#F5D0C5", "#F3C677"],
+    badge: "limited",
   },
   {
     id: 6,
@@ -61,6 +116,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 4025,
     image: product2,
     colors: ["#374151", "#F5D0C5", "#F3C677"],
+    badge: "new",
   },
   {
     id: 7,
@@ -69,6 +125,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 3250,
     image: product3,
     colors: ["#374151", "#E8B4B8", "#D4A574"],
+    badge: "hot",
   },
   {
     id: 8,
@@ -77,6 +134,7 @@ const newProducts: NewProduct[] = [
     originalPrice: 29999,
     image: product4,
     colors: ["#374151", "#F3C677", "#E8B4B8"],
+    badge: "trending",
   },
 ];
 
@@ -85,10 +143,8 @@ const NewProductCard = ({ product }: { product: NewProduct }) => {
     <div className="group cursor-pointer bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden">
-        {/* New Badge - Solid & Eye-catching */}
-        <span className="absolute top-3 sm:top-4 left-3 sm:left-4 z-10 bg-coral text-white text-xs sm:text-sm font-bold px-4 py-1.5 rounded-lg shadow-lg shadow-coral/30 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:shadow-coral/40">
-          New
-        </span>
+        {/* Dynamic Badge */}
+        <BadgeComponent type={product.badge} />
 
         {/* Wishlist Button */}
         <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-white/90 hover:bg-coral text-muted-foreground hover:text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 shadow-md">

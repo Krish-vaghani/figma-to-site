@@ -1,4 +1,4 @@
-import { Heart, Star, ShoppingCart } from "lucide-react";
+import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
@@ -13,10 +13,50 @@ interface Product {
   reviews: string;
   rating: number;
   image: string;
-  badge?: string;
-  badgeColor?: string;
+  badge?: "bestseller" | "trending" | "new" | "hot";
   colors: string[];
 }
+
+const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "hot" }) => {
+  const badgeStyles = {
+    bestseller: {
+      bg: "bg-gradient-to-r from-amber-500 to-orange-500",
+      shadow: "shadow-lg shadow-amber-500/40",
+      icon: Award,
+      text: "Best Seller",
+    },
+    trending: {
+      bg: "bg-gradient-to-r from-emerald-500 to-teal-500",
+      shadow: "shadow-lg shadow-emerald-500/40",
+      icon: TrendingUp,
+      text: "Trending",
+    },
+    new: {
+      bg: "bg-gradient-to-r from-coral to-rose-500",
+      shadow: "shadow-lg shadow-coral/40",
+      icon: Sparkles,
+      text: "New",
+    },
+    hot: {
+      bg: "bg-gradient-to-r from-red-500 to-pink-500",
+      shadow: "shadow-lg shadow-red-500/40",
+      icon: Flame,
+      text: "Hot",
+    },
+  };
+
+  const style = badgeStyles[type];
+  const Icon = style.icon;
+
+  return (
+    <span
+      className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${style.bg} ${style.shadow} text-white text-xs font-bold px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl animate-pulse`}
+    >
+      <Icon className="h-3 w-3" />
+      {style.text}
+    </span>
+  );
+};
 
 const products: Product[] = [
   {
@@ -28,8 +68,7 @@ const products: Product[] = [
     reviews: "125k Reviews",
     rating: 4.0,
     image: product1,
-    badge: "Best Seller",
-    badgeColor: "bg-coral",
+    badge: "bestseller",
     colors: ["#374151", "#F5D0C5", "#F3C677"],
   },
   {
@@ -41,6 +80,7 @@ const products: Product[] = [
     reviews: "125k Reviews",
     rating: 4.0,
     image: product2,
+    badge: "hot",
     colors: ["#374151", "#F5D0C5", "#F3C677"],
   },
   {
@@ -52,8 +92,7 @@ const products: Product[] = [
     reviews: "125k Reviews",
     rating: 4.0,
     image: product3,
-    badge: "Trending",
-    badgeColor: "bg-[#9CA374]",
+    badge: "trending",
     colors: ["#374151", "#E8B4B8", "#D4A574"],
   },
   {
@@ -65,6 +104,7 @@ const products: Product[] = [
     reviews: "125k Reviews",
     rating: 4.0,
     image: product4,
+    badge: "new",
     colors: ["#D4A574", "#F3C677", "#E8B4B8"],
   },
 ];
@@ -75,13 +115,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       {/* Image Container */}
       <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-secondary/30 aspect-[4/5]">
         {/* Badge */}
-        {product.badge && (
-          <span
-            className={`absolute top-3 sm:top-4 left-3 sm:left-4 z-10 ${product.badgeColor} text-white text-xs font-medium px-3 py-1.5 rounded-full transition-transform duration-300 group-hover:scale-110`}
-          >
-            {product.badge}
-          </span>
-        )}
+        {product.badge && <BadgeComponent type={product.badge} />}
 
         {/* Wishlist Button */}
         <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-foreground/60 hover:bg-coral text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110">
