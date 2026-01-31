@@ -114,19 +114,72 @@ const MarqueeRow = ({
   direction: "left" | "right";
   speed?: number;
 }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, scrollLeft: 0 });
 
   // Triple the items for seamless infinite scroll
   const items = [...testimonials, ...testimonials, ...testimonials];
 
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!wrapperRef.current) return;
+    setIsDragging(true);
+    setIsPaused(true);
+    dragStart.current = {
+      x: e.pageX - wrapperRef.current.offsetLeft,
+      scrollLeft: wrapperRef.current.scrollLeft,
+    };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !wrapperRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - wrapperRef.current.offsetLeft;
+    const walk = (x - dragStart.current.x) * 1.5;
+    wrapperRef.current.scrollLeft = dragStart.current.scrollLeft - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setTimeout(() => setIsPaused(false), 1500);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    if (!wrapperRef.current) return;
+    setIsDragging(true);
+    setIsPaused(true);
+    dragStart.current = {
+      x: e.touches[0].pageX - wrapperRef.current.offsetLeft,
+      scrollLeft: wrapperRef.current.scrollLeft,
+    };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!isDragging || !wrapperRef.current) return;
+    const x = e.touches[0].pageX - wrapperRef.current.offsetLeft;
+    const walk = (x - dragStart.current.x) * 1.5;
+    wrapperRef.current.scrollLeft = dragStart.current.scrollLeft - walk;
+  };
+
+  const handleTouchEnd = () => {
+    setIsDragging(false);
+    setTimeout(() => setIsPaused(false), 2000);
+  };
+
   return (
     <div 
-      className="relative overflow-hidden"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-      onTouchStart={() => setIsPaused(true)}
-      onTouchEnd={() => setTimeout(() => setIsPaused(false), 2000)}
+      ref={wrapperRef}
+      className="relative overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing"
+      style={{ scrollBehavior: isDragging ? 'auto' : 'smooth' }}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {/* Gradient overlays for smooth edges */}
       <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-secondary/30 to-transparent z-10 pointer-events-none" />
@@ -134,10 +187,9 @@ const MarqueeRow = ({
       
       <div
         ref={containerRef}
-        className="flex gap-6 py-2"
+        className="flex gap-6 py-2 w-max"
         style={{
-          animation: `${direction === "left" ? "marquee-left" : "marquee-right"} ${speed}s linear infinite`,
-          animationPlayState: isPaused ? "paused" : "running",
+          animation: isPaused ? 'none' : `${direction === "left" ? "marquee-left" : "marquee-right"} ${speed}s linear infinite`,
         }}
       >
         {items.map((testimonial, index) => (
