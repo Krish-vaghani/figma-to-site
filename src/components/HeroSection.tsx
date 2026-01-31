@@ -6,14 +6,15 @@ import avatar from "@/assets/avatar.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative min-h-[calc(100vh-80px)] lg:min-h-0 overflow-hidden">
-      {/* Background Pattern */}
+    <section className="relative overflow-hidden">
+      {/* Background Pattern - Full image */}
       <div
         className="absolute inset-0 z-0"
         style={{
           backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "cover",
+          backgroundSize: "100% 100%",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       />
 
