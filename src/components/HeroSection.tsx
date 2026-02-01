@@ -1,50 +1,46 @@
-import { ArrowRight, Sparkles, Star } from "lucide-react";
+import { ArrowRight, Sparkles, Star, Award, Truck, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import heroBackground from "@/assets/hero-background.png";
 import heroProduct from "@/assets/hero-product.jpg";
-import avatar from "@/assets/avatar.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden min-h-[600px] lg:min-h-[700px]">
-      {/* Background Pattern - Full image */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "auto 100%",
-          backgroundPosition: "left center",
-          backgroundRepeat: "no-repeat",
-        }}
-      />
+    <section className="relative min-h-[100svh] flex items-center overflow-hidden bg-gradient-to-br from-background via-secondary/30 to-background">
+      {/* Decorative background elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Large decorative circles */}
+        <motion.div 
+          className="absolute -top-1/4 -right-1/4 w-[600px] h-[600px] rounded-full bg-gradient-to-br from-coral/10 to-transparent blur-3xl"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+        <motion.div 
+          className="absolute -bottom-1/4 -left-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-tr from-coral/8 to-transparent blur-3xl"
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.5, delay: 0.2, ease: "easeOut" }}
+        />
+        
+        {/* Subtle grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,0,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,0,0,0.02)_1px,transparent_1px)] bg-[size:60px_60px]" />
+      </div>
 
-      {/* Subtle gradient overlay for better text readability */}
-      <motion.div 
-        className="absolute inset-0 z-[1] bg-gradient-to-r from-background/50 via-background/20 to-transparent"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-      />
-
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-20 items-center max-w-7xl mx-auto">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-0">
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-center max-w-7xl mx-auto">
           {/* Left Content */}
           <motion.div 
-            className="space-y-6 sm:space-y-8 text-center lg:text-left order-2 lg:order-1"
+            className="space-y-8 text-center lg:text-left"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
             {/* Badge */}
             <motion.div 
-              className="inline-flex items-center gap-2 bg-coral/10 text-coral px-4 py-2 rounded-full text-sm font-medium border border-coral/20"
-              initial={{ opacity: 0, y: 20, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.5, ease: "easeOut" }}
+              className="inline-flex items-center gap-2 bg-coral/10 text-coral px-5 py-2.5 rounded-full text-sm font-medium border border-coral/20 backdrop-blur-sm"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
             >
               <motion.div
                 animate={{ rotate: [0, 15, -15, 0] }}
@@ -55,41 +51,39 @@ const HeroSection = () => {
               <span>New Collection 2024</span>
             </motion.div>
 
+            {/* Main Heading */}
             <div className="space-y-4">
-              <motion.h2 
-                className="text-lg sm:text-xl md:text-2xl font-light italic text-foreground/70 tracking-wide"
+              <motion.p 
+                className="text-lg sm:text-xl font-light italic text-foreground/60 tracking-wide"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+                transition={{ delay: 0.4, duration: 0.6 }}
               >
                 Elevate Your Everyday Style
-              </motion.h2>
+              </motion.p>
               
               <motion.h1 
-                className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-foreground leading-[1.1] tracking-tight"
+                className="text-4xl sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl font-bold text-foreground leading-[1.1] tracking-tight"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5, duration: 0.7, ease: "easeOut" }}
+                transition={{ delay: 0.5, duration: 0.7 }}
               >
-                Discover Your{" "}
+                Discover Your
                 <span className="block mt-2">
                   Perfect{" "}
                   <span className="text-coral relative inline-block">
                     Elegance
                     <motion.svg 
-                      className="absolute -bottom-2 left-0 w-full" 
+                      className="absolute -bottom-2 left-0 w-full h-3" 
                       viewBox="0 0 200 12" 
                       fill="none"
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 1 }}
-                      transition={{ delay: 1, duration: 0.8, ease: "easeInOut" }}
                     >
                       <motion.path 
                         d="M2 8C50 2 150 2 198 8" 
                         stroke="hsl(var(--coral))" 
                         strokeWidth="3" 
                         strokeLinecap="round" 
-                        className="opacity-60"
+                        className="opacity-50"
                         initial={{ pathLength: 0 }}
                         animate={{ pathLength: 1 }}
                         transition={{ delay: 1.2, duration: 0.8, ease: "easeInOut" }}
@@ -100,200 +94,186 @@ const HeroSection = () => {
               </motion.h1>
             </div>
 
+            {/* Description */}
             <motion.p 
               className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6, duration: 0.6, ease: "easeOut" }}
+              transition={{ delay: 0.6, duration: 0.6 }}
             >
-              Discover thoughtfully crafted purses that blend timeless design with
-              modern elegance — perfect for work, casual days, and special moments.
+              Thoughtfully crafted purses that blend timeless design with modern elegance — perfect for every occasion.
             </motion.p>
 
+            {/* CTA Buttons */}
             <motion.div 
-              className="flex flex-col sm:flex-row flex-wrap gap-4 pt-4 justify-center lg:justify-start"
+              className="flex flex-col sm:flex-row gap-4 pt-2 justify-center lg:justify-start"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7, duration: 0.6, ease: "easeOut" }}
+              transition={{ delay: 0.7, duration: 0.6 }}
             >
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button className="bg-foreground text-background hover:bg-coral rounded-full px-8 sm:px-10 py-6 sm:py-7 text-base font-medium gap-3 group w-full sm:w-auto transition-all duration-300 shadow-xl hover:shadow-2xl">
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                <Button className="bg-foreground text-background hover:bg-coral rounded-full px-10 py-7 text-base font-medium gap-3 group w-full sm:w-auto transition-all duration-300 shadow-xl hover:shadow-2xl">
                   Shop Collection
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
-              <motion.div
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
-              >
+              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Button
                   variant="outline"
-                  className="rounded-full px-8 sm:px-10 py-6 sm:py-7 text-base font-medium gap-3 group border-2 border-foreground/20 hover:border-coral hover:bg-coral hover:text-background w-full sm:w-auto transition-all duration-300 backdrop-blur-sm"
+                  className="rounded-full px-10 py-7 text-base font-medium gap-3 group border-2 border-foreground/20 hover:border-coral hover:bg-coral hover:text-background w-full sm:w-auto transition-all duration-300"
                 >
-                  Explore More
+                  View Lookbook
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </motion.div>
             </motion.div>
 
-            {/* Trust indicators - Enhanced */}
+            {/* Stats Row */}
             <motion.div 
-              className="flex flex-wrap items-center gap-6 pt-6 justify-center lg:justify-start"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-8 pt-8 border-t border-border/50"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.6, ease: "easeOut" }}
+              transition={{ delay: 0.8, duration: 0.6 }}
             >
-              {/* Happy Customers */}
-              <div className="flex items-center gap-3">
-                <div className="flex -space-x-2">
-                  {[...Array(4)].map((_, i) => (
-                    <motion.div 
-                      key={i} 
-                      className="w-9 h-9 rounded-full bg-muted border-2 border-background overflow-hidden shadow-md"
-                      initial={{ opacity: 0, scale: 0.5, x: -10 }}
-                      animate={{ opacity: 1, scale: 1, x: 0 }}
-                      transition={{ delay: 0.9 + i * 0.1, duration: 0.4, ease: "easeOut" }}
-                    >
-                      <img src={avatar} alt="" className="w-full h-full object-cover" />
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-foreground font-semibold text-sm">2,500+</span>
-                  <span className="text-muted-foreground text-xs">Happy Customers</span>
-                </div>
+              <div className="text-center lg:text-left">
+                <motion.p 
+                  className="text-3xl sm:text-4xl font-bold text-foreground"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1, duration: 0.4, type: "spring" }}
+                >
+                  15K+
+                </motion.p>
+                <p className="text-muted-foreground text-sm mt-1">Happy Customers</p>
               </div>
-
-              {/* Divider */}
-              <div className="hidden sm:block w-px h-10 bg-border" />
-
-              {/* Rating */}
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, scale: 0 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: 1.1 + i * 0.05, duration: 0.3, type: "spring" }}
-                    >
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-foreground font-semibold text-sm">4.9/5</span>
-                  <span className="text-muted-foreground text-xs">Based on 1.2k reviews</span>
-                </div>
+              <div className="w-px h-12 bg-border hidden sm:block" />
+              <div className="text-center lg:text-left">
+                <motion.p 
+                  className="text-3xl sm:text-4xl font-bold text-foreground flex items-center gap-1 justify-center lg:justify-start"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1.1, duration: 0.4, type: "spring" }}
+                >
+                  4.9
+                  <Star className="h-6 w-6 fill-coral text-coral" />
+                </motion.p>
+                <p className="text-muted-foreground text-sm mt-1">Average Rating</p>
+              </div>
+              <div className="w-px h-12 bg-border hidden sm:block" />
+              <div className="text-center lg:text-left">
+                <motion.p 
+                  className="text-3xl sm:text-4xl font-bold text-foreground"
+                  initial={{ opacity: 0, scale: 0.5 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1.2, duration: 0.4, type: "spring" }}
+                >
+                  200+
+                </motion.p>
+                <p className="text-muted-foreground text-sm mt-1">Unique Designs</p>
               </div>
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Product Image */}
+          {/* Right Content - Hero Image (Hidden on mobile) */}
           <motion.div 
-            className="relative order-1 lg:order-2 flex justify-center lg:justify-end"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            className="relative hidden lg:flex justify-center lg:justify-end"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4, duration: 0.8 }}
           >
-            {/* Decorative elements */}
+            {/* Decorative frame */}
             <motion.div 
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] h-[95%] rounded-full bg-gradient-to-br from-coral/15 via-coral/5 to-transparent blur-3xl"
-              initial={{ scale: 0, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.8, ease: "easeOut" }}
-            />
-
-            {/* Floating decorative ring */}
-            <motion.div
-              className="absolute top-8 right-8 w-20 h-20 rounded-full border-2 border-coral/20"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.8, duration: 0.6 }}
-            />
-            <motion.div
-              className="absolute bottom-16 left-4 w-12 h-12 rounded-full border-2 border-foreground/10"
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 1, duration: 0.6 }}
-            />
-
-            {/* Floating dots decoration */}
-            <motion.div
-              className="absolute top-20 left-8 flex gap-2"
+              className="absolute -inset-4 bg-gradient-to-br from-coral/20 via-coral/5 to-transparent rounded-[3rem] blur-2xl"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 1.2, duration: 0.5 }}
-            >
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="w-2 h-2 rounded-full bg-coral/40"
-                  animate={{ y: [0, -6, 0] }}
-                  transition={{ 
-                    delay: 1.4 + i * 0.15, 
-                    duration: 2, 
-                    repeat: Infinity, 
-                    ease: "easeInOut" 
-                  }}
-                />
-              ))}
-            </motion.div>
-
-            {/* Main Product Image with premium frame */}
-            <motion.div 
-              className="relative"
-              initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.8, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              {/* Outer glow frame */}
-              <div className="absolute -inset-1 bg-gradient-to-br from-coral/30 via-transparent to-coral/20 rounded-[2rem] blur-sm" />
+              transition={{ delay: 0.6, duration: 0.8 }}
+            />
+            
+            {/* Main image container */}
+            <div className="relative">
+              {/* Floating decorative elements */}
+              <motion.div 
+                className="absolute -top-6 -left-6 w-24 h-24 border-2 border-coral/30 rounded-full"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1, duration: 0.5 }}
+              />
+              <motion.div 
+                className="absolute -bottom-4 -right-4 w-16 h-16 border-2 border-foreground/10 rounded-full"
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1.1, duration: 0.5 }}
+              />
               
-              {/* Image container */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
-                <div className="rounded-[1.4rem] overflow-hidden">
+              {/* Image */}
+              <motion.div 
+                className="relative rounded-[2rem] overflow-hidden shadow-2xl bg-gradient-to-br from-coral/10 to-transparent p-1"
+                whileHover={{ scale: 1.02 }}
+                transition={{ duration: 0.4 }}
+              >
+                <div className="rounded-[1.8rem] overflow-hidden">
                   <motion.img
                     src={heroProduct}
-                    alt="Elegant silver clutch purse"
-                    className="w-full h-[380px] sm:h-[480px] md:h-[520px] lg:h-[560px] xl:h-[600px] object-cover"
-                    whileHover={{ scale: 1.05 }}
-                    transition={{ duration: 0.7 }}
+                    alt="Elegant luxury purse"
+                    className="w-full h-[500px] xl:h-[580px] object-cover"
+                    initial={{ scale: 1.1 }}
+                    animate={{ scale: 1 }}
+                    transition={{ duration: 1.2, ease: "easeOut" }}
                   />
                   
-                  {/* Premium overlay gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  {/* Corner accent */}
-                  <motion.div 
-                    className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 1, duration: 0.5 }}
-                  >
-                    <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Bestseller</span>
-                  </motion.div>
+                  {/* Overlay gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent" />
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Bottom floating badge */}
+              {/* Price tag */}
               <motion.div 
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-foreground text-background px-6 py-3 rounded-full shadow-xl flex items-center gap-3"
+                className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white shadow-xl rounded-full px-8 py-4 flex items-center gap-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1.2, duration: 0.5 }}
               >
-                <span className="text-sm font-medium">Starting at</span>
-                <span className="text-lg font-bold">$89</span>
-                <ArrowRight className="h-4 w-4" />
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase tracking-wider">Starting from</p>
+                  <p className="text-2xl font-bold text-foreground">$89</p>
+                </div>
+                <motion.button 
+                  className="bg-foreground text-background p-3 rounded-full hover:bg-coral transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <ArrowRight className="h-5 w-5" />
+                </motion.button>
               </motion.div>
-            </motion.div>
+            </div>
           </motion.div>
         </div>
       </div>
+
+      {/* Bottom trust bar */}
+      <motion.div 
+        className="absolute bottom-0 left-0 right-0 bg-foreground/5 backdrop-blur-sm border-t border-border/50"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.6 }}
+      >
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-12 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <Truck className="h-5 w-5 text-coral" />
+              <span>Free Shipping</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-coral" />
+              <span>2 Year Warranty</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-coral" />
+              <span>Premium Quality</span>
+            </div>
+          </div>
+        </div>
+      </motion.div>
     </section>
   );
 };
