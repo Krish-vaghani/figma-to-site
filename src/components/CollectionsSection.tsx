@@ -7,6 +7,7 @@ import product4 from "@/assets/product-4.png";
 import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
 import ProductCardSkeleton from "./ProductCardSkeleton";
+import LazyImage from "./LazyImage";
 import { useImagePreload } from "@/hooks/useImagePreload";
 import { useWishlist } from "@/contexts/WishlistContext";
 
@@ -146,8 +147,8 @@ const ProductCard = ({ product }: { product: Product }) => {
           <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isWishlisted ? "fill-current" : ""}`} />
         </motion.button>
 
-        {/* Product Image */}
-        <img
+        {/* Product Image with Lazy Loading */}
+        <LazyImage
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
