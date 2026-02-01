@@ -1,4 +1,5 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Zap } from "lucide-react";
+import { motion } from "framer-motion";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
@@ -7,6 +8,7 @@ import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useImagePreload } from "@/hooks/useImagePreload";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 type BadgeType = "new" | "hot" | "trending" | "bestseller" | "limited";
 
@@ -148,6 +150,9 @@ const newProducts: NewProduct[] = [
 ];
 
 const NewProductCard = ({ product }: { product: NewProduct }) => {
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(product.id + 100); // Offset to avoid ID collision with collections
+
   return (
     <div className="group cursor-pointer bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
       {/* Image Container */}
@@ -156,9 +161,20 @@ const NewProductCard = ({ product }: { product: NewProduct }) => {
         <BadgeComponent type={product.badge} />
 
         {/* Wishlist Button */}
-        <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-white/90 hover:bg-coral text-muted-foreground hover:text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 shadow-md">
-          <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
-        </button>
+        <motion.button 
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 shadow-md ${
+            isWishlisted 
+              ? "bg-coral text-white" 
+              : "bg-white/90 hover:bg-coral text-muted-foreground hover:text-white"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist(product.id + 100);
+          }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isWishlisted ? "fill-current" : ""}`} />
+        </motion.button>
 
         {/* Product Image */}
         <img

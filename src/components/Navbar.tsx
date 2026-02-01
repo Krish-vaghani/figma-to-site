@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Search, ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useWishlist } from "@/contexts/WishlistContext";
+import { motion, AnimatePresence } from "framer-motion";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -14,6 +16,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { wishlistCount } = useWishlist();
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-border">
@@ -52,9 +55,24 @@ const Navbar = () => {
           <Button variant="ghost" size="icon" className="rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
             <ShoppingCart className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="hidden sm:flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
+          
+          {/* Wishlist Button with Badge */}
+          <Button variant="ghost" size="icon" className="hidden sm:flex relative rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral hover:scale-110">
             <Heart className="h-4 w-4" />
+            <AnimatePresence>
+              {wishlistCount > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-md"
+                >
+                  {wishlistCount > 9 ? "9+" : wishlistCount}
+                </motion.span>
+              )}
+            </AnimatePresence>
           </Button>
+          
           <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral hover:scale-105 px-4 sm:px-6 text-sm transition-all duration-300">
             Sign In
           </Button>
@@ -95,8 +113,13 @@ const Navbar = () => {
             <Button variant="ghost" size="icon" className="sm:hidden rounded-full border border-border h-9 w-9">
               <Search className="h-4 w-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="sm:hidden rounded-full border border-border h-9 w-9">
+            <Button variant="ghost" size="icon" className="sm:hidden relative rounded-full border border-border h-9 w-9">
               <Heart className="h-4 w-4" />
+              {wishlistCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                  {wishlistCount > 9 ? "9+" : wishlistCount}
+                </span>
+              )}
             </Button>
             <Button className="sm:hidden flex-1 rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
               Sign In
