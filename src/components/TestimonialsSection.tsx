@@ -2,6 +2,7 @@ import { Quote } from "lucide-react";
 import { useInfiniteMarquee } from "@/hooks/use-infinite-marquee";
 import avatarMale from "@/assets/avatar-male.jpg";
 import avatarFemale from "@/assets/avatar-female.png";
+import ScrollReveal from "./ScrollReveal";
 
 interface Testimonial {
   id: number;
@@ -153,15 +154,17 @@ const TestimonialsSection = () => {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-secondary/30 overflow-hidden">
       {/* Section Header */}
-      <div className="text-center mb-8 sm:mb-12 px-4">
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-          What Our <span className="text-coral">Clients Say</span>
-        </h2>
-        <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
-          Discover What Our Customers Are Saying About Their Experience, Quality, And
-          Timeless Style They Love.
-        </p>
-      </div>
+      <ScrollReveal>
+        <div className="text-center mb-8 sm:mb-12 px-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+            What Our <span className="text-coral">Clients Say</span>
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
+            Discover What Our Customers Are Saying About Their Experience, Quality, And
+            Timeless Style They Love.
+          </p>
+        </div>
+      </ScrollReveal>
 
       {/* Scrolling Rows */}
       <div className="space-y-6">

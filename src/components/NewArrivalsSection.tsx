@@ -3,6 +3,8 @@ import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
 import product4 from "@/assets/product-4.png";
+import ScrollReveal from "./ScrollReveal";
+import StaggerReveal from "./StaggerReveal";
 
 type BadgeType = "new" | "hot" | "trending" | "bestseller" | "limited";
 
@@ -210,30 +212,34 @@ const NewArrivalsSection = () => {
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-            Fresh Styles <span className="text-coral">Just Dropped</span>
-          </h2>
-          <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
-            Whether It's Daily Use, Office Wear, Or A Special Occasion — We Have The
-            Perfect Purse For You.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+              Fresh Styles <span className="text-coral">Just Dropped</span>
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
+              Whether It's Daily Use, Office Wear, Or A Special Occasion — We Have The
+              Perfect Purse For You.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.08}>
           {newProducts.map((product) => (
             <NewProductCard key={product.id} product={product} />
           ))}
-        </div>
+        </StaggerReveal>
 
         {/* Explore Button */}
-        <div className="flex justify-center mt-10 sm:mt-14">
-          <button className="bg-foreground text-background font-medium px-8 py-4 rounded-full flex items-center gap-2 hover:bg-coral transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
-            Explore All New Arrivals
-            <ArrowRight className="h-5 w-5" />
-          </button>
-        </div>
+        <ScrollReveal delay={0.3}>
+          <div className="flex justify-center mt-10 sm:mt-14">
+            <button className="bg-foreground text-background font-medium px-8 py-4 rounded-full flex items-center gap-2 hover:bg-coral transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+              Explore All New Arrivals
+              <ArrowRight className="h-5 w-5" />
+            </button>
+          </div>
+        </ScrollReveal>
       </div>
     </section>
   );

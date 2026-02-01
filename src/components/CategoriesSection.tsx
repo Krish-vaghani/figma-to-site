@@ -2,6 +2,8 @@ import categoryTote from "@/assets/category-tote.png";
 import categorySling from "@/assets/category-sling.png";
 import categoryClutches from "@/assets/category-clutches.png";
 import categoryMini from "@/assets/category-mini.png";
+import ScrollReveal from "./ScrollReveal";
+import StaggerReveal from "./StaggerReveal";
 
 interface Category {
   id: number;
@@ -45,22 +47,24 @@ const CategoriesSection = () => {
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
-        <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-            Find Your <span className="text-coral">Perfect Purse</span>
-          </h2>
-          <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
-            Whether It's Daily Use, Office Wear, Or A Special Occasion — We Have The
-            Perfect Purse For You.
-          </p>
-        </div>
+        <ScrollReveal>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+              Find Your <span className="text-coral">Perfect Purse</span>
+            </h2>
+            <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
+              Whether It's Daily Use, Office Wear, Or A Special Occasion — We Have The
+              Perfect Purse For You.
+            </p>
+          </div>
+        </ScrollReveal>
 
         {/* Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-6 xl:gap-8">
+        <StaggerReveal className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6 sm:gap-8 lg:gap-6 xl:gap-8" staggerDelay={0.08}>
           {categories.map((category) => (
             <CategoryCard key={category.id} category={category} />
           ))}
-        </div>
+        </StaggerReveal>
       </div>
     </section>
   );
