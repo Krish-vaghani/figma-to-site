@@ -1,28 +1,12 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import product1 from "@/assets/product-1.png";
-import product2 from "@/assets/product-2.png";
-import product3 from "@/assets/product-3.png";
-import product4 from "@/assets/product-4.png";
 import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
-import ProductCardSkeleton from "./ProductCardSkeleton";
 import ProductQuickView from "./ProductQuickView";
-import { useImagePreload } from "@/hooks/useImagePreload";
+import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
-
-type BadgeType = "new" | "hot" | "trending" | "bestseller" | "limited";
-
-interface NewProduct {
-  id: number;
-  name: string;
-  price: number;
-  originalPrice: number;
-  image: string;
-  colors: string[];
-  badge: BadgeType;
-}
+import { products, type Product, type BadgeType } from "@/data/products";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -76,82 +60,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
   );
 };
 
-const newProducts: NewProduct[] = [
-  {
-    id: 1,
-    name: "Aurora Mini Purse",
-    price: 500,
-    originalPrice: 800,
-    image: product1,
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "new",
-  },
-  {
-    id: 2,
-    name: "Velora Crossbody",
-    price: 3299,
-    originalPrice: 4025,
-    image: product2,
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "hot",
-  },
-  {
-    id: 3,
-    name: "Bloom Mini Tote",
-    price: 2199,
-    originalPrice: 3250,
-    image: product3,
-    colors: ["#374151", "#E8B4B8", "#D4A574"],
-    badge: "trending",
-  },
-  {
-    id: 4,
-    name: "Nova Chain Purse",
-    price: 2799,
-    originalPrice: 29999,
-    image: product4,
-    colors: ["#374151", "#F3C677", "#E8B4B8"],
-    badge: "bestseller",
-  },
-  {
-    id: 5,
-    name: "Aurora Mini Purse",
-    price: 500,
-    originalPrice: 800,
-    image: product1,
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "limited",
-  },
-  {
-    id: 6,
-    name: "Velora Crossbody",
-    price: 3299,
-    originalPrice: 4025,
-    image: product2,
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "new",
-  },
-  {
-    id: 7,
-    name: "Bloom Mini Tote",
-    price: 2199,
-    originalPrice: 3250,
-    image: product3,
-    colors: ["#374151", "#E8B4B8", "#D4A574"],
-    badge: "hot",
-  },
-  {
-    id: 8,
-    name: "Nova Chain Purse",
-    price: 2799,
-    originalPrice: 29999,
-    image: product4,
-    colors: ["#374151", "#F3C677", "#E8B4B8"],
-    badge: "trending",
-  },
-];
-
-const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: () => void }) => {
+const NewProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id + 100); // Offset to avoid ID collision with collections
 
@@ -160,7 +69,7 @@ const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: ()
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden">
         {/* Dynamic Badge */}
-        <BadgeComponent type={product.badge} />
+        {product.badge && <BadgeComponent type={product.badge} />}
 
         {/* Wishlist Button */}
         <motion.button 
@@ -206,6 +115,9 @@ const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: ()
           </div>
         </div>
 
+        {/* Stock Urgency Indicator */}
+        <StockBadge stock={product.stock} variant="text" />
+
         {/* Price */}
         <div className="flex items-baseline gap-2">
           <span className="text-lg sm:text-xl font-bold text-foreground">
@@ -230,8 +142,7 @@ const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: ()
 };
 
 const NewArrivalsSection = () => {
-  const isLoading = false; // Removed blocking preload - using native lazy loading instead
-  const [selectedProduct, setSelectedProduct] = useState<NewProduct | null>(null);
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
@@ -250,19 +161,11 @@ const NewArrivalsSection = () => {
         </ScrollReveal>
 
         {/* Products Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[...Array(8)].map((_, i) => (
-              <ProductCardSkeleton key={i} variant="arrival" />
-            ))}
-          </div>
-        ) : (
-          <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.08}>
-            {newProducts.map((product) => (
-              <NewProductCard key={product.id} product={product} onClick={() => setSelectedProduct(product)} />
-            ))}
-          </StaggerReveal>
-        )}
+        <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.08}>
+          {products.map((product) => (
+            <NewProductCard key={product.id} product={product} onClick={() => setSelectedProduct(product)} />
+          ))}
+        </StaggerReveal>
 
         {/* Quick View Modal */}
         {selectedProduct && (

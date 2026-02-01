@@ -1,31 +1,16 @@
 import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import product1 from "@/assets/product-1.png";
-import product2 from "@/assets/product-2.png";
-import product3 from "@/assets/product-3.png";
-import product4 from "@/assets/product-4.png";
 import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import ProductQuickView from "./ProductQuickView";
-import { useImagePreload } from "@/hooks/useImagePreload";
+import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  originalPrice: number;
-  reviews: string;
-  rating: number;
-  image: string;
-  badge?: "bestseller" | "trending" | "new" | "hot";
-  colors: string[];
-}
+import { products, type Product, type BadgeType } from "@/data/products";
 
-const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "hot" }) => {
+const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
     bestseller: {
       bg: "bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600",
@@ -55,6 +40,13 @@ const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "h
       text: "Hot",
       iconColor: "text-red-100",
     },
+    limited: {
+      bg: "bg-gradient-to-br from-violet-400 via-purple-500 to-indigo-600",
+      glow: "before:bg-purple-400/30",
+      icon: Sparkles,
+      text: "Limited",
+      iconColor: "text-violet-100",
+    },
   };
 
   const style = badgeStyles[type];
@@ -69,57 +61,6 @@ const BadgeComponent = ({ type }: { type: "bestseller" | "trending" | "new" | "h
     </span>
   );
 };
-
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Aurora Mini Purse",
-    description: "Structured Crossbody With Top Handle",
-    price: 500,
-    originalPrice: 800,
-    reviews: "125k Reviews",
-    rating: 4.0,
-    image: product1,
-    badge: "bestseller",
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-  },
-  {
-    id: 2,
-    name: "Velora Crossbody",
-    description: "Modern Structured Handheld Bag",
-    price: 3299,
-    originalPrice: 4025,
-    reviews: "125k Reviews",
-    rating: 4.0,
-    image: product2,
-    badge: "trending",
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-  },
-  {
-    id: 3,
-    name: "Bloom Mini Tote",
-    description: "Compact Tote With Spacious Interior",
-    price: 2199,
-    originalPrice: 3250,
-    reviews: "125k Reviews",
-    rating: 4.0,
-    image: product3,
-    badge: "new",
-    colors: ["#374151", "#E8B4B8", "#D4A574"],
-  },
-  {
-    id: 4,
-    name: "Nova Chain Purse",
-    description: "Premium Quilted Evening Bag",
-    price: 2799,
-    originalPrice: 29999,
-    reviews: "125k Reviews",
-    rating: 4.0,
-    image: product4,
-    badge: "hot",
-    colors: ["#D4A574", "#F3C677", "#E8B4B8"],
-  },
-];
 
 const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -203,6 +144,9 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
         <p className="text-muted-foreground text-sm">{product.description}</p>
 
+        {/* Stock Urgency Indicator */}
+        <StockBadge stock={product.stock} />
+
         <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Price */}
           <div className="flex items-baseline gap-2">
@@ -228,8 +172,9 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 };
 
 const CollectionsSection = () => {
-  const isLoading = false; // Removed blocking preload - using native lazy loading instead
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  // Only show first 4 products for collections
+  const collectionProducts = products.slice(0, 4);
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
@@ -248,19 +193,12 @@ const CollectionsSection = () => {
         </ScrollReveal>
 
         {/* Products Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
-            {[...Array(4)].map((_, i) => (
-              <ProductCardSkeleton key={i} variant="collection" />
-            ))}
-          </div>
-        ) : (
-          <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} onClick={() => setSelectedProduct(product)} />
-            ))}
-          </StaggerReveal>
-        )}
+        <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" staggerDelay={0.1}>
+          {collectionProducts.map((product) => (
+            <ProductCard key={product.id} product={product} onClick={() => setSelectedProduct(product)} />
+          ))}
+        </StaggerReveal>
+
         {/* Quick View Modal */}
         {selectedProduct && (
           <ProductQuickView
