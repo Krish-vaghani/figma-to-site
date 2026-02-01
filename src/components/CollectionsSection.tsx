@@ -1,4 +1,5 @@
 import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
 import product3 from "@/assets/product-3.png";
@@ -7,6 +8,7 @@ import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
 import ProductCardSkeleton from "./ProductCardSkeleton";
 import { useImagePreload } from "@/hooks/useImagePreload";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 interface Product {
   id: number;
@@ -118,6 +120,9 @@ const products: Product[] = [
 ];
 
 const ProductCard = ({ product }: { product: Product }) => {
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isWishlisted = isInWishlist(product.id);
+
   return (
     <div className="group cursor-pointer">
       {/* Image Container */}
@@ -126,9 +131,20 @@ const ProductCard = ({ product }: { product: Product }) => {
         {product.badge && <BadgeComponent type={product.badge} />}
 
         {/* Wishlist Button */}
-        <button className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10 bg-foreground/60 hover:bg-coral text-white rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110">
-          <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
-        </button>
+        <motion.button 
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 ${
+            isWishlisted 
+              ? "bg-coral text-white" 
+              : "bg-foreground/60 hover:bg-coral text-white"
+          }`}
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleWishlist(product.id);
+          }}
+          whileTap={{ scale: 0.9 }}
+        >
+          <Heart className={`h-4 w-4 sm:h-5 sm:w-5 ${isWishlisted ? "fill-current" : ""}`} />
+        </motion.button>
 
         {/* Product Image */}
         <img
