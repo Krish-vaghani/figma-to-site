@@ -172,7 +172,7 @@ const HeroSection = () => {
                       animate={{ opacity: 1, scale: 1, x: 0 }}
                       transition={{ delay: 0.9 + i * 0.1, duration: 0.4, ease: "easeOut" }}
                     >
-                      <img src={avatar} alt="" className="w-full h-full object-cover" />
+                      <img src={avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
                     </motion.div>
                   ))}
                 </div>
@@ -275,6 +275,8 @@ const HeroSection = () => {
                     src={heroProduct}
                     alt="Elegant silver clutch purse"
                     className="w-full h-[380px] sm:h-[480px] md:h-[520px] lg:h-[560px] xl:h-[600px] object-cover"
+                    loading="eager"
+                    decoding="async"
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.7 }}
                   />

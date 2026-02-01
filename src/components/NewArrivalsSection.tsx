@@ -183,6 +183,8 @@ const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: ()
           src={product.image}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+          decoding="async"
         />
       </div>
 
@@ -228,7 +230,7 @@ const NewProductCard = ({ product, onClick }: { product: NewProduct; onClick: ()
 };
 
 const NewArrivalsSection = () => {
-  const isLoading = useImagePreload(newProducts.map((p) => p.image));
+  const isLoading = false; // Removed blocking preload - using native lazy loading instead
   const [selectedProduct, setSelectedProduct] = useState<NewProduct | null>(null);
 
   return (
