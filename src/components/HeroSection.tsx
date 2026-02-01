@@ -1,4 +1,4 @@
-import { ArrowRight, Star } from "lucide-react";
+import { ArrowRight, Star, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBackground from "@/assets/hero-background.png";
 import heroProduct from "@/assets/hero-product.jpg";
@@ -6,7 +6,7 @@ import avatar from "@/assets/avatar.jpg";
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden">
+    <section className="relative overflow-hidden min-h-[600px] lg:min-h-[700px]">
       {/* Background Pattern - Full image */}
       <div
         className="absolute inset-0 z-0"
@@ -18,92 +18,136 @@ const HeroSection = () => {
         }}
       />
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16 items-center max-w-7xl mx-auto">
-          {/* Left Content */}
-          <div className="space-y-4 sm:space-y-6 lg:space-y-8 text-center lg:text-left order-2 lg:order-1">
-            <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-4xl font-light italic text-foreground/80">
-              Elevate Your Everyday Style
-            </h2>
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-foreground leading-tight">
-              Lorem Ipsum Text{" "}
-              <span className="block">
-                Simply <span className="text-coral">Dummy Text</span>
-              </span>
-            </h1>
+      {/* Subtle gradient overlay for better text readability */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-r from-background/40 via-transparent to-transparent" />
 
-            <p className="text-muted-foreground text-base sm:text-lg lg:text-lg xl:text-xl max-w-lg mx-auto lg:mx-0">
-              Discover Thoughtfully Crafted Purses That Blend Timeless Design With
-              Modern Elegance — Perfect For Work, Casual Days, And Special Moments.
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-20 items-center max-w-7xl mx-auto">
+          {/* Left Content */}
+          <div className="space-y-6 sm:space-y-8 text-center lg:text-left order-2 lg:order-1">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-coral/10 text-coral px-4 py-2 rounded-full text-sm font-medium border border-coral/20">
+              <Sparkles className="h-4 w-4" />
+              <span>New Collection 2024</span>
+            </div>
+
+            <div className="space-y-4">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-light italic text-foreground/70 tracking-wide">
+                Elevate Your Everyday Style
+              </h2>
+              
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold text-foreground leading-[1.1] tracking-tight">
+                Discover Your{" "}
+                <span className="block mt-2">
+                  Perfect <span className="text-coral relative inline-block">
+                    Elegance
+                    <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 12" fill="none">
+                      <path d="M2 8C50 2 150 2 198 8" stroke="hsl(var(--coral))" strokeWidth="3" strokeLinecap="round" className="opacity-60"/>
+                    </svg>
+                  </span>
+                </span>
+              </h1>
+            </div>
+
+            <p className="text-muted-foreground text-base sm:text-lg lg:text-xl max-w-xl mx-auto lg:mx-0 leading-relaxed">
+              Discover thoughtfully crafted purses that blend timeless design with
+              modern elegance — perfect for work, casual days, and special moments.
             </p>
 
-            <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4 justify-center lg:justify-start">
-              <Button className="bg-foreground text-background hover:bg-foreground/90 hover:scale-105 rounded-full px-6 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-7 text-sm sm:text-base gap-2 group w-full sm:w-auto transition-all duration-300 shadow-lg hover:shadow-xl">
-                Shop Now
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            <div className="flex flex-col sm:flex-row flex-wrap gap-4 pt-4 justify-center lg:justify-start">
+              <Button className="bg-foreground text-background hover:bg-foreground/90 hover:scale-[1.02] rounded-full px-8 sm:px-10 py-6 sm:py-7 text-base font-medium gap-3 group w-full sm:w-auto transition-all duration-300 shadow-xl hover:shadow-2xl">
+                Shop Collection
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Button
                 variant="outline"
-                className="rounded-full px-6 sm:px-8 lg:px-10 py-5 sm:py-6 lg:py-7 text-sm sm:text-base gap-2 group border-foreground/20 hover:border-foreground hover:bg-foreground hover:text-background w-full sm:w-auto transition-all duration-300"
+                className="rounded-full px-8 sm:px-10 py-6 sm:py-7 text-base font-medium gap-3 group border-2 border-foreground/20 hover:border-foreground hover:bg-foreground hover:text-background w-full sm:w-auto transition-all duration-300 backdrop-blur-sm"
               >
-                View More
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                Explore More
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
+            </div>
+
+            {/* Trust indicators */}
+            <div className="flex items-center gap-6 pt-4 justify-center lg:justify-start text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <div className="flex -space-x-2">
+                  {[...Array(4)].map((_, i) => (
+                    <div key={i} className="w-8 h-8 rounded-full bg-muted border-2 border-background overflow-hidden">
+                      <img src={avatar} alt="" className="w-full h-full object-cover" />
+                    </div>
+                  ))}
+                </div>
+                <span className="font-medium">2,500+ Happy Customers</span>
+              </div>
             </div>
           </div>
 
           {/* Right Content - Product Image with Floating Cards */}
           <div className="relative order-1 lg:order-2 flex justify-center lg:justify-end">
+            {/* Decorative circle behind image */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[90%] rounded-full bg-gradient-to-br from-coral/10 to-coral/5 blur-3xl" />
+
             {/* Floating Card - Top */}
-            <div className="absolute top-0 left-0 sm:left-4 lg:left-0 xl:left-4 z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-3 sm:p-4 flex items-center gap-2 sm:gap-3 max-w-[200px] sm:max-w-[250px] transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-              <img
-                src={avatar}
-                alt="Customer"
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover"
-              />
+            <div className="absolute top-4 sm:top-8 left-0 sm:left-4 lg:-left-4 xl:left-0 z-20 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl p-4 sm:p-5 flex items-center gap-3 sm:gap-4 max-w-[220px] sm:max-w-[260px] transition-all duration-500 hover:-translate-y-2 cursor-pointer border border-white/50 group">
+              <div className="relative">
+                <img
+                  src={avatar}
+                  alt="Customer"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover ring-2 ring-coral/30 ring-offset-2"
+                />
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
+                  <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                </div>
+              </div>
               <div>
-                <p className="font-semibold text-foreground text-xs sm:text-sm">
-                  What's White-Label
+                <p className="font-semibold text-foreground text-sm sm:text-base group-hover:text-coral transition-colors">
+                  Premium Quality
                 </p>
-                <p className="text-foreground text-xs sm:text-sm">Jewellery Solutions?</p>
+                <p className="text-muted-foreground text-xs sm:text-sm">Handcrafted Excellence</p>
               </div>
             </div>
 
             {/* Main Product Image */}
-            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden ml-8 sm:ml-12 lg:ml-16 mt-12 sm:mt-16 group">
+            <div className="relative rounded-3xl overflow-hidden ml-6 sm:ml-10 lg:ml-12 mt-16 sm:mt-20 shadow-2xl group">
               <img
                 src={heroProduct}
                 alt="Elegant silver clutch purse"
-                className="w-full h-[350px] sm:h-[450px] md:h-[500px] lg:h-[550px] xl:h-[600px] 2xl:h-[650px] object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-[380px] sm:h-[480px] md:h-[520px] lg:h-[560px] xl:h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-foreground/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
 
             {/* Floating Card - Bottom */}
-            <div className="absolute bottom-4 sm:bottom-8 lg:bottom-12 left-0 z-20 bg-white rounded-xl sm:rounded-2xl shadow-lg hover:shadow-xl p-4 sm:p-5 max-w-[180px] sm:max-w-[220px] transition-all duration-300 hover:-translate-y-1 cursor-pointer group">
-              <p className="text-muted-foreground text-xs uppercase tracking-wide">
-                Purse Name
-              </p>
-              <h3 className="font-semibold text-foreground text-base sm:text-lg mt-1 group-hover:text-coral transition-colors">
-                Lorem Ipsum
+            <div className="absolute bottom-6 sm:bottom-10 lg:bottom-16 -left-2 sm:left-0 lg:-left-8 z-20 bg-white/95 backdrop-blur-md rounded-2xl shadow-xl hover:shadow-2xl p-5 sm:p-6 max-w-[200px] sm:max-w-[240px] transition-all duration-500 hover:-translate-y-2 cursor-pointer border border-white/50 group">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-muted-foreground text-xs uppercase tracking-wider font-medium">
+                  Featured
+                </p>
+                <span className="bg-coral/10 text-coral text-xs px-2 py-0.5 rounded-full font-medium">New</span>
+              </div>
+              <h3 className="font-semibold text-foreground text-lg sm:text-xl group-hover:text-coral transition-colors">
+                Luxe Clutch
               </h3>
-              <div className="flex items-center gap-1 sm:gap-2 mt-2">
+              <div className="flex items-center gap-2 mt-3">
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="h-3 w-3 sm:h-4 sm:w-4 fill-coral text-coral"
+                      className="h-4 w-4 fill-amber-400 text-amber-400"
                     />
                   ))}
                 </div>
-                <span className="text-muted-foreground text-xs sm:text-sm">250 Reviews</span>
+                <span className="text-muted-foreground text-sm">(250)</span>
               </div>
-              <p className="text-xl sm:text-2xl font-bold text-foreground mt-2 sm:mt-3">$125.00</p>
-              <button className="flex items-center gap-2 text-foreground font-medium mt-2 sm:mt-3 group/btn text-sm hover:text-coral transition-colors">
-                View More
-                <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4 group-hover/btn:translate-x-1 transition-transform" />
-              </button>
+              <div className="flex items-center justify-between mt-4">
+                <p className="text-2xl sm:text-3xl font-bold text-foreground">$125</p>
+                <button className="bg-foreground text-background p-2.5 rounded-full hover:bg-coral transition-colors group/btn">
+                  <ArrowRight className="h-4 w-4 group-hover/btn:translate-x-0.5 transition-transform" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
