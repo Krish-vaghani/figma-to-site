@@ -29,6 +29,8 @@ const CategoryCard = ({ category }: { category: Category }) => {
           src={category.image}
           alt={category.name}
           className="w-full h-full object-contain p-4 sm:p-5 md:p-6 transition-transform duration-500 group-hover:scale-110"
+          loading="lazy"
+          decoding="async"
         />
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-coral/0 group-hover:bg-coral/10 transition-colors duration-300 rounded-full" />
