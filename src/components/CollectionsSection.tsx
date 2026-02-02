@@ -85,7 +85,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
   return (
     <div 
-      className="w-[280px] sm:w-[320px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300" 
+      className="w-[240px] sm:w-[280px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300" 
       onClick={onClick}
     >
       {/* Image Container */}
@@ -93,12 +93,12 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         {/* Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
-        {/* Wishlist Button */}
+        {/* Wishlist Button - Transparent with blue tint */}
         <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 ${
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${
             isWishlisted 
               ? "bg-coral text-white" 
-              : "bg-foreground/60 hover:bg-coral text-white"
+              : "bg-blue-500/20 text-white border border-white/30"
           }`}
           onClick={(e) => {
             e.stopPropagation();
@@ -113,22 +113,11 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
+          className="w-full h-full object-cover pointer-events-none"
           loading="lazy"
           decoding="async"
           draggable={false}
         />
-
-        {/* Hover Overlay with Add to Cart */}
-        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/20 transition-all duration-300 flex items-end justify-center pb-6 opacity-0 group-hover:opacity-100">
-          <button 
-            onClick={handleAddToCart}
-            className="bg-background text-foreground font-medium px-6 py-3 rounded-full flex items-center gap-2 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 hover:bg-coral hover:text-white shadow-lg"
-          >
-            <ShoppingCart className="h-4 w-4" />
-            Add to Cart
-          </button>
-        </div>
       </div>
 
       {/* Product Info */}
@@ -151,26 +140,26 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
         <p className="text-muted-foreground text-sm line-clamp-2">{product.description}</p>
 
-        {/* Stock Urgency Indicator */}
-        <StockBadge stock={product.stock} />
-
         <div className="flex flex-wrap items-center justify-between gap-2">
           {/* Price */}
           <div className="flex items-baseline gap-2">
-            <span className="text-xl sm:text-2xl font-bold text-foreground">
+            <span className="text-lg sm:text-xl font-bold text-foreground">
               ${product.price.toLocaleString()}.00
             </span>
-            <span className="text-muted-foreground line-through text-sm">
+            <span className="text-muted-foreground line-through text-xs">
               ${product.originalPrice.toLocaleString()}.00
             </span>
           </div>
 
-          {/* Rating */}
-          <div className="flex items-center gap-1.5">
-            <Star className="h-4 w-4 fill-coral text-coral" />
-            <span className="text-muted-foreground text-sm">
-              {product.rating}({product.reviews})
-            </span>
+          {/* Rating & Stock Badge together */}
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
+              <Star className="h-3.5 w-3.5 fill-coral text-coral" />
+              <span className="text-muted-foreground text-xs">
+                {product.rating}({product.reviews})
+              </span>
+            </div>
+            <StockBadge stock={product.stock} variant="text" showIcon={false} />
           </div>
         </div>
       </div>

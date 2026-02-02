@@ -152,7 +152,7 @@ const MarqueeRow = ({
 
 const TestimonialsSection = () => {
   return (
-    <section className="py-4 sm:py-6 lg:py-8 bg-secondary/30 overflow-hidden">
+    <section className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 bg-secondary/30 overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
         <div className="text-center mb-8 sm:mb-12 px-4">

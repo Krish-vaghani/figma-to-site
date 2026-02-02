@@ -66,7 +66,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
 
   return (
     <div 
-      className="w-[260px] sm:w-[300px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300" 
+      className="w-[240px] sm:w-[280px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300" 
       onClick={onClick}
     >
       {/* Image Container */}
@@ -74,12 +74,12 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
         {/* Dynamic Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
-        {/* Wishlist Button */}
+        {/* Wishlist Button - Transparent with blue tint */}
         <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 hover:scale-110 shadow-md ${
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${
             isWishlisted 
               ? "bg-coral text-white" 
-              : "bg-background/90 hover:bg-coral text-muted-foreground hover:text-white"
+              : "bg-blue-500/20 text-white border border-white/30"
           }`}
           onClick={(e) => {
             e.stopPropagation();
@@ -94,7 +94,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
+          className="w-full h-full object-cover pointer-events-none"
           loading="lazy"
           decoding="async"
           draggable={false}
@@ -105,31 +105,31 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
       <div className="p-4 sm:p-5 space-y-3">
         {/* Name & Colors */}
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-semibold text-foreground text-sm sm:text-base group-hover:text-coral transition-colors duration-300">
+          <h3 className="font-semibold text-foreground text-sm sm:text-base">
             {product.name}
           </h3>
           <div className="flex gap-1">
             {product.colors.map((color, index) => (
               <span
                 key={index}
-                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border hover:scale-125 transition-transform duration-200 cursor-pointer"
+                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border cursor-pointer"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
         </div>
 
-        {/* Stock Urgency Indicator */}
-        <StockBadge stock={product.stock} variant="text" />
-
-        {/* Price */}
-        <div className="flex items-baseline gap-2">
-          <span className="text-lg sm:text-xl font-bold text-foreground">
-            ${product.price.toLocaleString()}.00
-          </span>
-          <span className="text-muted-foreground line-through text-sm">
-            ${product.originalPrice.toLocaleString()}.00
-          </span>
+        {/* Price & Stock Badge together */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-baseline gap-2">
+            <span className="text-lg sm:text-xl font-bold text-foreground">
+              ${product.price.toLocaleString()}.00
+            </span>
+            <span className="text-muted-foreground line-through text-xs">
+              ${product.originalPrice.toLocaleString()}.00
+            </span>
+          </div>
+          <StockBadge stock={product.stock} variant="text" showIcon={false} />
         </div>
 
         {/* CTA Link */}

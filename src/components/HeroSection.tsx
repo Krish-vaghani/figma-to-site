@@ -126,9 +126,9 @@ const HeroSection = () => {
               />
             </div>
 
-            {/* Mobile Product Info Card */}
+            {/* Mobile Product Info Card - Positioned higher on image */}
             <motion.div 
-              className="bg-background rounded-2xl shadow-lg p-4 mx-2 -mt-8 relative z-10"
+              className="bg-background rounded-2xl shadow-lg p-4 mx-4 -mt-20 relative z-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}

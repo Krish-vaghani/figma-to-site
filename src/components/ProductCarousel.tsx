@@ -103,21 +103,7 @@ const ProductCarousel = ({
         </div>
       </div>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={scrollPrev}
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-20 bg-background/90 backdrop-blur-sm border border-border rounded-full p-2 sm:p-3 shadow-lg hover:bg-coral hover:text-white hover:border-coral transition-all duration-300 hover:scale-110"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-      </button>
-      <button
-        onClick={scrollNext}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-20 bg-background/90 backdrop-blur-sm border border-border rounded-full p-2 sm:p-3 shadow-lg hover:bg-coral hover:text-white hover:border-coral transition-all duration-300 hover:scale-110"
-        aria-label="Next slide"
-      >
-        <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
-      </button>
+      {/* Navigation Arrows - Hidden */}
 
       {/* 5 Dots Navigation - Center dot is always primary */}
       <div className="flex justify-center items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
