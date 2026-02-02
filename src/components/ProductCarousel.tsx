@@ -18,9 +18,10 @@ const ProductCarousel = ({
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
-      align: "start",
+      align: "center",
       skipSnaps: false,
       dragFree: false,
+      containScroll: false,
     },
     [
       Autoplay({ 
@@ -33,8 +34,6 @@ const ProductCarousel = ({
 
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [scrollSnaps, setScrollSnaps] = useState<number[]>([]);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
 
   const scrollPrev = useCallback(() => {
     if (emblaApi) emblaApi.scrollPrev();
@@ -51,8 +50,6 @@ const ProductCarousel = ({
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setSelectedIndex(emblaApi.selectedScrollSnap());
-    setCanScrollPrev(emblaApi.canScrollPrev());
-    setCanScrollNext(emblaApi.canScrollNext());
   }, [emblaApi]);
 
   useEffect(() => {
@@ -70,15 +67,36 @@ const ProductCarousel = ({
     };
   }, [emblaApi, onSelect]);
 
+  // Calculate which 5 dots to show with current in center
+  const totalSlides = scrollSnaps.length;
+  const getDotIndices = () => {
+    if (totalSlides <= 5) {
+      return Array.from({ length: totalSlides }, (_, i) => i);
+    }
+    
+    // Always show 5 dots with selected in the center (position 2)
+    const indices: number[] = [];
+    for (let i = -2; i <= 2; i++) {
+      let index = selectedIndex + i;
+      // Handle wrap around for loop
+      if (index < 0) index = totalSlides + index;
+      if (index >= totalSlides) index = index - totalSlides;
+      indices.push(index);
+    }
+    return indices;
+  };
+
+  const dotIndices = getDotIndices();
+
   return (
     <div className={cn("relative", className)}>
       {/* Carousel Container */}
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden px-4 sm:px-8" ref={emblaRef}>
         <div className="flex gap-4 sm:gap-6">
           {children.map((child, index) => (
             <div 
               key={index} 
-              className="flex-shrink-0 min-w-0"
+              className="flex-shrink-0 min-w-0 first:ml-4 last:mr-4 sm:first:ml-8 sm:last:mr-8"
               style={{ flex: "0 0 auto" }}
             >
               {child}
@@ -103,21 +121,28 @@ const ProductCarousel = ({
         <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
 
-      {/* Dots Navigation */}
-      <div className="flex justify-center gap-2 mt-6 sm:mt-8">
-        {scrollSnaps.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollTo(index)}
-            className={cn(
-              "w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition-all duration-300",
-              selectedIndex === index
-                ? "bg-coral scale-125"
-                : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-            )}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
+      {/* 5 Dots Navigation - Center dot is primary */}
+      <div className="flex justify-center items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
+        {dotIndices.map((dotIndex, position) => {
+          const isCenter = position === Math.floor(dotIndices.length / 2);
+          const distanceFromCenter = Math.abs(position - Math.floor(dotIndices.length / 2));
+          
+          return (
+            <button
+              key={`dot-${dotIndex}-${position}`}
+              onClick={() => scrollTo(dotIndex)}
+              className={cn(
+                "rounded-full transition-all duration-300 ease-out",
+                isCenter
+                  ? "w-3 h-3 sm:w-4 sm:h-4 bg-coral scale-110"
+                  : distanceFromCenter === 1
+                  ? "w-2.5 h-2.5 sm:w-3 sm:h-3 bg-coral/50 hover:bg-coral/70"
+                  : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+              )}
+              aria-label={`Go to slide ${dotIndex + 1}`}
+            />
+          );
+        })}
       </div>
     </div>
   );
