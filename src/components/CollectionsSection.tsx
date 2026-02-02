@@ -85,11 +85,11 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
   return (
     <div 
-      className="w-[240px] sm:w-[280px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300" 
+      className="w-[240px] sm:w-[280px] h-[380px] sm:h-[440px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col" 
       onClick={onClick}
     >
       {/* Image Container */}
-      <div className="relative overflow-hidden bg-secondary/30 aspect-[4/5]">
+      <div className="relative overflow-hidden bg-secondary/30 aspect-[4/5] flex-shrink-0">
         {/* Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
@@ -121,7 +121,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
       </div>
 
       {/* Product Info */}
-      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3">
+      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3 flex-grow flex flex-col">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-foreground text-base sm:text-lg group-hover:text-coral transition-colors duration-300">
             {product.name}
@@ -138,9 +138,9 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
           </div>
         </div>
 
-        <p className="text-muted-foreground text-sm line-clamp-2">{product.description}</p>
+        <p className="text-muted-foreground text-sm line-clamp-2 flex-grow">{product.description}</p>
 
-        <div className="flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 mt-auto">
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-lg sm:text-xl font-bold text-foreground">

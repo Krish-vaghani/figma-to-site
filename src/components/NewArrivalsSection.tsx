@@ -66,11 +66,11 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
 
   return (
     <div 
-      className="w-[240px] sm:w-[280px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300" 
+      className="w-[240px] sm:w-[280px] h-[380px] sm:h-[440px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col" 
       onClick={onClick}
     >
       {/* Image Container */}
-      <div className="relative aspect-[4/5] overflow-hidden">
+      <div className="relative aspect-[4/5] overflow-hidden flex-shrink-0">
         {/* Dynamic Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
@@ -102,7 +102,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
       </div>
 
       {/* Product Info */}
-      <div className="p-4 sm:p-5 space-y-3">
+      <div className="p-4 sm:p-5 space-y-3 flex-grow flex flex-col">
         {/* Name & Colors */}
         <div className="flex items-center justify-between gap-2">
           <h3 className="font-semibold text-foreground text-sm sm:text-base">
@@ -135,7 +135,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
         {/* CTA Link */}
         <a
           href="#"
-          className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300"
+          className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto"
           onClick={(e) => e.stopPropagation()}
         >
           Let's Check It Out
