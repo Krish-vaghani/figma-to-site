@@ -24,8 +24,8 @@ const Footer = () => {
 
   return (
     <footer className="relative overflow-hidden" style={{ background: 'linear-gradient(180deg, hsl(var(--background)) 0%, hsl(var(--coral) / 0.08) 50%, hsl(var(--coral) / 0.15) 100%)' }}>
-      {/* Decorative Dots */}
-      <div className="absolute inset-0 pointer-events-none">
+      {/* Decorative Dots - Hidden on mobile for cleaner look */}
+      <div className="absolute inset-0 pointer-events-none hidden sm:block">
         <div className="absolute top-1/4 left-[15%] w-2 h-2 bg-coral rounded-full" />
         <div className="absolute top-[60%] left-[8%] w-2 h-2 bg-coral rounded-full" />
         <div className="absolute top-1/3 right-[15%] w-2 h-2 bg-coral rounded-full" />
@@ -39,27 +39,27 @@ const Footer = () => {
       </div>
 
       {/* Hero Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-16 sm:pt-24 pb-12 sm:pb-16 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-12 sm:pt-16 lg:pt-24 pb-10 sm:pb-12 lg:pb-16 relative z-10">
         <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
+          <div className="text-center max-w-2xl mx-auto px-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-3 sm:mb-4">
               Crafted With <span className="text-coral">Elegance & Care</span>
             </h2>
-            <p className="text-muted-foreground text-base sm:text-lg mb-8 leading-relaxed">
+            <p className="text-muted-foreground text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed">
               Thoughtfully Designed Purses That Blend Style, Quality, And Everyday Comfort
               —Crafted To Elevate Your Look With Confidence.
             </p>
             
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
               <Button 
                 variant="outline"
-                className="rounded-full px-6 sm:px-8 py-5 sm:py-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all duration-300 font-medium text-sm sm:text-base"
+                className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base"
               >
                 Subscribe & Save / Join Our List
               </Button>
               <Button 
-                className="rounded-full px-6 sm:px-8 py-5 sm:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-sm sm:text-base gap-2 group"
+                className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base gap-2 group"
               >
                 Shop Now
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -70,18 +70,18 @@ const Footer = () => {
       </div>
 
       {/* Links Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pb-8 sm:pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pb-8 sm:pb-10 lg:pb-12 relative z-10">
+        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-3 lg:gap-12">
           {/* Explore Column */}
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div>
-              <h4 className="text-lg sm:text-xl font-semibold text-foreground mb-4 sm:mb-6">Explore</h4>
-              <div className="grid grid-cols-3 gap-x-4 gap-y-3">
+              <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">Explore</h4>
+              <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
                 {exploreLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="text-muted-foreground hover:text-coral transition-colors text-sm sm:text-base"
+                    className="text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm lg:text-base"
                   >
                     {link.name}
                   </a>
@@ -93,13 +93,13 @@ const Footer = () => {
           {/* Categories Column */}
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div>
-              <h4 className="text-lg sm:text-xl font-semibold text-foreground mb-4 sm:mb-6">Categories / Collections</h4>
-              <div className="grid grid-cols-3 gap-x-4 gap-y-3">
+              <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">Categories / Collections</h4>
+              <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
                 {categoryLinks.map((link) => (
                   <a
                     key={link.name}
                     href={link.href}
-                    className="text-muted-foreground hover:text-coral transition-colors text-sm sm:text-base"
+                    className="text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm lg:text-base"
                   >
                     {link.name}
                   </a>
@@ -110,22 +110,22 @@ const Footer = () => {
 
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>
-            <div className="bg-background rounded-2xl p-5 sm:p-6 shadow-sm border border-border/50">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="text-xl">🇮🇳</span>
-                <span className="text-sm text-muted-foreground">India</span>
+            <div className="bg-background rounded-2xl p-4 sm:p-5 lg:p-6 shadow-sm border border-border/50">
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <span className="text-lg sm:text-xl">🇮🇳</span>
+                <span className="text-xs sm:text-sm text-muted-foreground">India</span>
               </div>
-              <h4 className="text-lg sm:text-xl font-semibold text-foreground mb-4">Contact Us</h4>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-6">
-                <a href="mailto:Support@Yourbrand.Com" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-sm">
-                  <div className="w-8 h-8 rounded-full bg-coral/10 flex items-center justify-center">
-                    <Mail className="h-4 w-4 text-coral" />
+              <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">Contact Us</h4>
+              <div className="flex flex-col gap-3">
+                <a href="mailto:Support@Yourbrand.Com" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
+                    <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                   </div>
-                  <span>Support@Yourbrand.Com</span>
+                  <span className="break-all">Support@Yourbrand.Com</span>
                 </a>
-                <a href="tel:+919XXXXXXXXX" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-sm">
-                  <div className="w-8 h-8 rounded-full bg-coral/10 flex items-center justify-center">
-                    <Phone className="h-4 w-4 text-coral" />
+                <a href="tel:+919XXXXXXXXX" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm">
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
+                    <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                   </div>
                   <span>+91 9XXXXXXXXX</span>
                 </a>
@@ -136,16 +136,16 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-border/50 bg-secondary/30">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-4 sm:py-6">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="border-t border-border/50 bg-background/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-4 sm:py-5 lg:py-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             {/* Logo & Compliance */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 lg:gap-6">
               <div className="flex items-center gap-2">
-                <img src={logo} alt="Welcome Logo" className="h-8 sm:h-10" />
-                <span className="text-lg font-semibold text-foreground">welcome</span>
+                <img src={logo} alt="Welcome Logo" className="h-7 sm:h-8 lg:h-10" />
+                <span className="text-base sm:text-lg font-semibold text-foreground">welcome</span>
               </div>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                 <span className="font-medium">Privacy & Compliance :</span>
                 <span>Secure Payments</span>
                 <span>•</span>
@@ -156,9 +156,9 @@ const Footer = () => {
             </div>
 
             {/* Copyright & Legal Links */}
-            <div className="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 lg:gap-6 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
               <span>© 2026 Your Brand Name. All Rights Reserved.</span>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 <a href="#" className="hover:text-coral transition-colors">Privacy Policy</a>
                 <a href="#" className="hover:text-coral transition-colors">Terms & Conditions</a>
                 <a href="#" className="hover:text-coral transition-colors">Return Policy</a>
