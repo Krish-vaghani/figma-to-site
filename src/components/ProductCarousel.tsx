@@ -67,26 +67,7 @@ const ProductCarousel = ({
     };
   }, [emblaApi, onSelect]);
 
-  // Calculate which 5 dots to show with current in center
   const totalSlides = scrollSnaps.length;
-  const getDotIndices = () => {
-    if (totalSlides <= 5) {
-      return Array.from({ length: totalSlides }, (_, i) => i);
-    }
-    
-    // Always show 5 dots with selected in the center (position 2)
-    const indices: number[] = [];
-    for (let i = -2; i <= 2; i++) {
-      let index = selectedIndex + i;
-      // Handle wrap around for loop
-      if (index < 0) index = totalSlides + index;
-      if (index >= totalSlides) index = index - totalSlides;
-      indices.push(index);
-    }
-    return indices;
-  };
-
-  const dotIndices = getDotIndices();
 
   return (
     <div className={cn("relative", className)}>
@@ -121,25 +102,31 @@ const ProductCarousel = ({
         <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
       </button>
 
-      {/* 5 Dots Navigation - Center dot is primary */}
+      {/* Animated Dots Navigation */}
       <div className="flex justify-center items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
-        {dotIndices.map((dotIndex, position) => {
-          const isCenter = position === Math.floor(dotIndices.length / 2);
-          const distanceFromCenter = Math.abs(position - Math.floor(dotIndices.length / 2));
+        {scrollSnaps.map((_, index) => {
+          const isSelected = index === selectedIndex;
+          // Calculate distance from selected for scaling effect
+          let distance = Math.abs(index - selectedIndex);
+          // Handle loop wrap-around distance
+          if (totalSlides > 0) {
+            const wrapDistance = totalSlides - distance;
+            distance = Math.min(distance, wrapDistance);
+          }
           
           return (
             <button
-              key={`dot-${dotIndex}-${position}`}
-              onClick={() => scrollTo(dotIndex)}
+              key={index}
+              onClick={() => scrollTo(index)}
               className={cn(
-                "rounded-full transition-all duration-300 ease-out",
-                isCenter
-                  ? "w-3 h-3 sm:w-4 sm:h-4 bg-coral scale-110"
-                  : distanceFromCenter === 1
-                  ? "w-2.5 h-2.5 sm:w-3 sm:h-3 bg-coral/50 hover:bg-coral/70"
-                  : "w-2 h-2 sm:w-2.5 sm:h-2.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                "rounded-full transition-all duration-500 ease-out",
+                isSelected
+                  ? "w-4 h-4 sm:w-5 sm:h-5 bg-coral scale-110 shadow-lg shadow-coral/30"
+                  : distance === 1
+                  ? "w-3 h-3 sm:w-4 sm:h-4 bg-coral/60 hover:bg-coral/80"
+                  : "w-2.5 h-2.5 sm:w-3 sm:h-3 bg-muted-foreground/30 hover:bg-muted-foreground/50"
               )}
-              aria-label={`Go to slide ${dotIndex + 1}`}
+              aria-label={`Go to slide ${index + 1}`}
             />
           );
         })}
