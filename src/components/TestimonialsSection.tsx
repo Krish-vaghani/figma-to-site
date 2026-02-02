@@ -89,8 +89,9 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
       <div className="flex items-center gap-3 flex-shrink-0 mt-auto">
         <img
           src={testimonial.avatar}
-          alt={testimonial.name}
+          alt={`${testimonial.name} - Customer testimonial`}
           className="w-12 h-12 rounded-full object-cover pointer-events-none"
+          loading="lazy"
           draggable={false}
         />
         <div>

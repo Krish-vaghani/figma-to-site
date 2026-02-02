@@ -100,12 +100,63 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
   body {
     @apply bg-background text-foreground font-sans;
     font-family: 'Inter', sans-serif;
+    text-rendering: optimizeLegibility;
   }
 
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
+  }
+
+  /* GPU-accelerated transforms */
+  .will-change-transform {
+    will-change: transform;
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Smooth scrolling container */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Optimized image rendering */
+  img {
+    content-visibility: auto;
+  }
+
+  /* Skip to content for accessibility */
+  .skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: hsl(var(--foreground));
+    color: hsl(var(--background));
+    padding: 8px 16px;
+    z-index: 100;
+    transition: top 0.3s;
+  }
+  .skip-link:focus {
+    top: 0;
   }
 }

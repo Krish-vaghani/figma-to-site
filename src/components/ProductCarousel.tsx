@@ -20,8 +20,9 @@ const ProductCarousel = ({
       loop: true, 
       align: "center",
       skipSnaps: false,
-      dragFree: false,
+      dragFree: true, // Smoother drag experience
       containScroll: false,
+      duration: 25, // Faster, smoother transitions
     },
     [
       Autoplay({ 

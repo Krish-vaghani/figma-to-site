@@ -93,8 +93,8 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
         {/* Product Image */}
         <img
           src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover pointer-events-none"
+          alt={`${product.name} - New arrival handbag`}
+          className="w-full h-full object-cover pointer-events-none will-change-transform"
           loading="lazy"
           decoding="async"
           draggable={false}

@@ -120,9 +120,10 @@ const HeroSection = () => {
             <div className="rounded-3xl overflow-hidden shadow-xl">
               <img
                 src={heroProduct}
-                alt="Aurora Mini Purse"
+                alt="Aurora Mini Purse - Premium leather crossbody bag"
                 className="w-full aspect-[4/5] object-cover"
                 loading="eager"
+                fetchPriority="high"
               />
             </div>
 
@@ -387,12 +388,13 @@ const HeroSection = () => {
                   <div className="rounded-[1.4rem] overflow-hidden">
                     <motion.img
                       src={heroProduct}
-                      alt="Elegant silver clutch purse"
-                      className="w-full h-[560px] xl:h-[600px] object-cover"
+                      alt="Elegant silver clutch purse - Premium designer handbag"
+                      className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
                       loading="eager"
+                      fetchPriority="high"
                       decoding="async"
-                      whileHover={{ scale: 1.05 }}
-                      transition={{ duration: 0.7 }}
+                      whileHover={{ scale: 1.03 }}
+                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     />
                     
                     {/* Premium overlay gradient */}

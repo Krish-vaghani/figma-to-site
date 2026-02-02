@@ -112,8 +112,8 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         {/* Product Image */}
         <img
           src={product.image}
-          alt={product.name}
-          className="w-full h-full object-cover pointer-events-none"
+          alt={`${product.name} - Designer handbag`}
+          className="w-full h-full object-cover pointer-events-none will-change-transform"
           loading="lazy"
           decoding="async"
           draggable={false}
