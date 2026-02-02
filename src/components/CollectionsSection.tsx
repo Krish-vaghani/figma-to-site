@@ -81,9 +81,9 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
   };
 
   return (
-    <div className="group cursor-pointer" onClick={onClick}>
+    <div className="group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300" onClick={onClick}>
       {/* Image Container */}
-      <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-secondary/30 aspect-[4/5]">
+      <div className="relative overflow-hidden bg-secondary/30 aspect-[4/5]">
         {/* Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
