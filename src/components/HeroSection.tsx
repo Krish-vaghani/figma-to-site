@@ -412,16 +412,32 @@ const HeroSection = () => {
                   </div>
                 </div>
 
-                {/* Bottom floating badge */}
+                {/* Product Info Card - Floating over image */}
                 <motion.div 
-                  className="absolute -bottom-4 left-1/2 -translate-x-1/2 bg-foreground text-background px-6 py-3 rounded-full shadow-xl flex items-center gap-3"
+                  className="absolute -bottom-6 left-4 right-4 bg-background rounded-2xl shadow-xl p-5"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 1.2, duration: 0.5 }}
                 >
-                  <span className="text-sm font-medium">Starting at</span>
-                  <span className="text-lg font-bold">$89</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <div className="flex items-start justify-between mb-2">
+                    <h3 className="text-lg font-semibold text-foreground">Aurora Mini Purse</h3>
+                    <button className="flex items-center gap-1 text-coral text-sm font-medium group">
+                      View More
+                      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                  </div>
+                  <p className="text-sm text-muted-foreground mb-3">Structured Crossbody With Top Handle</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-bold text-foreground">$500.00</span>
+                      <span className="text-sm text-muted-foreground line-through">$800.00</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                      <span className="text-sm text-foreground font-medium">4.0</span>
+                      <span className="text-xs text-muted-foreground">(125k Reviews)</span>
+                    </div>
+                  </div>
                 </motion.div>
               </motion.div>
             </motion.div>
