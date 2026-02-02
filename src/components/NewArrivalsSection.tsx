@@ -65,7 +65,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
   const isWishlisted = isInWishlist(product.id + 100); // Offset to avoid ID collision with collections
 
   return (
-    <div className="group cursor-pointer bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300" onClick={onClick}>
+    <div className="group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300" onClick={onClick}>
       {/* Image Container */}
       <div className="relative aspect-[4/5] overflow-hidden">
         {/* Dynamic Badge */}
