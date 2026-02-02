@@ -4,13 +4,14 @@ import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link, useLocation } from "react-router-dom";
 import SearchModal from "./SearchModal";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
-  { label: "Home", href: "#", active: true },
+  { label: "Home", href: "/" },
   { label: "Shop", href: "#" },
-  { label: "Purses", href: "#" },
+  { label: "Purses", href: "/purses" },
   { label: "Jewellery", href: "#" },
   { label: "About Us", href: "#" },
   { label: "Sale", href: "#" },
@@ -22,6 +23,12 @@ const Navbar = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { wishlistCount } = useWishlist();
   const { cartCount, setIsCartOpen } = useCart();
+  const location = useLocation();
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    return location.pathname.startsWith(href);
+  };
 
   return (
     <nav className="sticky top-0 z-50 bg-background py-3 px-4 sm:px-6 lg:px-8">
@@ -36,23 +43,33 @@ const Navbar = () => {
 
           {/* Navigation Links - Desktop */}
           <ul className="hidden lg:flex items-center gap-1">
-            {navLinks.map((link, index) => (
-              <li key={link.label} className="flex items-center">
-                <a
-                  href={link.href}
-                  className={`px-3 xl:px-4 py-2 text-sm font-medium transition-all duration-300 relative ${
-                    link.active
-                      ? "text-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-coral after:rounded-full"
-                      : "text-muted-foreground hover:text-coral"
-                  }`}
-                >
-                  {link.label}
-                </a>
-                {index < navLinks.length - 1 && (
-                  <span className="text-border">|</span>
-                )}
-              </li>
-            ))}
+            {navLinks.map((link, index) => {
+              const isActive = isActiveLink(link.href);
+              const isExternal = link.href === "#";
+
+              const linkClasses = `px-3 xl:px-4 py-2 text-sm font-medium transition-all duration-300 relative ${
+                isActive
+                  ? "text-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-coral after:rounded-full"
+                  : "text-muted-foreground hover:text-coral"
+              }`;
+
+              return (
+                <li key={link.label} className="flex items-center">
+                  {isExternal ? (
+                    <a href={link.href} className={linkClasses}>
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link to={link.href} className={linkClasses}>
+                      {link.label}
+                    </Link>
+                  )}
+                  {index < navLinks.length - 1 && (
+                    <span className="text-border">|</span>
+                  )}
+                </li>
+              );
+            })}
           </ul>
 
           {/* Right Side Icons */}
@@ -131,21 +148,38 @@ const Navbar = () => {
             className="lg:hidden mt-3 mx-auto max-w-7xl bg-background border border-border rounded-3xl shadow-lg overflow-hidden"
           >
             <ul className="py-4 px-4 space-y-2">
-              {navLinks.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
-                      link.active
-                        ? "text-foreground bg-secondary"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = isActiveLink(link.href);
+                const isExternal = link.href === "#";
+
+                const linkClasses = `block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
+                  isActive
+                    ? "text-foreground bg-secondary"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`;
+
+                return (
+                  <li key={link.label}>
+                    {isExternal ? (
+                      <a
+                        href={link.href}
+                        className={linkClasses}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        to={link.href}
+                        className={linkClasses}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {link.label}
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
             <div className="px-4 pb-4 flex gap-2">
               <Button 
