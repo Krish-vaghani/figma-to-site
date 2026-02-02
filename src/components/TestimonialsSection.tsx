@@ -76,17 +76,17 @@ const testimonialsRow2: Testimonial[] = [
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
-    <div className="flex-shrink-0 w-[320px] sm:w-[380px] bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 select-none [&_*]:no-underline">
+    <div className="flex-shrink-0 w-[320px] sm:w-[380px] h-[220px] sm:h-[240px] bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow duration-300 select-none [&_*]:no-underline flex flex-col">
       {/* Quote Icon */}
-      <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4" />
+      <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4 flex-shrink-0" />
 
       {/* Quote Text */}
-      <p className="text-foreground text-sm sm:text-base leading-relaxed mb-6">
+      <p className="text-foreground text-sm sm:text-base leading-relaxed mb-6 flex-grow line-clamp-3">
         {testimonial.quote}
       </p>
 
       {/* Author */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 flex-shrink-0 mt-auto">
         <img
           src={testimonial.avatar}
           alt={testimonial.name}
