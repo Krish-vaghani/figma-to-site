@@ -86,70 +86,70 @@ const ExitIntentPopup = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-[90%] max-w-md"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-[92%] max-w-md max-h-[90vh] overflow-y-auto"
           >
             <div className="bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative">
               {/* Close Button */}
               <button
                 onClick={() => setIsVisible(false)}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-secondary transition-colors z-10"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full bg-white/20 hover:bg-white/40 transition-colors z-10"
                 aria-label="Close popup"
               >
-                <X className="h-5 w-5 text-muted-foreground" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
               </button>
 
               {/* Decorative Header */}
-              <div className="bg-gradient-to-br from-coral via-rose-400 to-pink-500 p-6 sm:p-8 text-center">
+              <div className="bg-gradient-to-br from-coral via-coral/80 to-coral/60 p-5 sm:p-8 text-center">
                 <motion.div
                   initial={{ rotate: -10 }}
                   animate={{ rotate: [0, -5, 5, 0] }}
                   transition={{ repeat: Infinity, duration: 2 }}
-                  className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full mb-4"
+                  className="inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full mb-3 sm:mb-4"
                 >
-                  <Gift className="h-8 w-8 sm:h-10 sm:w-10 text-white" />
+                  <Gift className="h-6 w-6 sm:h-10 sm:w-10 text-white" />
                 </motion.div>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white font-serif">
+                <h3 className="text-xl sm:text-3xl font-bold text-white font-serif">
                   Wait! Don't Leave Yet
                 </h3>
-                <p className="text-white/90 mt-2 text-sm sm:text-base">
+                <p className="text-white/90 mt-1 sm:mt-2 text-xs sm:text-base">
                   We have a special offer just for you
                 </p>
               </div>
 
               {/* Content */}
-              <div className="p-6 sm:p-8">
-                <div className="text-center mb-6">
-                  <div className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full mb-4">
-                    <span className="text-4xl sm:text-5xl font-bold text-coral">15%</span>
-                    <span className="text-foreground font-medium">OFF</span>
+              <div className="p-5 sm:p-8">
+                <div className="text-center mb-4 sm:mb-6">
+                  <div className="inline-flex items-center gap-2 bg-secondary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4">
+                    <span className="text-3xl sm:text-5xl font-bold text-coral">15%</span>
+                    <span className="text-foreground font-medium text-sm sm:text-base">OFF</span>
                   </div>
-                  <p className="text-muted-foreground text-sm sm:text-base">
+                  <p className="text-muted-foreground text-xs sm:text-base">
                     Subscribe to our newsletter and get an exclusive discount on your first order!
                   </p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                   <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
                     <Input
                       type="email"
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-12 h-12 rounded-full border-border focus:border-coral"
+                      className="pl-10 sm:pl-12 h-10 sm:h-12 text-sm sm:text-base rounded-full border-border focus:border-coral"
                       required
                     />
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-12 rounded-full bg-foreground text-background hover:bg-coral transition-colors font-medium"
+                    className="w-full h-10 sm:h-12 rounded-full bg-foreground text-background hover:bg-coral transition-colors font-medium text-sm sm:text-base"
                   >
                     Get My Discount
-                    <ArrowRight className="h-5 w-5 ml-2" />
+                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
                   </Button>
                 </form>
 
-                <p className="text-center text-muted-foreground text-xs mt-4">
+                <p className="text-center text-muted-foreground text-[10px] sm:text-xs mt-3 sm:mt-4">
                   No spam, ever. Unsubscribe anytime.
                 </p>
               </div>

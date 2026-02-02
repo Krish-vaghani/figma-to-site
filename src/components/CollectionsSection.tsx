@@ -125,7 +125,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
       </div>
 
       {/* Product Info */}
-      <div className="mt-4 sm:mt-5 space-y-2 sm:space-y-3">
+      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3">
         <div className="flex items-start justify-between gap-2">
           <h3 className="font-semibold text-foreground text-base sm:text-lg group-hover:text-coral transition-colors duration-300">
             {product.name}
