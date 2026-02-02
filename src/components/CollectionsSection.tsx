@@ -1,11 +1,12 @@
-import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import ScrollReveal from "./ScrollReveal";
 import ProductQuickView from "./ProductQuickView";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
+import { useInfiniteMarquee } from "@/hooks/use-infinite-marquee";
 import { products, type Product, type BadgeType } from "@/data/products";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
@@ -80,7 +81,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
   return (
     <div 
-      className="flex-shrink-0 w-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300" 
+      className="flex-shrink-0 w-[280px] sm:w-[320px] group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] hover:shadow-[0_20px_50px_-12px_hsl(var(--foreground)/0.2)] transition-all duration-300 select-none" 
       onClick={onClick}
     >
       {/* Image Container */}
@@ -108,9 +109,10 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         <img
           src={product.image}
           alt={product.name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 pointer-events-none"
           loading="lazy"
           decoding="async"
+          draggable={false}
         />
 
         {/* Hover Overlay with Add to Cart */}
@@ -172,119 +174,46 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
   );
 };
 
-const ProductCarousel = ({ 
+const ProductMarquee = ({ 
   productList, 
-  onProductClick 
+  direction = "left",
+  speed = 40,
+  onProductClick
 }: { 
   productList: Product[]; 
+  direction?: "left" | "right";
+  speed?: number;
   onProductClick: (product: Product) => void;
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [visibleCards, setVisibleCards] = useState(1);
+  const { wrapperRef, isDragging, handlers } = useInfiniteMarquee({
+    direction,
+    speedSeconds: speed,
+    sets: 3,
+  });
 
-  // Calculate visible cards based on screen size
-  useEffect(() => {
-    const updateVisibleCards = () => {
-      if (window.innerWidth >= 1024) {
-        setVisibleCards(4);
-      } else if (window.innerWidth >= 640) {
-        setVisibleCards(2);
-      } else {
-        setVisibleCards(1);
-      }
-    };
-
-    updateVisibleCards();
-    window.addEventListener('resize', updateVisibleCards);
-    return () => window.removeEventListener('resize', updateVisibleCards);
-  }, []);
-
-  const maxIndex = Math.max(0, productList.length - visibleCards);
-  const totalDots = maxIndex + 1;
-
-  const scrollToIndex = (index: number) => {
-    if (carouselRef.current) {
-      const cardWidth = carouselRef.current.scrollWidth / productList.length;
-      carouselRef.current.scrollTo({
-        left: cardWidth * index,
-        behavior: 'smooth'
-      });
-      setCurrentIndex(index);
-    }
-  };
-
-  const handleScroll = () => {
-    if (carouselRef.current) {
-      const cardWidth = carouselRef.current.scrollWidth / productList.length;
-      const newIndex = Math.round(carouselRef.current.scrollLeft / cardWidth);
-      setCurrentIndex(Math.min(newIndex, maxIndex));
-    }
-  };
-
-  const goToPrev = () => {
-    const newIndex = Math.max(0, currentIndex - 1);
-    scrollToIndex(newIndex);
-  };
-
-  const goToNext = () => {
-    const newIndex = Math.min(maxIndex, currentIndex + 1);
-    scrollToIndex(newIndex);
-  };
+  // Triple the items for seamless infinite scroll
+  const items = [...productList, ...productList, ...productList];
 
   return (
-    <div className="relative">
-      {/* Navigation Arrows */}
-      <button
-        onClick={goToPrev}
-        disabled={currentIndex === 0}
-        className="absolute left-0 sm:-left-4 top-1/2 -translate-y-1/2 z-20 bg-background/90 backdrop-blur-sm text-foreground p-2 sm:p-3 rounded-full shadow-lg hover:bg-coral hover:text-white transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-background/90 disabled:hover:text-foreground"
-        aria-label="Previous"
-      >
-        <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
-      </button>
+    <div 
+      ref={wrapperRef}
+      className={
+        "relative overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing" +
+        (isDragging ? " select-none" : "")
+      }
+      style={{ scrollBehavior: "auto" }}
+      {...handlers}
+    >
+      {/* Gradient overlays for smooth edges */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
       
-      <button
-        onClick={goToNext}
-        disabled={currentIndex >= maxIndex}
-        className="absolute right-0 sm:-right-4 top-1/2 -translate-y-1/2 z-20 bg-background/90 backdrop-blur-sm text-foreground p-2 sm:p-3 rounded-full shadow-lg hover:bg-coral hover:text-white transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-background/90 disabled:hover:text-foreground"
-        aria-label="Next"
-      >
-        <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
-      </button>
-
-      {/* Carousel Container */}
-      <div 
-        ref={carouselRef}
-        className="overflow-x-auto scrollbar-hide scroll-smooth snap-x snap-mandatory px-8 sm:px-0"
-        onScroll={handleScroll}
-        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-      >
-        <div className="flex gap-4 sm:gap-6">
-          {productList.map((product) => (
-            <div 
-              key={product.id} 
-              className="snap-start flex-shrink-0"
-              style={{ width: `calc((100% - ${(visibleCards - 1) * 24}px) / ${visibleCards})` }}
-            >
-              <ProductCard product={product} onClick={() => onProductClick(product)} />
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Dot Indicators */}
-      <div className="flex justify-center gap-2 mt-6 sm:mt-8">
-        {Array.from({ length: totalDots }).map((_, index) => (
-          <button
-            key={index}
-            onClick={() => scrollToIndex(index)}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
-              currentIndex === index 
-                ? "w-8 bg-coral" 
-                : "w-2.5 bg-muted-foreground/30 hover:bg-muted-foreground/50"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
+      <div className="flex gap-4 sm:gap-6 py-2 w-max px-4">
+        {items.map((product, index) => (
+          <ProductCard 
+            key={`${direction}-${product.id}-${index}`} 
+            product={product} 
+            onClick={() => onProductClick(product)} 
           />
         ))}
       </div>
@@ -294,40 +223,40 @@ const ProductCarousel = ({
 
 const CollectionsSection = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
-  // Show first 4 products for collections
+  // Only show first 4 products for collections
   const collectionProducts = products.slice(0, 4);
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background overflow-hidden">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-        {/* Section Header */}
-        <ScrollReveal>
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
-              Our Best <span className="text-coral">Collections</span>
-            </h2>
-            <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
-              Discover Our Most Loved Purse Collections, Designed To Match Every Mood,
-              Outfit, And Occasion.
-            </p>
-          </div>
-        </ScrollReveal>
+      {/* Section Header */}
+      <ScrollReveal>
+        <div className="text-center mb-8 sm:mb-12 px-4">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
+            Our Best <span className="text-coral">Collections</span>
+          </h2>
+          <p className="text-muted-foreground text-base sm:text-lg mt-3 sm:mt-4 max-w-2xl mx-auto">
+            Discover Our Most Loved Purse Collections, Designed To Match Every Mood,
+            Outfit, And Occasion.
+          </p>
+        </div>
+      </ScrollReveal>
 
-        {/* Products Carousel */}
-        <ProductCarousel 
-          productList={collectionProducts} 
-          onProductClick={setSelectedProduct} 
+      {/* Products Marquee */}
+      <ProductMarquee 
+        productList={collectionProducts} 
+        direction="left" 
+        speed={45}
+        onProductClick={setSelectedProduct} 
+      />
+
+      {/* Quick View Modal */}
+      {selectedProduct && (
+        <ProductQuickView
+          product={selectedProduct}
+          isOpen={!!selectedProduct}
+          onClose={() => setSelectedProduct(null)}
         />
-
-        {/* Quick View Modal */}
-        {selectedProduct && (
-          <ProductQuickView
-            product={selectedProduct}
-            isOpen={!!selectedProduct}
-            onClose={() => setSelectedProduct(null)}
-          />
-        )}
-      </div>
+      )}
     </section>
   );
 };
