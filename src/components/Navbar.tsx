@@ -17,7 +17,7 @@ const navLinks = [
   { label: "Shop", href: "#" },
   { label: "Purses", href: "/purses" },
   { label: "Jewellery", href: "#" },
-  { label: "About Us", href: "#" },
+  { label: "About Us", href: "/about" },
   { label: "Sale", href: "#" },
   { label: "Contact Us", href: "#" },
 ];
