@@ -1,7 +1,6 @@
 import { Heart, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { useCart } from "@/contexts/CartContext";
 import type { Product } from "@/data/products";
 
 interface ShopProductCardProps {
@@ -15,17 +14,17 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
   return (
     <div
-      className="group cursor-pointer bg-card rounded-2xl overflow-hidden transition-all duration-300"
+      className="group cursor-pointer bg-card rounded-2xl overflow-hidden shadow-sm transition-all duration-300"
       onClick={onClick}
     >
       {/* Image Container */}
-      <div className="relative overflow-hidden bg-secondary/30 aspect-square">
+      <div className="relative overflow-hidden bg-secondary/30 aspect-square rounded-t-2xl">
         {/* Wishlist Button */}
         <motion.button
-          className={`absolute top-3 right-3 z-10 rounded-full p-2.5 transition-all duration-300 backdrop-blur-sm ${
+          className={`absolute top-3 right-3 z-10 rounded-full p-2.5 transition-all duration-300 ${
             isWishlisted
               ? "bg-coral text-white"
-              : "bg-white/80 text-muted-foreground hover:bg-white"
+              : "bg-foreground/40 text-white hover:bg-foreground/60"
           }`}
           onClick={(e) => {
             e.stopPropagation();
@@ -51,31 +50,37 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
       {/* Product Info */}
       <div className="p-4 space-y-2">
-        <div className="flex items-start justify-between gap-2">
+        {/* Name and Colors Row */}
+        <div className="flex items-center justify-between gap-2">
           <h3 className="font-semibold text-foreground text-base group-hover:text-coral transition-colors duration-300">
             {product.name}
           </h3>
           {/* Color Options */}
-          <div className="flex gap-1 flex-shrink-0">
+          <div className="flex gap-1.5 flex-shrink-0">
             {product.colors.map((color, index) => (
               <span
                 key={index}
-                className="w-4 h-4 rounded-full border border-border"
+                className="w-5 h-5 rounded-full border border-border"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
         </div>
 
+        {/* Description */}
         <p className="text-muted-foreground text-sm">{product.description}</p>
 
+        {/* Divider */}
+        <div className="border-t border-border my-2" />
+
+        {/* Price and Rating Row */}
         <div className="flex items-center justify-between pt-1">
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-bold text-foreground">
               ${product.price.toLocaleString()}.00
             </span>
-            <span className="text-muted-foreground line-through text-xs">
+            <span className="text-muted-foreground line-through text-sm">
               ${product.originalPrice.toLocaleString()}.00
             </span>
           </div>
@@ -83,7 +88,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           {/* Rating */}
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-coral text-coral" />
-            <span className="text-muted-foreground text-xs">
+            <span className="text-muted-foreground text-sm">
               {product.rating}({product.reviews})
             </span>
           </div>
