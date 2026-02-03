@@ -1,12 +1,11 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import AnnouncementBar from "@/components/AnnouncementBar";
 import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import heroBackground from "@/assets/hero-background.png";
+import shopBackground from "@/assets/shop-background.png";
 import instagramBackground from "@/assets/instagram-background.png";
 import heroProduct from "@/assets/hero-product.jpg";
 import product1 from "@/assets/product-1.png";
@@ -53,55 +52,34 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <AnnouncementBar />
-      
-      {/* Header with Hero Background */}
+      {/* Header with Shop Background - same as Purses page */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden bg-cover bg-right sm:bg-top"
         style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "auto 100%",
-          backgroundPosition: "left center",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: `url(${shopBackground})`,
         }}
       >
-        <Navbar className="bg-transparent" />
-        
-        {/* Hero Section */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-12 sm:py-16 lg:py-20">
-          <ScrollReveal>
-            <div className="text-center">
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
-                About Us
-              </h1>
-              <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                <Link to="/" className="hover:text-coral transition-colors">Home</Link>
-                <span>/</span>
-                <span className="text-foreground">About Us</span>
-              </div>
-            </div>
-          </ScrollReveal>
+        {/* Soft overlay for readability */}
+        <div className="absolute inset-0 bg-background/50" aria-hidden="true" />
+
+        <div className="relative z-10">
+          <Navbar className="bg-transparent" />
           
-          {/* Decorative Hero Image */}
-          <ScrollReveal delay={0.2}>
-            <div className="flex justify-center mt-8 sm:mt-12">
-              <div className="relative w-48 h-48 sm:w-64 sm:h-64 lg:w-80 lg:h-80">
-                <div className="absolute inset-0 rounded-full overflow-hidden border-4 border-coral/20">
-                  <img 
-                    src={heroProduct} 
-                    alt="Featured purse" 
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-                {/* Decorative leaf elements */}
-                <div className="absolute -left-8 -top-4 w-16 h-16 opacity-30">
-                  <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M50 0C50 27.6 27.6 50 0 50C27.6 50 50 72.4 50 100C50 72.4 72.4 50 100 50C72.4 50 50 27.6 50 0Z" fill="hsl(var(--coral))"/>
-                  </svg>
+          {/* Hero Section */}
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-12 sm:py-16 lg:py-20">
+            <ScrollReveal>
+              <div className="text-center">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
+                  About Us
+                </h1>
+                <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+                  <Link to="/" className="hover:text-coral transition-colors">Home</Link>
+                  <span>/</span>
+                  <span className="text-foreground">About Us</span>
                 </div>
               </div>
-            </div>
-          </ScrollReveal>
+            </ScrollReveal>
+          </div>
         </div>
       </div>
 
@@ -198,11 +176,11 @@ const AboutUs = () => {
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Instagram Images */}
-            <div className="flex gap-4 sm:gap-6 flex-1">
+            {/* Instagram Images - Single column on mobile, row on larger screens */}
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 flex-1 w-full sm:w-auto">
               {instagramImages.map((image, index) => (
                 <ScrollReveal key={index} variant="fadeUp" delay={index * 0.1}>
-                  <div className="w-28 h-36 sm:w-40 sm:h-52 lg:w-48 lg:h-64 rounded-2xl overflow-hidden shadow-lg">
+                  <div className="w-full h-64 sm:w-40 sm:h-52 lg:w-48 lg:h-64 rounded-2xl overflow-hidden shadow-lg">
                     <img 
                       src={image} 
                       alt={`Instagram post ${index + 1}`}
