@@ -78,7 +78,7 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div 
-      className="flex-shrink-0 w-[320px] sm:w-[380px] h-[240px] sm:h-[260px] rounded-2xl p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col bg-card"
+      className="flex-shrink-0 w-[320px] sm:w-[380px] h-[240px] sm:h-[260px] rounded-2xl p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col backdrop-blur-[30px] bg-white/[0.08] shadow-[0_8px_32px_0_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.1)]"
     >
       {/* Quote Icon */}
       <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4 flex-shrink-0" />
