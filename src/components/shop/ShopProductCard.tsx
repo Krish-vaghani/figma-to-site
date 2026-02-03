@@ -14,7 +14,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
   return (
     <div
-      className="group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-[30px] bg-white/[0.08] shadow-[0_8px_32px_0_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+      className="group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-[30px] bg-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.12),0_4px_16px_0_rgba(0,0,0,0.08),inset_0_0_0_1px_rgba(255,255,255,0.1)]"
       onClick={onClick}
     >
       {/* Image Container */}
