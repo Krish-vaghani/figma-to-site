@@ -1,16 +1,34 @@
 import { Heart, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
-import type { Product } from "@/data/products";
+import type { Product, BadgeType } from "@/data/products";
 
 interface ShopProductCardProps {
   product: Product;
   onClick: () => void;
 }
 
+const getBadgeConfig = (badge: BadgeType) => {
+  switch (badge) {
+    case "bestseller":
+      return { label: "Best Sellers", bgClass: "bg-coral" };
+    case "trending":
+      return { label: "Trending", bgClass: "bg-coral" };
+    case "new":
+      return { label: "New Arrivals", bgClass: "bg-coral" };
+    case "hot":
+      return { label: "Hot", bgClass: "bg-coral" };
+    case "limited":
+      return { label: "Limited", bgClass: "bg-foreground" };
+    default:
+      return null;
+  }
+};
+
 const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
+  const badgeConfig = product.badge ? getBadgeConfig(product.badge) : null;
 
   return (
     <div
@@ -19,6 +37,13 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
     >
       {/* Image Container */}
       <div className="relative overflow-hidden bg-secondary/30 aspect-square rounded-t-2xl">
+        {/* Product Badge */}
+        {badgeConfig && (
+          <div className={`absolute top-3 left-3 z-10 ${badgeConfig.bgClass} text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-md`}>
+            {badgeConfig.label}
+          </div>
+        )}
+
         {/* Wishlist Button */}
         <motion.button
           className={`absolute top-3 right-3 z-10 rounded-full p-2.5 transition-all duration-300 ${
