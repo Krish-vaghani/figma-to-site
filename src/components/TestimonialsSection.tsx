@@ -78,7 +78,12 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div 
-      className="flex-shrink-0 w-[320px] sm:w-[380px] h-[240px] sm:h-[260px] rounded-2xl p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col backdrop-blur-[30px] bg-white/[0.08] shadow-[0_8px_32px_0_rgba(255,255,255,0.1),inset_0_0_0_1px_rgba(255,255,255,0.1)]"
+      className="flex-shrink-0 w-[320px] sm:w-[380px] h-[240px] sm:h-[260px] rounded-2xl p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col"
+      style={{
+        backgroundImage: `url(${testimonialCardBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       {/* Quote Icon */}
       <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4 flex-shrink-0" />
@@ -156,14 +161,7 @@ const MarqueeRow = ({
 
 const TestimonialsSection = () => {
   return (
-    <section 
-      className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 overflow-hidden"
-      style={{
-        backgroundImage: `url(${testimonialCardBg})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
-    >
+    <section className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 bg-secondary/30 overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
         <div className="text-center mb-8 sm:mb-12 px-4">
