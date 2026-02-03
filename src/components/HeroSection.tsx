@@ -2,7 +2,6 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import heroBackground from "@/assets/hero-background.png";
 import heroProduct from "@/assets/hero-product.jpg";
 import avatar from "@/assets/avatar.jpg";
 
@@ -20,22 +19,6 @@ const HeroSection = () => {
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Background Pattern - Full image with parallax */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        initial={{ scale: 1.1, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 1.2, ease: "easeOut" }}
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "auto 100%",
-          backgroundPosition: "left center",
-          backgroundRepeat: "no-repeat",
-          y: backgroundY,
-          scale: backgroundScale,
-        }}
-      />
-
       {/* Subtle gradient overlay for better text readability */}
       <motion.div 
         className="absolute inset-0 z-[1] bg-gradient-to-r from-background/50 via-background/20 to-transparent lg:bg-gradient-to-r lg:from-background/50 lg:via-background/20 lg:to-transparent"

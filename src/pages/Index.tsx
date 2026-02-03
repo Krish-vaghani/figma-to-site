@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import heroBackground from "@/assets/hero-background.png";
 
 // Lazy load below-the-fold sections for faster initial paint
 const CollectionsSection = lazy(() => import("@/components/CollectionsSection"));
@@ -30,13 +31,25 @@ const Index = () => {
       </a>
       
       <AnnouncementBar />
-      <Navbar />
       
-      <main id="main-content">
+      {/* Header area with shared hero background (Navbar + HeroSection) */}
+      <div
+        className="relative overflow-hidden"
+        style={{
+          backgroundImage: `url(${heroBackground})`,
+          backgroundSize: "auto 100%",
+          backgroundPosition: "left center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <Navbar className="bg-transparent" />
+        
         <ErrorBoundary section="Hero">
           <HeroSection />
         </ErrorBoundary>
-        
+      </div>
+      
+      <main id="main-content">
         <Suspense fallback={<SectionLoader />}>
           <ErrorBoundary section="Collections">
             <CollectionsSection />
