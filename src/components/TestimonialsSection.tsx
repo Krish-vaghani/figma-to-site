@@ -78,7 +78,12 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div 
-      className="flex-shrink-0 w-[300px] sm:w-[340px] rounded-[40px] p-6 sm:p-8 select-none [&_*]:no-underline flex flex-col overflow-hidden bg-card"
+      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-[40px] p-6 sm:p-8 select-none [&_*]:no-underline flex flex-col overflow-hidden"
+      style={{
+        backgroundImage: `url(${testimonialCardBg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
     >
       {/* Quote Icon */}
       <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4 flex-shrink-0" />
