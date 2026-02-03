@@ -93,12 +93,12 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         {/* Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
-        {/* Wishlist Button - Transparent with blue tint */}
+        {/* Wishlist Button - White icon, transparent when not active */}
         <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 ${
             isWishlisted 
               ? "bg-coral text-white" 
-              : "bg-blue-500/20 text-white border border-white/30"
+              : "bg-foreground/30 text-white"
           }`}
           onClick={(e) => {
             e.stopPropagation();
