@@ -118,38 +118,56 @@ const Footer = () => {
 
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>
-            <div className="relative overflow-hidden bg-background rounded-2xl p-4 sm:p-5 lg:p-6 shadow-lg">
-              {/* Animated border line */}
-              <div className="absolute inset-0 rounded-2xl overflow-hidden">
-                <div 
-                  className="absolute inset-[-2px] animate-border-spin"
-                  style={{
-                    background: 'conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 45deg, transparent 90deg)',
-                  }}
-                />
-                <div className="absolute inset-[2px] bg-background rounded-[14px]" />
-              </div>
-              
-              {/* Content */}
-              <div className="relative z-10">
+            <div className="relative rounded-2xl p-[2px] overflow-hidden shadow-lg">
+              {/* Animated border line (subtle, doesn't overlap content) */}
+              <div
+                className="absolute inset-0 animate-border-spin pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  background:
+                    "conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 55deg, transparent 120deg)",
+                  opacity: 0.9,
+                }}
+              />
+
+              {/* Card surface */}
+              <div className="relative rounded-[14px] bg-background p-4 sm:p-5 lg:p-6">
                 <div className="flex items-center gap-2 mb-2 sm:mb-3">
                   <span className="text-lg sm:text-xl">🇮🇳</span>
                   <span className="text-xs sm:text-sm text-muted-foreground">India</span>
                 </div>
-                <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">Contact Us</h4>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                  <a href="mailto:Support@Yourbrand.Com" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm min-w-0">
+
+                <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">
+                  Contact Us
+                </h4>
+
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 min-w-0">
+                  <a
+                    href="mailto:Support@Yourbrand.Com"
+                    title="Support@Yourbrand.Com"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm min-w-0"
+                  >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span className="truncate">Support@Yourbrand.Com</span>
+                    <span className="leading-tight break-words sm:truncate">
+                      Support@Yourbrand.Com
+                    </span>
                   </a>
+
                   <div className="hidden sm:block h-6 w-px bg-border/50 flex-shrink-0" />
-                  <a href="tel:+919XXXXXXXXX" className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm min-w-0">
+
+                  <a
+                    href="tel:+919XXXXXXXXX"
+                    title="+91 9XXXXXXXXX"
+                    className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm min-w-0"
+                  >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span className="truncate">+91 9XXXXXXXXX</span>
+                    <span className="leading-tight break-words sm:truncate">
+                      +91 9XXXXXXXXX
+                    </span>
                   </a>
                 </div>
               </div>

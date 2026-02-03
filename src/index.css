@@ -171,7 +171,7 @@ All colors MUST be HSL.
   }
 
   .animate-border-spin {
-    animation: border-spin 4s linear infinite;
+    animation: border-spin 6s linear infinite;
     transform-origin: center center;
   }
 }
