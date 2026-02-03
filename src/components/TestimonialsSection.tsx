@@ -173,7 +173,7 @@ const TestimonialsSection = () => {
       {/* Scrolling Rows */}
       <div className="space-y-2">
         <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35} />
-        <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={40} />
+        <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={35} />
       </div>
 
       {/* Custom CSS for smooth marquee */}
