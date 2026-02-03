@@ -149,7 +149,7 @@ const MarqueeRow = ({
       <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background/50 to-transparent z-10 pointer-events-none" />
       
       <div
-        className="flex gap-6 py-2 w-max"
+        className="flex gap-4 py-2 w-max"
       >
         {items.map((testimonial, index) => (
           <TestimonialCard key={`${direction}-${testimonial.id}-${index}`} testimonial={testimonial} />
@@ -176,7 +176,7 @@ const TestimonialsSection = () => {
       </ScrollReveal>
 
       {/* Scrolling Rows */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35} />
         <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={40} />
       </div>
