@@ -159,4 +159,18 @@ All colors MUST be HSL.
   .skip-link:focus {
     top: 0;
   }
+
+  /* Animated border spin for contact card */
+  @keyframes border-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .animate-border-spin {
+    animation: border-spin 3s linear infinite;
+  }
 }
