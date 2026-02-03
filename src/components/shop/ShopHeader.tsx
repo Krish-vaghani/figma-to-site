@@ -1,9 +1,17 @@
 import { Link } from "react-router-dom";
 import leafDecoration from "@/assets/leaf-decoration.svg";
+import shopBackground from "@/assets/shop-background.png";
 
 const ShopHeader = () => {
   return (
-    <div className="relative bg-background overflow-hidden">
+    <div 
+      className="relative overflow-hidden"
+      style={{ 
+        backgroundImage: `url(${shopBackground})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
       {/* Decorative leaf patterns */}
       <img
         src={leafDecoration}
