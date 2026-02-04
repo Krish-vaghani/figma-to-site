@@ -99,13 +99,14 @@ const HeroSection = () => {
               />
 
               {/* Mobile Product Info Card - Centered half on image, half below */}
-              <motion.div 
-                className="absolute bottom-0 left-0 right-0 translate-y-1/2 z-10 px-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8, duration: 0.5 }}
-              >
-                <div className="bg-background rounded-2xl shadow-lg p-4">
+              {/* Note: Tailwind translate classes must not be on a motion.div because Framer Motion controls transform */}
+              <div className="absolute bottom-0 left-0 right-0 translate-y-1/2 z-10 px-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.5 }}
+                  className="bg-background rounded-2xl shadow-lg p-4"
+                >
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="text-lg font-semibold text-foreground">Aurora Mini Purse</h3>
                     <button className="flex items-center gap-1 text-coral text-sm font-medium group">
@@ -125,8 +126,8 @@ const HeroSection = () => {
                       <span className="text-xs text-muted-foreground">(125k Reviews)</span>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </div>
             </div>
           </motion.div>
         </div>
