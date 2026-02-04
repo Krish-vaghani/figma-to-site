@@ -19,17 +19,6 @@ const HeroSection = () => {
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Subtle gradient overlay for better text readability */}
-      <motion.div 
-        className="absolute inset-0 z-[1] bg-gradient-to-r from-background/50 via-background/20 to-transparent lg:bg-gradient-to-r lg:from-background/50 lg:via-background/20 lg:to-transparent"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        style={{ opacity: overlayOpacity }}
-      />
-
-      {/* Mobile overlay - lighter to show background */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-background/40 via-background/50 to-background/70 lg:hidden" />
 
       {/* ===== MOBILE LAYOUT ===== */}
       <div className="relative z-10 lg:hidden">
