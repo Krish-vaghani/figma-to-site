@@ -84,8 +84,8 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
   };
 
   return (
-    <div 
-      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col" 
+    <div
+      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col"
       onClick={onClick}
     >
       {/* Image Container */}
@@ -94,12 +94,11 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         {product.badge && <BadgeComponent type={product.badge} />}
 
         {/* Wishlist Button - White icon, transparent when not active */}
-        <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 ${
-            isWishlisted 
-              ? "bg-coral text-white" 
+        <motion.button
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 ${isWishlisted
+              ? "bg-coral text-white"
               : "bg-foreground/30 text-white"
-          }`}
+            }`}
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist(product.id, product.name);
@@ -167,7 +166,14 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
   );
 };
 
-const CollectionsSection = () => {
+import type { LandingSection } from "@/store/api";
+
+interface CollectionsSectionProps {
+  data?: LandingSection;
+  isLoading?: boolean;
+}
+
+const CollectionsSection = ({ data, isLoading }: CollectionsSectionProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   // Only show first 4 products for collections
   const collectionProducts = products.slice(0, 4);
@@ -191,10 +197,10 @@ const CollectionsSection = () => {
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto">
         <ProductCarousel autoplayDelay={4000}>
           {collectionProducts.map((product) => (
-            <ProductCard 
-              key={product.id} 
-              product={product} 
-              onClick={() => setSelectedProduct(product)} 
+            <ProductCard
+              key={product.id}
+              product={product}
+              onClick={() => setSelectedProduct(product)}
             />
           ))}
         </ProductCarousel>

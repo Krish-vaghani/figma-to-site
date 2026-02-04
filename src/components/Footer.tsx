@@ -1,4 +1,4 @@
-import { ArrowRight, Mail, Phone } from "lucide-react";
+import { ArrowRight, Mail, Phone, MapPin, Instagram, Facebook, Twitter, Youtube, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
 import ScrollReveal from "./ScrollReveal";
@@ -6,68 +6,86 @@ import footerBackground from "@/assets/footer-background.png";
 
 const Footer = () => {
   const exploreLinks = [
-    { name: "Home", href: "#" },
-    { name: "Jewellery", href: "#" },
-    { name: "Sale", href: "#" },
-    { name: "Purses", href: "#" },
-    { name: "About Us", href: "#" },
-    { name: "Contact Us", href: "#" },
+    { name: "Home", href: "/" },
+    { name: "Purses", href: "/purses" },
+    { name: "About Us", href: "/about" },
+    { name: "Contact Us", href: "#contact" },
   ];
 
   const categoryLinks = [
     { name: "Handbags", href: "#" },
     { name: "Tote Bags", href: "#" },
-    { name: "Wallets", href: "#" },
     { name: "Sling Bags", href: "#" },
     { name: "Clutches", href: "#" },
+    { name: "Wallets", href: "#" },
     { name: "Gift Sets", href: "#" },
   ];
 
+  const socialLinks = [
+    { name: "Instagram", icon: Instagram, href: "#" },
+    { name: "Facebook", icon: Facebook, href: "#" },
+    { name: "Twitter", icon: Twitter, href: "#" },
+    { name: "YouTube", icon: Youtube, href: "#" },
+  ];
+
   return (
-    <footer
-      className="relative overflow-hidden"
-      style={{
-        backgroundImage: `url(${footerBackground})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
-    >
-      {/* Decorative Dots - Hidden on mobile for cleaner look */}
-      <div className="absolute inset-0 pointer-events-none hidden sm:block">
-        <div className="absolute top-1/4 left-[15%] w-2 h-2 bg-coral rounded-full" />
-        <div className="absolute top-[60%] left-[8%] w-2 h-2 bg-coral rounded-full" />
-        <div className="absolute top-1/3 right-[15%] w-2 h-2 bg-coral rounded-full" />
-        <div className="absolute top-[65%] right-[5%] w-2 h-2 bg-coral rounded-full" />
-        {/* Decorative lines */}
-        <svg className="absolute inset-0 w-full h-full opacity-20" xmlns="http://www.w3.org/2000/svg">
-          <line x1="10%" y1="30%" x2="25%" y2="50%" stroke="hsl(var(--coral))" strokeWidth="1" strokeOpacity="0.3" />
-          <line x1="75%" y1="25%" x2="90%" y2="45%" stroke="hsl(var(--coral))" strokeWidth="1" strokeOpacity="0.3" />
-          <line x1="85%" y1="55%" x2="95%" y2="70%" stroke="hsl(var(--coral))" strokeWidth="1" strokeOpacity="0.3" />
-        </svg>
+    <footer className="relative overflow-hidden bg-gradient-to-b from-background via-background to-secondary/20">
+      {/* Background Pattern */}
+      <div
+        className="absolute inset-0 opacity-30"
+        style={{
+          backgroundImage: `url(${footerBackground})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+
+      {/* Subtle gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background/90" />
+
+      {/* Decorative Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {/* Gradient orb */}
+        <div className="absolute -top-40 -right-40 w-96 h-96 bg-coral/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 -left-20 w-64 h-64 bg-coral/5 rounded-full blur-3xl" />
+
+        {/* Decorative dots */}
+        <div className="hidden lg:block">
+          <div className="absolute top-32 left-[12%] w-2 h-2 bg-coral/40 rounded-full" />
+          <div className="absolute top-64 left-[6%] w-1.5 h-1.5 bg-coral/30 rounded-full" />
+          <div className="absolute top-48 right-[10%] w-2 h-2 bg-coral/40 rounded-full" />
+          <div className="absolute top-[70%] right-[4%] w-1.5 h-1.5 bg-coral/30 rounded-full" />
+        </div>
       </div>
 
-      {/* Hero Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pt-12 sm:pt-16 lg:pt-24 pb-10 sm:pb-12 lg:pb-16 relative z-10">
+      {/* Hero CTA Section */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl pt-16 sm:pt-20 lg:pt-28 pb-12 sm:pb-16 relative z-10">
         <ScrollReveal>
-          <div className="text-center max-w-2xl mx-auto px-2">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-3 sm:mb-4">
-              Crafted With <span className="text-coral">Elegance & Care</span>
+          <div className="text-center max-w-2xl mx-auto">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground mb-4 leading-tight">
+              Crafted With{" "}
+              <span className="text-coral relative">
+                Elegance & Care
+                <svg className="absolute -bottom-2 left-0 w-full" viewBox="0 0 200 8" fill="none">
+                  <path d="M2 6C50 2 150 2 198 6" stroke="hsl(var(--coral))" strokeWidth="3" strokeLinecap="round" strokeOpacity="0.4" />
+                </svg>
+              </span>
             </h2>
-            <p className="text-muted-foreground text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed">
-              Thoughtfully Designed Purses That Blend Style, Quality, And Everyday Comfort —Crafted To Elevate Your Look
-              With Confidence.
+            <p className="text-muted-foreground text-base sm:text-lg mb-8 leading-relaxed max-w-xl mx-auto">
+              Thoughtfully designed purses that blend style, quality, and everyday comfort — crafted to elevate your look with confidence.
             </p>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Button
                 variant="outline"
-                className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base"
+                className="rounded-full px-8 py-6 border-2 border-foreground/20 hover:border-foreground hover:bg-foreground hover:text-background transition-all duration-300 font-medium text-sm group"
               >
-                Subscribe & Save / Join Our List
+                Subscribe & Save
+                <span className="ml-2 opacity-0 group-hover:opacity-100 transition-opacity">✨</span>
               </Button>
-              <Button className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base gap-2 group">
-                Shop Now
+              <Button className="rounded-full px-8 py-6 bg-foreground text-background hover:bg-coral hover:scale-105 transition-all duration-300 font-medium text-sm gap-2 group shadow-lg hover:shadow-xl">
+                Shop Collection
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
@@ -75,95 +93,140 @@ const Footer = () => {
         </ScrollReveal>
       </div>
 
-      {/* Links Section */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pb-8 sm:pb-10 lg:pb-12 relative z-10">
-        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-3 lg:gap-12">
+      {/* Divider with gradient */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl relative z-10">
+        <div className="h-px bg-gradient-to-r from-transparent via-border/60 to-transparent" />
+      </div>
+
+      {/* Main Footer Content */}
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-12 sm:py-16 lg:py-20 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+
           {/* Explore Column */}
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div>
-              <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-6">
                 Explore
               </h4>
-              <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
+              <ul className="space-y-3">
                 {exploreLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className="text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm lg:text-base"
-                  >
-                    {link.name}
-                  </a>
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm inline-flex items-center gap-2 group"
+                    >
+                      <span className="w-0 group-hover:w-3 h-px bg-coral transition-all duration-300" />
+                      {link.name}
+                    </a>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </ScrollReveal>
 
-          {/* Categories Column */}
+          {/* Collections Column */}
+          <ScrollReveal variant="fadeUp" delay={0.15}>
+            <div>
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-6">
+                Collections
+              </h4>
+              <ul className="space-y-3">
+                {categoryLinks.map((link) => (
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      className="text-muted-foreground hover:text-foreground transition-colors text-sm inline-flex items-center gap-2 group"
+                    >
+                      <span className="w-0 group-hover:w-3 h-px bg-coral transition-all duration-300" />
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </ScrollReveal>
+
+          {/* Contact Column */}
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div>
-              <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">
-                Categories / Collections
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-6">
+                Get In Touch
               </h4>
-              <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
-                {categoryLinks.map((link) => (
+              <ul className="space-y-4">
+                <li>
                   <a
-                    key={link.name}
-                    href={link.href}
-                    className="text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm lg:text-base"
+                    href="mailto:support@yourbrand.com"
+                    className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors group"
                   >
-                    {link.name}
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-coral/20 to-coral/5 flex items-center justify-center flex-shrink-0 group-hover:from-coral/30 group-hover:to-coral/10 transition-all">
+                      <Mail className="h-4 w-4 text-coral" />
+                    </div>
+                    <div className="pt-1">
+                      <span className="text-sm block leading-tight">support@yourbrand.com</span>
+                    </div>
                   </a>
-                ))}
-              </div>
+                </li>
+                <li>
+                  <a
+                    href="tel:+919876543210"
+                    className="flex items-start gap-3 text-muted-foreground hover:text-foreground transition-colors group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-coral/20 to-coral/5 flex items-center justify-center flex-shrink-0 group-hover:from-coral/30 group-hover:to-coral/10 transition-all">
+                      <Phone className="h-4 w-4 text-coral" />
+                    </div>
+                    <div className="pt-1">
+                      <span className="text-sm block leading-tight">+91 98765 43210</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <div className="flex items-start gap-3 text-muted-foreground">
+                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-coral/20 to-coral/5 flex items-center justify-center flex-shrink-0">
+                      <MapPin className="h-4 w-4 text-coral" />
+                    </div>
+                    <div className="pt-1">
+                      <span className="text-sm block leading-tight">Mumbai, India 🇮🇳</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
             </div>
           </ScrollReveal>
 
-          {/* Contact Card */}
-          <ScrollReveal variant="fadeUp" delay={0.3}>
-            <div className="relative overflow-hidden bg-background rounded-2xl p-4 sm:p-5 lg:p-6 shadow-lg">
-              {/* Animated border line */}
-              <div className="absolute inset-0 rounded-2xl">
-                <div
-                  className="absolute inset-0 rounded-2xl animate-border-spin"
-                  style={{
-                    background:
-                      "conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 60deg, transparent 120deg)",
-                    padding: "2px",
-                  }}
+          {/* Newsletter Column */}
+          <ScrollReveal variant="fadeUp" delay={0.25}>
+            <div>
+              <h4 className="text-sm font-semibold text-foreground uppercase tracking-wider mb-6">
+                Newsletter
+              </h4>
+              <p className="text-muted-foreground text-sm mb-5 leading-relaxed">
+                Get exclusive offers, new arrivals & styling tips delivered to your inbox.
+              </p>
+
+              {/* Newsletter Input */}
+              <div className="relative mb-6">
+                <input
+                  type="email"
+                  placeholder="Your email address"
+                  className="w-full px-4 py-3 pr-12 rounded-xl bg-foreground/[0.03] border border-border/50 text-sm placeholder:text-muted-foreground/50 focus:outline-none focus:border-coral/50 focus:bg-foreground/[0.05] transition-all"
                 />
-                <div className="absolute inset-[2px] bg-background rounded-[14px]" />
+                <button className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg bg-coral hover:bg-coral/90 flex items-center justify-center transition-colors group">
+                  <Send className="h-4 w-4 text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
               </div>
 
-              {/* Content */}
-              <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
-                  <span className="text-lg sm:text-xl">🇮🇳</span>
-                  <span className="text-xs sm:text-sm text-muted-foreground">India</span>
-                </div>
-                <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">
-                  Contact Us
-                </h4>
-                <div className="flex items-center gap-4">
+              {/* Social Links */}
+              <div className="flex items-center gap-2">
+                {socialLinks.map((social) => (
                   <a
-                    href="mailto:Support@Yourbrand.Com"
-                    className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
+                    key={social.name}
+                    href={social.href}
+                    className="w-10 h-10 rounded-xl bg-foreground/[0.03] border border-border/40 flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-coral/40 hover:bg-coral/5 transition-all duration-300"
+                    aria-label={social.name}
                   >
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-                      <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
-                    </div>
-                    <span>Support@Yourbrand.Com</span>
+                    <social.icon className="h-4 w-4" />
                   </a>
-                  <div className="h-6 w-px bg-border/50" />
-                  <a
-                    href="tel:+919XXXXXXXXX"
-                    className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
-                  >
-                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-                      <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
-                    </div>
-                    <span>+91 9XXXXXXXXX</span>
-                  </a>
-                </div>
+                ))}
               </div>
             </div>
           </ScrollReveal>
@@ -171,37 +234,40 @@ const Footer = () => {
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-border/50 bg-background/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-4 sm:py-5 lg:py-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            {/* Logo & Compliance */}
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 lg:gap-6">
-              <div className="flex items-center gap-2">
-                <img src={logo} alt="Welcome Logo" className="h-7 sm:h-8 lg:h-10" />
-              </div>
-              <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
-                <span className="font-medium">Privacy & Compliance :</span>
-                <span>Secure Payments</span>
-                <span>•</span>
-                <span>Easy Returns</span>
-                <span>•</span>
-                <span>Customer-First Support</span>
+      <div className="border-t border-border/30 bg-foreground/[0.015] backdrop-blur-sm relative z-10">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl py-6">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+
+            {/* Left Side - Logo & Trust */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
+              <img src={logo} alt="Welcome" className="h-9" />
+
+              <div className="hidden sm:block h-8 w-px bg-border/40" />
+
+              <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Secure Payments
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                  Easy Returns
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-coral" />
+                  Premium Quality
+                </span>
               </div>
             </div>
 
-            {/* Copyright & Legal Links */}
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 lg:gap-6 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
-              <span>© 2026 Your Brand Name. All Rights Reserved.</span>
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                <a href="#" className="hover:text-coral transition-colors">
-                  Privacy Policy
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
-                  Terms & Conditions
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
-                  Return Policy
-                </a>
+            {/* Right Side - Copyright & Links */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 text-xs text-muted-foreground">
+              <span>© 2026 Your Brand. All rights reserved.</span>
+              <div className="hidden sm:block h-4 w-px bg-border/40" />
+              <div className="flex items-center gap-4">
+                <a href="#" className="hover:text-foreground transition-colors">Privacy</a>
+                <a href="#" className="hover:text-foreground transition-colors">Terms</a>
+                <a href="#" className="hover:text-foreground transition-colors">Refunds</a>
               </div>
             </div>
           </div>

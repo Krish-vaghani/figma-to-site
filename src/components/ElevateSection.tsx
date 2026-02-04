@@ -4,8 +4,14 @@ import elevate2 from "@/assets/elevate-2.png";
 import elevate3 from "@/assets/elevate-3.png";
 import elevate4 from "@/assets/elevate-4.png";
 import ScrollReveal from "./ScrollReveal";
+import type { LandingSection } from "@/store/api";
 
-const ElevateSection = () => {
+interface ElevateSectionProps {
+  data?: LandingSection;
+  isLoading?: boolean;
+}
+
+const ElevateSection = ({ data, isLoading }: ElevateSectionProps) => {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
