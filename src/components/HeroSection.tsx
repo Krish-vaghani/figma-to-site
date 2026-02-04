@@ -4,10 +4,16 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
 import heroProduct from "@/assets/hero-product.jpg";
 import avatar from "@/assets/avatar.jpg";
+import type { LandingSection } from "@/store/api";
 
-const HeroSection = () => {
+interface HeroSectionProps {
+  data?: LandingSection;
+  isLoading?: boolean;
+}
+
+const HeroSection = ({ data, isLoading }: HeroSectionProps) => {
   const sectionRef = useRef<HTMLElement>(null);
-  
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start start", "end start"]
@@ -24,14 +30,14 @@ const HeroSection = () => {
       <div className="relative z-10 lg:hidden">
         <div className="container mx-auto px-4 py-8">
           {/* Mobile Content - Centered */}
-          <motion.div 
+          <motion.div
             className="text-center space-y-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
             {/* Subtitle */}
-            <motion.p 
+            <motion.p
               className="text-sm text-muted-foreground tracking-wide"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -41,7 +47,7 @@ const HeroSection = () => {
             </motion.p>
 
             {/* Main Heading */}
-            <motion.h1 
+            <motion.h1
               className="text-3xl sm:text-4xl font-bold text-foreground leading-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -52,7 +58,7 @@ const HeroSection = () => {
             </motion.h1>
 
             {/* Description */}
-            <motion.p 
+            <motion.p
               className="text-sm text-muted-foreground leading-relaxed max-w-sm mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -62,7 +68,7 @@ const HeroSection = () => {
             </motion.p>
 
             {/* Mobile Buttons */}
-            <motion.div 
+            <motion.div
               className="flex items-center justify-center gap-3 pt-2"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -83,7 +89,7 @@ const HeroSection = () => {
           </motion.div>
 
           {/* Mobile Product Image */}
-          <motion.div 
+          <motion.div
             className="mt-6 relative pb-16"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,14 +144,14 @@ const HeroSection = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-20 items-center max-w-7xl mx-auto">
             {/* Left Content */}
-            <motion.div 
+            <motion.div
               className="space-y-6 sm:space-y-8 text-left"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               {/* Badge */}
-              <motion.div 
+              <motion.div
                 className="inline-flex items-center gap-2 bg-coral/10 text-coral px-4 py-2 rounded-full text-sm font-medium border border-coral/20"
                 initial={{ opacity: 0, y: 20, scale: 0.9 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -161,7 +167,7 @@ const HeroSection = () => {
               </motion.div>
 
               <div className="space-y-4">
-                <motion.h2 
+                <motion.h2
                   className="text-lg sm:text-xl md:text-2xl font-light italic text-foreground/70 tracking-wide"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -169,8 +175,8 @@ const HeroSection = () => {
                 >
                   Elevate Your Everyday Style
                 </motion.h2>
-                
-                <motion.h1 
+
+                <motion.h1
                   className="text-5xl xl:text-6xl 2xl:text-7xl font-bold text-foreground leading-[1.1] tracking-tight"
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -181,19 +187,19 @@ const HeroSection = () => {
                     Perfect{" "}
                     <span className="text-coral relative inline-block">
                       Elegance
-                      <motion.svg 
-                        className="absolute -bottom-2 left-0 w-full" 
-                        viewBox="0 0 200 12" 
+                      <motion.svg
+                        className="absolute -bottom-2 left-0 w-full"
+                        viewBox="0 0 200 12"
                         fill="none"
                         initial={{ pathLength: 0, opacity: 0 }}
                         animate={{ pathLength: 1, opacity: 1 }}
                         transition={{ delay: 1, duration: 0.8, ease: "easeInOut" }}
                       >
-                        <motion.path 
-                          d="M2 8C50 2 150 2 198 8" 
-                          stroke="hsl(var(--coral))" 
-                          strokeWidth="3" 
-                          strokeLinecap="round" 
+                        <motion.path
+                          d="M2 8C50 2 150 2 198 8"
+                          stroke="hsl(var(--coral))"
+                          strokeWidth="3"
+                          strokeLinecap="round"
                           className="opacity-60"
                           initial={{ pathLength: 0 }}
                           animate={{ pathLength: 1 }}
@@ -205,7 +211,7 @@ const HeroSection = () => {
                 </motion.h1>
               </div>
 
-              <motion.p 
+              <motion.p
                 className="text-muted-foreground text-lg lg:text-xl max-w-xl leading-relaxed"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -215,7 +221,7 @@ const HeroSection = () => {
                 modern elegance — perfect for work, casual days, and special moments.
               </motion.p>
 
-              <motion.div 
+              <motion.div
                 className="flex flex-wrap gap-4 pt-4"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -245,7 +251,7 @@ const HeroSection = () => {
               </motion.div>
 
               {/* Trust indicators */}
-              <motion.div 
+              <motion.div
                 className="flex flex-wrap items-center gap-6 pt-6"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -255,8 +261,8 @@ const HeroSection = () => {
                 <div className="flex items-center gap-3">
                   <div className="flex -space-x-2">
                     {[...Array(4)].map((_, i) => (
-                      <motion.div 
-                        key={i} 
+                      <motion.div
+                        key={i}
                         className="w-9 h-9 rounded-full bg-muted border-2 border-background overflow-hidden shadow-md"
                         initial={{ opacity: 0, scale: 0.5, x: -10 }}
                         animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -298,14 +304,14 @@ const HeroSection = () => {
             </motion.div>
 
             {/* Right Content - Product Image */}
-            <motion.div 
+            <motion.div
               className="relative flex justify-end"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
             >
               {/* Decorative elements */}
-              <motion.div 
+              <motion.div
                 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] h-[95%] rounded-full bg-gradient-to-br from-coral/15 via-coral/5 to-transparent blur-3xl"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -338,18 +344,18 @@ const HeroSection = () => {
                     key={i}
                     className="w-2 h-2 rounded-full bg-coral/40"
                     animate={{ y: [0, -6, 0] }}
-                    transition={{ 
-                      delay: 1.4 + i * 0.15, 
-                      duration: 2, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
+                    transition={{
+                      delay: 1.4 + i * 0.15,
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
                     }}
                   />
                 ))}
               </motion.div>
 
               {/* Main Product Image with premium frame */}
-              <motion.div 
+              <motion.div
                 className="relative"
                 initial={{ opacity: 0, scale: 0.9, y: 30 }}
                 animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -357,7 +363,7 @@ const HeroSection = () => {
               >
                 {/* Outer glow frame */}
                 <div className="absolute -inset-1 bg-gradient-to-br from-coral/30 via-transparent to-coral/20 rounded-[2rem] blur-sm" />
-                
+
                 {/* Image container */}
                 <div className="relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
                   <div className="rounded-[1.4rem] overflow-hidden">
@@ -371,12 +377,12 @@ const HeroSection = () => {
                       whileHover={{ scale: 1.03 }}
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     />
-                    
+
                     {/* Premium overlay gradient */}
                     <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                    
+
                     {/* Corner accent */}
-                    <motion.div 
+                    <motion.div
                       className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -388,7 +394,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Product Info Card - Floating below image */}
-                <motion.div 
+                <motion.div
                   className="absolute -bottom-16 left-4 right-4 bg-background rounded-2xl shadow-xl p-5"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}

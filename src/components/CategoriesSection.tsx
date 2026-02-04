@@ -35,7 +35,7 @@ const CategoryCard = ({ category }: { category: Category }) => {
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-coral/0 group-hover:bg-coral/10 transition-colors duration-300 rounded-full" />
       </div>
-      
+
       {/* Category Name */}
       <h3 className="mt-4 sm:mt-5 text-sm sm:text-base md:text-lg font-semibold text-foreground group-hover:text-coral transition-colors duration-300">
         {category.name}
@@ -44,7 +44,14 @@ const CategoryCard = ({ category }: { category: Category }) => {
   );
 };
 
-const CategoriesSection = () => {
+import type { LandingSection } from "@/store/api";
+
+interface CategoriesSectionProps {
+  data?: LandingSection;
+  isLoading?: boolean;
+}
+
+const CategoriesSection = ({ data, isLoading }: CategoriesSectionProps) => {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
