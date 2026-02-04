@@ -21,21 +21,23 @@ const sortOptions = [
 ];
 
 const SortDropdown = ({ value, onChange }: SortDropdownProps) => {
+  const selectedLabel = sortOptions.find(opt => opt.value === value)?.label || "Sort";
+  
   return (
     <div className="flex items-center gap-2">
       <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-[160px] sm:w-[180px] bg-background border border-border/60 rounded-full px-4 h-10 shadow-sm hover:border-coral/50 transition-colors">
+        <SelectTrigger className="w-auto min-w-[140px] max-w-[200px] bg-background border border-border/60 rounded-full px-4 h-10 shadow-sm hover:border-coral/50 transition-colors">
           <div className="flex items-center gap-2">
-            <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
-            <SelectValue placeholder="Sort by" />
+            <ArrowUpDown className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="truncate text-sm">{selectedLabel}</span>
           </div>
         </SelectTrigger>
-        <SelectContent className="bg-background border border-border rounded-xl shadow-lg z-50">
+        <SelectContent className="bg-background border border-border rounded-xl shadow-lg z-50 min-w-[180px]">
           {sortOptions.map((option) => (
             <SelectItem 
               key={option.value} 
               value={option.value}
-              className="cursor-pointer hover:bg-coral/10 focus:bg-coral/10 rounded-lg"
+              className="cursor-pointer hover:bg-coral/10 focus:bg-coral/10 rounded-lg whitespace-nowrap"
             >
               {option.label}
             </SelectItem>
