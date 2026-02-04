@@ -176,11 +176,16 @@ const AboutUs = () => {
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-            {/* Instagram Images - Single column on mobile, row on larger screens */}
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 flex-1 w-full sm:w-auto">
+            {/* Instagram Images - 2 images on mobile, 3 on larger screens */}
+            <div className="grid grid-cols-2 sm:flex sm:flex-row gap-4 sm:gap-6 flex-1 w-full sm:w-auto">
               {instagramImages.map((image, index) => (
-                <ScrollReveal key={index} variant="fadeUp" delay={index * 0.1}>
-                  <div className="w-full h-64 sm:w-40 sm:h-52 lg:w-48 lg:h-64 rounded-2xl overflow-hidden shadow-lg">
+                <ScrollReveal 
+                  key={index} 
+                  variant="fadeUp" 
+                  delay={index * 0.1}
+                  className={index === 2 ? "hidden sm:block" : ""}
+                >
+                  <div className="w-full h-40 sm:w-40 sm:h-52 lg:w-48 lg:h-64 rounded-2xl overflow-hidden shadow-lg">
                     <img 
                       src={image} 
                       alt={`Instagram post ${index + 1}`}
