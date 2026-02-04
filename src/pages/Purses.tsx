@@ -139,36 +139,24 @@ const Purses = () => {
 
           {/* Products Area */}
           <div className="flex-1 min-w-0">
-            {/* Mobile Filter Toggle & Header */}
-            <div className="mb-6">
-              {/* Mobile row: Filter (start) + Sort (end) */}
-              <div className="flex items-center justify-between gap-3 sm:hidden">
-                <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
-                  <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
-                      <Menu className="h-4 w-4 mr-2" />
-                      Filters
-                    </Button>
-                  </SheetTrigger>
-                  <SheetContent side="left" className="w-80 overflow-y-auto">
-                    <div className="pt-6">{FiltersContent}</div>
-                  </SheetContent>
-                </Sheet>
-
-                <SortDropdown value={sortBy} onChange={setSortBy} />
-              </div>
-
-              {/* Desktop/tablet row: Sort (left) + count (right) */}
-              <div className="hidden sm:flex items-center justify-between gap-4">
-                <div className="flex items-center gap-4">
+            {/* Toolbar: Filters, Sort & Product Count */}
+            <div className="mb-6 bg-muted/30 rounded-2xl p-4 border border-border/40">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Left side: Filter button + Sort */}
+                <div className="flex items-center gap-3">
+                  {/* Mobile/Tablet Filter Button */}
                   <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="outline" size="sm" className="lg:hidden">
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="lg:hidden rounded-full px-4 h-10 border-border/60 hover:border-coral/50 hover:bg-coral/5 transition-colors"
+                      >
                         <Menu className="h-4 w-4 mr-2" />
                         Filters
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-80 overflow-y-auto">
+                    <SheetContent side="left" className="w-80 overflow-y-auto bg-background">
                       <div className="pt-6">{FiltersContent}</div>
                     </SheetContent>
                   </Sheet>
@@ -176,23 +164,15 @@ const Purses = () => {
                   <SortDropdown value={sortBy} onChange={setSortBy} />
                 </div>
 
-                <p className="text-muted-foreground">
-                  Showing{" "}
-                  <span className="font-semibold text-foreground">
+                {/* Right side: Product count */}
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="text-muted-foreground">Showing</span>
+                  <span className="bg-coral/10 text-coral font-semibold px-3 py-1 rounded-full">
                     {filteredProducts.length}
-                  </span>{" "}
-                  Products
-                </p>
+                  </span>
+                  <span className="text-muted-foreground">Products</span>
+                </div>
               </div>
-
-              {/* Mobile: count below */}
-              <p className="mt-3 sm:hidden text-muted-foreground">
-                Showing{" "}
-                <span className="font-semibold text-foreground">
-                  {filteredProducts.length}
-                </span>{" "}
-                Products
-              </p>
             </div>
 
             {/* Active Filters */}
