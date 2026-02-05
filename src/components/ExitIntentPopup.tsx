@@ -112,8 +112,12 @@ const ExitIntentPopup = () => {
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
             className="fixed inset-0 z-[101] flex items-center justify-center p-4 overflow-hidden"
+            onClick={() => setIsVisible(false)}
           >
-            <div className="w-full max-w-md max-h-[90vh] bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative flex flex-col">
+            <div 
+              className="w-full max-w-md max-h-[90vh] bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
               {/* Close Button */}
               <button
                 onClick={() => setIsVisible(false)}
