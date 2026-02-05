@@ -1,4 +1,4 @@
-import { Heart, Star, ShoppingCart, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
+import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import ScrollReveal from "./ScrollReveal";
@@ -6,7 +6,6 @@ import ProductQuickView from "./ProductQuickView";
 import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { useCart } from "@/contexts/CartContext";
 import { products, type Product, type BadgeType } from "@/data/products";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
@@ -67,21 +66,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 
 const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const { addToCart, setIsCartOpen } = useCart();
   const isWishlisted = isInWishlist(product.id);
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    addToCart({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      image: product.image,
-      color: product.colors[0],
-    });
-    setIsCartOpen(true);
-  };
 
   return (
     <div 
@@ -89,16 +74,16 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
       onClick={onClick}
     >
       {/* Image Container */}
-      <div className="relative overflow-hidden bg-secondary/30 h-[200px] sm:h-[240px] flex-shrink-0">
-        {/* Badge */}
+      <div className="relative h-[200px] sm:h-[240px] overflow-hidden flex-shrink-0">
+        {/* Dynamic Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
-        {/* Wishlist Button - White icon, transparent when not active */}
+        {/* Wishlist Button - Transparent with blue tint */}
         <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 ${
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${
             isWishlisted 
               ? "bg-coral text-white" 
-              : "bg-foreground/30 text-white"
+              : "bg-blue-500/20 text-white border border-white/30"
           }`}
           onClick={(e) => {
             e.stopPropagation();
@@ -121,27 +106,25 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
       </div>
 
       {/* Product Info */}
-      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3 flex-grow flex flex-col">
-        <div className="flex items-start justify-between gap-2">
-          <h3 className="font-semibold text-foreground text-base sm:text-lg group-hover:text-coral transition-colors duration-300">
+      <div className="p-4 sm:p-5 space-y-3 flex-grow flex flex-col">
+        {/* Name & Colors */}
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="font-semibold text-foreground text-sm sm:text-base">
             {product.name}
           </h3>
-          {/* Color Options */}
           <div className="flex gap-1">
             {product.colors.map((color, index) => (
               <span
                 key={index}
-                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border hover:scale-125 transition-transform duration-200 cursor-pointer"
+                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border cursor-pointer"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
         </div>
 
-        <p className="text-muted-foreground text-sm flex-grow">{product.description}</p>
-
-        <div className="flex flex-wrap items-center justify-between gap-2 mt-auto">
-          {/* Price */}
+        {/* Price & Stock Badge together */}
+        <div className="flex items-center justify-between gap-2">
           <div className="flex items-baseline gap-2">
             <span className="text-lg sm:text-xl font-bold text-foreground">
               ${product.price.toLocaleString()}.00
@@ -150,18 +133,18 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
               ${product.originalPrice.toLocaleString()}.00
             </span>
           </div>
-
-          {/* Rating & Stock Badge together */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-coral text-coral" />
-              <span className="text-muted-foreground text-xs">
-                {product.rating}({product.reviews})
-              </span>
-            </div>
-            <StockBadge stock={product.stock} variant="text" showIcon={false} />
-          </div>
+          <StockBadge stock={product.stock} variant="text" showIcon={false} />
         </div>
+
+        {/* CTA Link */}
+        <a
+          href="#"
+          className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
+          Let's Check It Out
+          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+        </a>
       </div>
     </div>
   );
