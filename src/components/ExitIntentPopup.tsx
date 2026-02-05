@@ -10,6 +10,31 @@ const ExitIntentPopup = () => {
   const [email, setEmail] = useState("");
   const [hasShown, setHasShown] = useState(false);
 
+  // Lock body scroll when popup is visible
+  useEffect(() => {
+    if (isVisible) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = `-${window.scrollY}px`;
+    } else {
+      const scrollY = document.body.style.top;
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0') * -1);
+      }
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
+    };
+  }, [isVisible]);
+
   useEffect(() => {
     // Check if popup was already shown in this session
     const alreadyShown = sessionStorage.getItem("exitPopupShown");
@@ -86,9 +111,9 @@ const ExitIntentPopup = () => {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-[101] flex items-center justify-center p-4"
+            className="fixed inset-0 z-[101] flex items-center justify-center p-4 overflow-hidden"
           >
-            <div className="w-full max-w-md bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative">
+            <div className="w-full max-w-md max-h-[90vh] bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative flex flex-col">
               {/* Close Button */}
               <button
                 onClick={() => setIsVisible(false)}
