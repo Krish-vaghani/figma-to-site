@@ -121,14 +121,13 @@ const Footer = () => {
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>
             <div className="relative overflow-hidden bg-background rounded-2xl p-4 sm:p-5 lg:p-6 shadow-lg">
-              {/* Animated border line */}
-              <div className="absolute inset-0 rounded-2xl">
+              {/* Animated border line - improved animation */}
+              <div className="absolute inset-0 rounded-2xl overflow-hidden">
                 <div
-                  className="absolute inset-0 rounded-2xl animate-border-spin"
+                  className="absolute -inset-[100%] animate-[spin_4s_linear_infinite]"
                   style={{
                     background:
-                      "conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 60deg, transparent 120deg)",
-                    padding: "2px",
+                      "conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 30deg, hsl(var(--coral)) 60deg, transparent 90deg)",
                   }}
                 />
                 <div className="absolute inset-[2px] bg-background rounded-[14px]" />
@@ -143,7 +142,8 @@ const Footer = () => {
                 <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">
                   Contact Us
                 </h4>
-                <div className="flex items-center gap-4">
+                {/* Stacked layout: Email on top, Phone below */}
+                <div className="flex flex-col gap-3">
                   <a
                     href="mailto:Support@Yourbrand.Com"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
@@ -151,9 +151,8 @@ const Footer = () => {
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span>Support@Yourbrand.Com</span>
+                    <span className="break-all">Support@Yourbrand.Com</span>
                   </a>
-                  <div className="h-6 w-px bg-border/50" />
                   <a
                     href="tel:+919XXXXXXXXX"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
