@@ -82,7 +82,7 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div
-      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-[40px] p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col overflow-hidden shadow-[0_8px_30px_-8px_rgba(0,0,0,0.15)]"
+      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-[40px] p-8 sm:p-10 select-none [&_*]:no-underline flex flex-col overflow-hidden"
       style={{
         backgroundImage: `url(${testimonialCardBg})`,
         backgroundSize: "cover",
@@ -171,7 +171,7 @@ const TestimonialsSection = () => {
       </ScrollReveal>
 
       {/* Scrolling Rows */}
-      <div className="space-y-2">
+      <div className="space-y-4">
         <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35} />
         <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={35} />
       </div>
