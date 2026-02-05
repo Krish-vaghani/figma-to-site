@@ -105,6 +105,26 @@ export default {
             transform: "translateX(200%)",
           },
         },
+        "page-enter": {
+          "0%": {
+            opacity: "0",
+            transform: "translateY(8px)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+        },
+        "page-exit": {
+          "0%": {
+            opacity: "1",
+            transform: "translateY(0)",
+          },
+          "100%": {
+            opacity: "0",
+            transform: "translateY(-8px)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -112,6 +132,8 @@ export default {
         "scroll-left": "scroll-left 30s linear infinite",
         "scroll-right": "scroll-right 30s linear infinite",
         shimmer: "shimmer 2.5s ease-in-out infinite",
+        "page-enter": "page-enter 0.3s ease-out",
+        "page-exit": "page-exit 0.3s ease-out",
       },
     },
   },
