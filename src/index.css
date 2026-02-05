@@ -43,6 +43,14 @@ All colors MUST be HSL.
     /* Custom coral accent color */
     --coral: 16 85% 62%;
 
+    /* Toast notification variants */
+    --toast-success: 142 76% 36%;
+    --toast-success-foreground: 0 0% 100%;
+    --toast-info: 217 91% 60%;
+    --toast-info-foreground: 0 0% 100%;
+    --toast-warning: 38 92% 50%;
+    --toast-warning-foreground: 0 0% 100%;
+
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
     --sidebar-primary: 240 5.9% 10%;
@@ -83,6 +91,14 @@ All colors MUST be HSL.
     --ring: 212.7 26.8% 83.9%;
 
     --coral: 16 85% 62%;
+
+    /* Toast notification variants */
+    --toast-success: 142 76% 36%;
+    --toast-success-foreground: 0 0% 100%;
+    --toast-info: 217 91% 60%;
+    --toast-info-foreground: 0 0% 100%;
+    --toast-warning: 38 92% 50%;
+    --toast-warning-foreground: 0 0% 100%;
 
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
