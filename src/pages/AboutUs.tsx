@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
-  shopBackground,
   aboutUsBackground,
   instagramBackground,
   heroProduct,
@@ -14,6 +13,13 @@ import {
   product2,
   product3,
 } from "@/lib/assetUrls";
+
+// First section / header background (separate bg asset)
+const aboutUsHeaderBackground =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770368952749_Frame_2147225911.png";
+// Image block immediately after first section (no padding)
+const aboutUsSectionImage =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770369040229_Group_1376156683.png";
 
 const AboutUs = () => {
   const features = [
@@ -55,21 +61,19 @@ const AboutUs = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header with Shop Background - same as Purses page */}
-      <div
-        className="relative overflow-hidden bg-cover bg-right sm:bg-top"
-        style={{
-          backgroundImage: `url(${shopBackground})`,
-        }}
-      >
-        {/* Soft overlay for readability */}
-        <div className="absolute inset-0 bg-background/50" aria-hidden="true" />
+      {/* Header / first section - background image (separate asset); mobile/tablet unchanged, lg: taller for ref look */}
+      <div className="relative overflow-hidden bg-background min-h-[300px] sm:min-h-[380px] lg:min-h-[480px]">
+        <div
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${aboutUsHeaderBackground})` }}
+          aria-hidden="true"
+        />
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex flex-col min-h-[300px] sm:min-h-[380px] lg:min-h-[480px]">
           <Navbar className="bg-transparent" />
-          
-          {/* Hero Section */}
-          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl py-12 sm:py-16 lg:py-20">
+
+          {/* Hero Section - title and breadcrumbs at end of image (bottom of section) */}
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex-1 flex flex-col justify-end pt-4 pb-6 sm:pb-8 lg:pb-10">
             <ScrollReveal>
               <div className="text-center">
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-bold text-foreground mb-4">
@@ -86,7 +90,16 @@ const AboutUs = () => {
         </div>
       </div>
 
-      {/* About Content Section */}
+      {/* Image block immediately after first section - show on mobile/tablet only */}
+      <div className="w-full block -mt-16 sm:-mt-16 lg:hidden">
+        <img
+          src={aboutUsSectionImage}
+          alt="About us"
+          className="w-full h-auto object-cover object-center block"
+        />
+      </div>
+
+      {/* About Content Section - padding on lg to match reference */}
       <section
         className="relative py-12 sm:py-16 lg:py-24 overflow-hidden bg-no-repeat min-h-[320px] sm:min-h-0 bg-cover bg-center lg:bg-right"
         style={{
@@ -128,22 +141,22 @@ const AboutUs = () => {
               </div>
             </ScrollReveal>
 
-            {/* Image */}
+            {/* Image - merged image is in first section on mobile; here show hero image */}
             <ScrollReveal variant="fadeRight" delay={0.2}>
               <div className="relative">
-                {/* Decorative illustration behind */}
+                {/* Decorative illustration behind - desktop only */}
                 <div className="absolute -top-12 -right-8 w-48 h-48 opacity-20 hidden lg:block">
                   <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="100" cy="100" r="80" stroke="hsl(var(--coral))" strokeWidth="1" strokeDasharray="4 4"/>
                     <circle cx="100" cy="100" r="60" stroke="hsl(var(--coral))" strokeWidth="1"/>
                   </svg>
                 </div>
-                
-                <div className="relative rounded-3xl overflow-hidden shadow-xl">
-                  <img 
-                    src={heroProduct} 
-                    alt="About us featured purse" 
-                    className="w-full h-auto object-cover"
+
+                <div className="relative rounded-3xl overflow-hidden shadow-xl lg:max-w-md lg:ml-auto">
+                  <img
+                    src={heroProduct}
+                    alt="About us featured purse"
+                    className="w-full h-auto object-cover lg:max-h-[420px] lg:object-cover lg:object-center"
                   />
                 </div>
               </div>
@@ -153,7 +166,7 @@ const AboutUs = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-12 sm:py-16 lg:py-20 bg-background">
+      <section className="py-9 sm:py-16 lg:py-20 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
             {features.map((feature, index) => (
@@ -177,7 +190,7 @@ const AboutUs = () => {
 
       {/* Instagram Section */}
       <section 
-        className="py-12 sm:py-16 lg:py-20 relative overflow-hidden min-h-[280px] bg-cover bg-no-repeat bg-right sm:bg-center"
+        className="py-6 sm:py-16 lg:py-20 relative overflow-hidden min-h-[280px] bg-cover bg-no-repeat bg-right sm:bg-center"
         style={{
           backgroundImage: `url(${instagramBackground})`,
           backgroundColor: "hsl(var(--secondary) / 0.5)",
