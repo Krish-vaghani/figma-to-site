@@ -101,7 +101,7 @@ const Footer = () => {
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div>
               <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">
-                Categories / Collections
+                Categories / Collectionss
               </h4>
               <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
                 {categoryLinks.map((link) => (
