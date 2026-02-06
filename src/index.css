@@ -176,8 +176,8 @@ All colors MUST be HSL.
     top: 0;
   }
 
-  /* Animated border spin for contact card */
-  @keyframes border-spin {
+  /* Contact card - single line animated border */
+  @keyframes contact-border-spin {
     from {
       transform: rotate(0deg);
     }
@@ -186,8 +186,7 @@ All colors MUST be HSL.
     }
   }
 
-  .animate-border-spin {
-    animation: border-spin 6s linear infinite;
-    transform-origin: center center;
+  .contact-border-spin {
+    animation: contact-border-spin 4s linear infinite;
   }
 }

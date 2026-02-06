@@ -120,11 +120,11 @@ const Footer = () => {
 
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>
-            <div className="relative overflow-hidden bg-background rounded-2xl p-4 sm:p-5 lg:p-6 shadow-lg">
-              {/* Animated border line - improved animation */}
+            <div className="relative overflow-hidden bg-background rounded-2xl p-4 sm:p-5 lg:p-4 lg:py-5 shadow-lg">
+              {/* Animated border - single line */}
               <div className="absolute inset-0 rounded-2xl overflow-hidden">
                 <div
-                  className="absolute -inset-[100%] animate-[spin_4s_linear_infinite]"
+                  className="absolute -inset-[100%] contact-border-spin"
                   style={{
                     background:
                       "conic-gradient(from 0deg, transparent 0deg, hsl(var(--coral)) 30deg, hsl(var(--coral)) 60deg, transparent 90deg)",
@@ -135,15 +135,15 @@ const Footer = () => {
 
               {/* Content */}
               <div className="relative z-10">
-                <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <div className="flex items-center gap-2 mb-2 sm:mb-3 lg:mb-2">
                   <span className="text-lg sm:text-xl">🇮🇳</span>
                   <span className="text-xs sm:text-sm text-muted-foreground">India</span>
                 </div>
-                <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4">
+                <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-3">
                   Contact Us
                 </h4>
                 {/* Stacked layout: Email on top, Phone below */}
-                <div className="flex flex-col gap-3">
+                <div className="flex flex-col gap-3 lg:gap-2">
                   <a
                     href="mailto:Support@Yourbrand.Com"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"

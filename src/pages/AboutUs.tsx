@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import shopBackground from "@/assets/shop-background.png";
-import instagramBackground from "@/assets/instagram-background.png";
+import aboutUsBackground from "@/assets/Frame 2147226358.png";
+import instagramBackground from "@/assets/Frame 2147226348.png";
 import heroProduct from "@/assets/hero-product.jpg";
 import product1 from "@/assets/product-1.png";
 import product2 from "@/assets/product-2.png";
@@ -84,8 +85,14 @@ const AboutUs = () => {
       </div>
 
       {/* About Content Section */}
-      <section className="py-12 sm:py-16 lg:py-24 bg-background">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+      <section
+        className="relative py-12 sm:py-16 lg:py-24 overflow-hidden bg-cover bg-right bg-no-repeat"
+        style={{
+          backgroundImage: `url(${aboutUsBackground})`,
+        }}
+      >
+        <div className="absolute inset-0 bg-background/60" aria-hidden="true" />
+        <div className="container relative z-10 mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Text Content */}
             <ScrollReveal variant="fadeLeft">
@@ -148,7 +155,7 @@ const AboutUs = () => {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch">
             {features.map((feature, index) => (
               <ScrollReveal key={feature.title} variant="fadeUp" delay={index * 0.1} className="h-full">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-border/30 text-center hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 border border-border/30 text-center transition-shadow duration-300 h-full flex flex-col shadow-[0_0_0_1px_rgba(0,0,0,0.04),0_4px_16px_rgba(0,0,0,0.06),0_8px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_0_0_1px_rgba(0,0,0,0.05),0_8px_24px_rgba(0,0,0,0.08),0_20px_48px_rgba(0,0,0,0.07)]">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-coral/10 flex items-center justify-center mx-auto mb-4 text-coral">
                     {feature.icon}
                   </div>
