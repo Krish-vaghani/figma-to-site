@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import heroBackground from "@/assets/hero-background.png";
+import { heroBackground } from "@/lib/assetUrls";
 
 // Lazy load below-the-fold sections for faster initial paint
 const CollectionsSection = lazy(() => import("@/components/CollectionsSection"));

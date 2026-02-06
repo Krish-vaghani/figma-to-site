@@ -1,7 +1,4 @@
-import categoryTote from "@/assets/category-tote.png";
-import categorySling from "@/assets/category-sling.png";
-import categoryClutches from "@/assets/category-clutches.png";
-import categoryMini from "@/assets/category-mini.png";
+import { categoryTote, categorySling, categoryClutches, categoryMini } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 import StaggerReveal from "./StaggerReveal";
 

@@ -2,8 +2,7 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
-import heroProduct from "@/assets/hero-product.jpg";
-import avatar from "@/assets/avatar.jpg";
+import { heroProduct, avatar } from "@/lib/assetUrls";
 
 const HeroSection = () => {
   const sectionRef = useRef<HTMLElement>(null);

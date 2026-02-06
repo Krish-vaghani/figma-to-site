@@ -1,9 +1,7 @@
 import { Quote } from "lucide-react";
 import { useInfiniteMarquee } from "@/hooks/use-infinite-marquee";
-import avatarMale from "@/assets/avatar-male.jpg";
-import avatarFemale from "@/assets/avatar-female.png";
+import { avatarMale, avatarFemale, testimonialCardBg } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
-import testimonialCardBg from "@/assets/testimonials-card-bg.png";
 
 interface Testimonial {
   id: number;

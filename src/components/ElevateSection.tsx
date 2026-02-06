@@ -1,8 +1,5 @@
 import { ArrowRight } from "lucide-react";
-import elevate1 from "@/assets/elevate-1.png";
-import elevate2 from "@/assets/elevate-2.png";
-import elevate3 from "@/assets/elevate-3.png";
-import elevate4 from "@/assets/elevate-4.png";
+import { elevate1, elevate2, elevate3, elevate4 } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 
 const ElevateSection = () => {

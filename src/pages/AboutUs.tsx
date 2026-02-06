@@ -5,13 +5,15 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import shopBackground from "@/assets/shop-background.png";
-import aboutUsBackground from "@/assets/Frame 2147226358.png";
-import instagramBackground from "@/assets/Frame 2147226348.png";
-import heroProduct from "@/assets/hero-product.jpg";
-import product1 from "@/assets/product-1.png";
-import product2 from "@/assets/product-2.png";
-import product3 from "@/assets/product-3.png";
+import {
+  shopBackground,
+  aboutUsBackground,
+  instagramBackground,
+  heroProduct,
+  product1,
+  product2,
+  product3,
+} from "@/lib/assetUrls";
 
 const AboutUs = () => {
   const features = [

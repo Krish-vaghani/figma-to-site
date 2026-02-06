@@ -1,8 +1,7 @@
 import { ArrowRight, Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/logo.png";
+import { logo, footerBackground } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
-import footerBackground from "@/assets/footer-background.png";
 
 const Footer = () => {
   const exploreLinks = [

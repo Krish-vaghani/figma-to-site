@@ -13,7 +13,7 @@ import ProductQuickView from "@/components/ProductQuickView";
 import { products, type Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import shopBackground from "@/assets/shop-background.png";
+import { shopBackground } from "@/lib/assetUrls";
 
 
 const PRODUCTS_PER_PAGE = 12;

@@ -6,7 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import SearchModal from "./SearchModal";
-import logo from "@/assets/logo.png";
+import { logo } from "@/lib/assetUrls";
 
 type NavbarProps = {
   className?: string;
