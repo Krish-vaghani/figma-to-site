@@ -2,7 +2,13 @@ import { ArrowRight } from "lucide-react";
 import { elevate1, elevate2, elevate3, elevate4 } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 
-const ElevateSection = () => {
+import { LandingSection } from "@/types/landing";
+
+interface ElevateSectionProps {
+  data?: LandingSection;
+}
+
+const ElevateSection = ({ data }: ElevateSectionProps) => {
   return (
     <section className="py-12 sm:py-16 lg:py-20 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">

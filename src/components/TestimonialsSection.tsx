@@ -153,7 +153,13 @@ const MarqueeRow = ({
   );
 };
 
-const TestimonialsSection = () => {
+import { LandingSection } from "@/types/landing";
+
+interface TestimonialsSectionProps {
+  data?: LandingSection;
+}
+
+const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
   return (
     <section className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 bg-secondary/30 overflow-hidden">
       {/* Section Header */}

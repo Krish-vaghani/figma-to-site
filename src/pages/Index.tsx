@@ -16,6 +16,8 @@ const NewArrivalsSection = lazy(() => import("@/components/NewArrivalsSection"))
 const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
 const ExitIntentPopup = lazy(() => import("@/components/ExitIntentPopup"));
 
+import { useGetLandingPageDataQuery } from "@/store/services/landingApi";
+
 // Minimal loading placeholder for non-product sections
 const SectionLoader = () => (
   <div className="py-16 flex items-center justify-center">
@@ -24,15 +26,37 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
+  const { data: response, isLoading, error } = useGetLandingPageDataQuery();
+  const landingData = response?.data;
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-coral border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-500">Error loading page</h2>
+          <p className="text-muted-foreground">Please try again later.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Skip to main content for accessibility */}
       <a href="#main-content" className="skip-link">
         Skip to main content
       </a>
-      
+
       <AnnouncementBar />
-      
+
       {/* Header area with shared hero background (Navbar + HeroSection) */}
       <div
         className="relative overflow-hidden"
@@ -44,47 +68,47 @@ const Index = () => {
         }}
       >
         <Navbar className="bg-transparent" />
-        
+
         <ErrorBoundary section="Hero">
-          <HeroSection />
+          <HeroSection data={landingData?.hero} />
         </ErrorBoundary>
       </div>
-      
+
       <main id="main-content">
         <Suspense fallback={<SectionSkeleton variant="carousel" count={4} />}>
           <ErrorBoundary section="Collections">
-            <CollectionsSection />
+            <CollectionsSection data={landingData?.best_collections} />
           </ErrorBoundary>
         </Suspense>
-        
+
         <Suspense fallback={<SectionLoader />}>
           <ErrorBoundary section="Categories">
-            <CategoriesSection />
+            <CategoriesSection data={landingData?.find_perfect_purse} />
           </ErrorBoundary>
         </Suspense>
-        
+
         <Suspense fallback={<SectionLoader />}>
           <ErrorBoundary section="Elevate">
-            <ElevateSection />
+            <ElevateSection data={landingData?.elevate_look} />
           </ErrorBoundary>
         </Suspense>
-        
+
         <Suspense fallback={<SectionSkeleton variant="carousel" count={5} />}>
           <ErrorBoundary section="New Arrivals">
-            <NewArrivalsSection />
+            <NewArrivalsSection data={landingData?.fresh_styles} />
           </ErrorBoundary>
         </Suspense>
-        
+
         <Suspense fallback={<SectionSkeleton variant="testimonials" />}>
           <ErrorBoundary section="Testimonials">
-            <TestimonialsSection />
+            <TestimonialsSection data={landingData?.testimonials} />
           </ErrorBoundary>
         </Suspense>
       </main>
-      
+
       <Footer />
       <ScrollToTop />
-      
+
       <Suspense fallback={null}>
         <ExitIntentPopup />
       </Suspense>

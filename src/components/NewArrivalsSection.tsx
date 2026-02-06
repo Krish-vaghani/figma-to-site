@@ -65,8 +65,8 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
   const isWishlisted = isInWishlist(product.id + 100); // Offset to avoid ID collision with collections
 
   return (
-    <div 
-      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col" 
+    <div
+      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col"
       onClick={onClick}
     >
       {/* Image Container */}
@@ -75,12 +75,11 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
         {product.badge && <BadgeComponent type={product.badge} />}
 
         {/* Wishlist Button - Transparent with blue tint */}
-        <motion.button 
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${
-            isWishlisted 
-              ? "bg-coral text-white" 
+        <motion.button
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${isWishlisted
+              ? "bg-coral text-white"
               : "bg-blue-500/20 text-white border border-white/30"
-          }`}
+            }`}
           onClick={(e) => {
             e.stopPropagation();
             toggleWishlist(product.id + 100, product.name);
@@ -146,7 +145,13 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
   );
 };
 
-const NewArrivalsSection = () => {
+import { LandingSection } from "@/types/landing";
+
+interface NewArrivalsSectionProps {
+  data?: LandingSection;
+}
+
+const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   // Show 5 products for new arrivals
   const newArrivalProducts = products.slice(0, 5);
@@ -170,10 +175,10 @@ const NewArrivalsSection = () => {
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto">
         <ProductCarousel autoplayDelay={3500}>
           {newArrivalProducts.map((product) => (
-            <NewProductCard 
-              key={product.id} 
-              product={product} 
-              onClick={() => setSelectedProduct(product)} 
+            <NewProductCard
+              key={product.id}
+              product={product}
+              onClick={() => setSelectedProduct(product)}
             />
           ))}
         </ProductCarousel>
