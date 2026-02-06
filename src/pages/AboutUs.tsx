@@ -86,9 +86,10 @@ const AboutUs = () => {
 
       {/* About Content Section */}
       <section
-        className="relative py-12 sm:py-16 lg:py-24 overflow-hidden bg-cover bg-right bg-no-repeat"
+        className="relative py-12 sm:py-16 lg:py-24 overflow-hidden bg-no-repeat min-h-[320px] sm:min-h-0 bg-cover bg-center lg:bg-right"
         style={{
           backgroundImage: `url(${aboutUsBackground})`,
+          backgroundColor: "hsl(var(--secondary))",
         }}
       >
         <div className="absolute inset-0 bg-background/60" aria-hidden="true" />
@@ -174,11 +175,10 @@ const AboutUs = () => {
 
       {/* Instagram Section */}
       <section 
-        className="py-12 sm:py-16 lg:py-20 relative overflow-hidden"
+        className="py-12 sm:py-16 lg:py-20 relative overflow-hidden min-h-[280px] bg-cover bg-no-repeat bg-right sm:bg-center"
         style={{
           backgroundImage: `url(${instagramBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundColor: "hsl(var(--secondary) / 0.5)",
         }}
       >
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
