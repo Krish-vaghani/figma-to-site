@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import SectionSkeleton from "@/components/SectionSkeleton";
 import heroBackground from "@/assets/hero-background.png";
 
 // Lazy load below-the-fold sections for faster initial paint
@@ -15,7 +16,7 @@ const NewArrivalsSection = lazy(() => import("@/components/NewArrivalsSection"))
 const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
 const ExitIntentPopup = lazy(() => import("@/components/ExitIntentPopup"));
 
-// Minimal loading placeholder
+// Minimal loading placeholder for non-product sections
 const SectionLoader = () => (
   <div className="py-16 flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-coral border-t-transparent rounded-full animate-spin" />
@@ -50,7 +51,7 @@ const Index = () => {
       </div>
       
       <main id="main-content">
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionSkeleton variant="carousel" count={4} />}>
           <ErrorBoundary section="Collections">
             <CollectionsSection />
           </ErrorBoundary>
@@ -68,13 +69,13 @@ const Index = () => {
           </ErrorBoundary>
         </Suspense>
         
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionSkeleton variant="carousel" count={5} />}>
           <ErrorBoundary section="New Arrivals">
             <NewArrivalsSection />
           </ErrorBoundary>
         </Suspense>
         
-        <Suspense fallback={<SectionLoader />}>
+        <Suspense fallback={<SectionSkeleton variant="testimonials" />}>
           <ErrorBoundary section="Testimonials">
             <TestimonialsSection />
           </ErrorBoundary>
