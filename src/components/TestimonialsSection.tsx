@@ -80,7 +80,7 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div
-      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-[40px] p-10 sm:p-12 select-none [&_*]:no-underline flex flex-col overflow-hidden"
+      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-full p-10 sm:p-12 select-none [&_*]:no-underline flex flex-col overflow-hidden"
       style={{
         backgroundImage: `url(${testimonialCardBg})`,
         backgroundSize: "cover",
