@@ -1,7 +1,6 @@
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 import { heroProduct, avatar } from "@/lib/assetUrls";
 
 import { LandingSection } from "@/types/landing";
@@ -11,19 +10,8 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ data }: HeroSectionProps) => {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end start"]
-  });
-
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
-  const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.5, 0.8]);
-
   return (
-    <section ref={sectionRef} className="relative overflow-hidden">
+    <section className="relative overflow-hidden" aria-label="Hero">
       {/* ===== MOBILE LAYOUT ===== */}
       <div className="relative z-10 lg:hidden">
         <div className="container mx-auto px-4 py-8">

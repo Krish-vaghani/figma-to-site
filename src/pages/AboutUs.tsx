@@ -5,6 +5,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useSeo } from "@/hooks/useSeo";
 import {
   aboutUsBackground,
   instagramBackground,
@@ -22,6 +23,7 @@ const aboutUsSectionImage =
   "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770369040229_Group_1376156683.png";
 
 const AboutUs = () => {
+  useSeo("About Us", "Learn about Purse — our story, craftsmanship, and commitment to timeless designer handbags and accessories.");
   const features = [
     {
       icon: (

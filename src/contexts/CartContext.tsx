@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export interface CartItem {
   id: number;
@@ -45,15 +45,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex].quantity += quantity;
-        toast({
-          title: "Cart Updated 🛒",
+        toast.success("Cart Updated 🛒", {
           description: `${item.name} quantity increased to ${updated[existingIndex].quantity}.`,
         });
         return updated;
       }
 
-      toast({
-        title: "Added to Cart 🛒",
+      toast.success("Added to Cart 🛒", {
         description: `${quantity}x ${item.name} has been added to your cart.`,
       });
       return [...prev, { ...item, quantity }];
@@ -64,8 +62,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart((prev) => {
       const item = prev.find((i) => i.id === id && i.color === color);
       if (item) {
-        toast({
-          title: "Removed from Cart",
+        toast.success("Removed from Cart", {
           description: `${item.name} has been removed from your cart.`,
         });
       }
@@ -87,8 +84,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = () => {
     setCart([]);
-    toast({
-      title: "Cart Cleared",
+    toast.success("Cart Cleared", {
       description: "All items have been removed from your cart.",
     });
   };

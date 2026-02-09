@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface WishlistContextType {
   wishlist: number[];
@@ -35,14 +35,12 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
       const isAdding = !prev.includes(id);
       
       if (isAdding) {
-        toast({
-          title: "Added to Wishlist ❤️",
+        toast.success("Added to Wishlist ❤️", {
           description: productName ? `${productName} has been saved to your wishlist.` : "Item saved to your wishlist.",
         });
         return [...prev, id];
       } else {
-        toast({
-          title: "Removed from Wishlist",
+        toast.success("Removed from Wishlist", {
           description: productName ? `${productName} has been removed from your wishlist.` : "Item removed from your wishlist.",
         });
         return prev.filter((item) => item !== id);

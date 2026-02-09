@@ -1,10 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { appReducer } from "./slices";
 import { landingApi } from "./services/landingApi";
 
 export const store = configureStore({
   reducer: {
-    app: appReducer,
     [landingApi.reducerPath]: landingApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -2,6 +2,7 @@ import { useState, useMemo, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
+import { useSeo } from "@/hooks/useSeo";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import ShopHeader from "@/components/shop/ShopHeader";
@@ -20,6 +21,7 @@ import { shopBackground } from "@/lib/assetUrls";
 const PRODUCTS_PER_PAGE = 12;
 
 const Purses = () => {
+  useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over $100.");
   const navigate = useNavigate();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);

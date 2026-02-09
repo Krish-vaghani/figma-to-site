@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,16 +10,23 @@ import ReviewsSection from "@/components/product-detail/ReviewsSection";
 import RelatedProducts from "@/components/product-detail/RelatedProducts";
 import { products } from "@/data/products";
 import { heroBackground } from "@/lib/assetUrls";
+import { useSeo } from "@/hooks/useSeo";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const product = products.find((p) => p.id === Number(id));
 
-  if (!product) {
-    navigate("/purses");
-    return null;
-  }
+  useSeo(
+    product ? product.name : "Product",
+    product ? `${product.description} Shop ${product.name} at Purse.` : undefined
+  );
+
+  useEffect(() => {
+    if (!product) navigate("/purses");
+  }, [product, navigate]);
+
+  if (!product) return null;
 
   return (
     <div className="min-h-screen bg-background">
