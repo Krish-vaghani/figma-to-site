@@ -9,7 +9,6 @@ import RatingBreakdown from "@/components/product-detail/RatingBreakdown";
 import ReviewsSection from "@/components/product-detail/ReviewsSection";
 import RelatedProducts from "@/components/product-detail/RelatedProducts";
 import { products } from "@/data/products";
-import { heroBackground } from "@/lib/assetUrls";
 import { useSeo } from "@/hooks/useSeo";
 
 const ProductDetail = () => {
@@ -32,18 +31,7 @@ const ProductDetail = () => {
     <div className="min-h-screen bg-background">
       <ScrollToTop />
 
-      {/* Header with background */}
-      <div
-        className="relative overflow-hidden"
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "auto 100%",
-          backgroundPosition: "left center",
-          backgroundRepeat: "no-repeat",
-        }}
-      >
-        <Navbar className="bg-transparent" />
-      </div>
+      <Navbar />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Product Section */}
