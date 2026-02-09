@@ -5,7 +5,8 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { heroBackground } from "@/lib/assetUrls";
+const heroBgImage =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770632691901_Frame_2147225909.png";
 import SectionSkeleton from "@/components/SectionSkeleton";
 
 // Lazy load below-the-fold sections for faster initial paint
@@ -40,19 +41,22 @@ const Index = () => {
 
       {/* Header area with shared hero background (Navbar + HeroSection) */}
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden min-h-[50vh]"
         style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: "auto 100%",
-          backgroundPosition: "left center",
+          backgroundImage: `url(${heroBgImage})`,
+          backgroundSize: "contain",
+          backgroundPosition: "top center",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <Navbar className="bg-transparent" />
+        <div className="absolute inset-0 bg-background/40 pointer-events-none z-0" aria-hidden />
+        <div className="relative z-10">
+          <Navbar className="bg-transparent" />
 
-        <ErrorBoundary section="Hero">
-          <HeroSection data={landingData?.hero} />
-        </ErrorBoundary>
+          <ErrorBoundary section="Hero">
+            <HeroSection data={landingData?.hero} />
+          </ErrorBoundary>
+        </div>
       </div>
 
       <main id="main-content">

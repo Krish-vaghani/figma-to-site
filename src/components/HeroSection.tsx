@@ -22,23 +22,8 @@ const HeroSection = ({ data }: HeroSectionProps) => {
   const backgroundScale = useTransform(scrollYProgress, [0, 1], [1, 1.1]);
   const overlayOpacity = useTransform(scrollYProgress, [0, 0.5], [0.5, 0.8]);
 
-  const heroBgImage =
-    "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770632691901_Frame_2147225909.png";
-
   return (
     <section ref={sectionRef} className="relative overflow-hidden">
-      {/* Full background image */}
-      <div
-        className="absolute inset-0 z-0 bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `url(${heroBgImage})`,
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-        }}
-      />
-      {/* Optional overlay for text readability - adjust opacity if needed */}
-      <div className="absolute inset-0 z-[1] bg-background/40 pointer-events-none" />
-
       {/* ===== MOBILE LAYOUT ===== */}
       <div className="relative z-10 lg:hidden">
         <div className="container mx-auto px-4 py-8">
