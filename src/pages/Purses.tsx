@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -85,6 +85,36 @@ const Purses = () => {
     currentPage * PRODUCTS_PER_PAGE
   );
 
+  const touchStartXRef = useRef<number | null>(null);
+  const touchCurrentXRef = useRef<number | null>(null);
+
+  const handleSheetTouchStart = (event: React.TouchEvent) => {
+    touchStartXRef.current = event.touches[0]?.clientX ?? null;
+    touchCurrentXRef.current = touchStartXRef.current;
+  };
+
+  const handleSheetTouchMove = (event: React.TouchEvent) => {
+    touchCurrentXRef.current = event.touches[0]?.clientX ?? null;
+  };
+
+  const handleSheetTouchEnd = () => {
+    if (
+      touchStartXRef.current != null &&
+      touchCurrentXRef.current != null
+    ) {
+      const deltaX = touchCurrentXRef.current - touchStartXRef.current;
+
+      // For a left-side sheet, a swipe from left to right (positive delta)
+      // will close the sheet on mobile.
+      if (deltaX > 80) {
+        setMobileFiltersOpen(false);
+      }
+    }
+
+    touchStartXRef.current = null;
+    touchCurrentXRef.current = null;
+  };
+
   const handleRemoveFilter = (type: string, value: string) => {
     setFilters((prev) => ({
       ...prev,
@@ -141,12 +171,34 @@ const Purses = () => {
 
           {/* Products Area */}
           <div className="flex-1 min-w-0">
-            {/* Toolbar: Filters, Sort & Product Count */}
-            <div className="mb-6 bg-muted/30 rounded-2xl p-4 border border-border/40">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Left side: Filter button + Sort */}
-                <div className="flex items-center gap-3">
-                  {/* Mobile/Tablet Filter Button */}
+            {/* Mobile Filter Toggle & Header */}
+            <div className="mb-6">
+              {/* Mobile row: Filter (start) + Sort (end) */}
+              <div className="flex items-center justify-between gap-3 sm:hidden">
+                <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="lg:hidden">
+                      <Menu className="h-4 w-4 mr-2" />
+                      Filters
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent
+                    side="left"
+                    className="w-80 overflow-y-auto"
+                    onTouchStart={handleSheetTouchStart}
+                    onTouchMove={handleSheetTouchMove}
+                    onTouchEnd={handleSheetTouchEnd}
+                  >
+                    <div className="pt-6">{FiltersContent}</div>
+                  </SheetContent>
+                </Sheet>
+
+                <SortDropdown value={sortBy} onChange={setSortBy} />
+              </div>
+
+              {/* Desktop/tablet row: Sort (left) + count (right) */}
+              <div className="hidden sm:flex items-center justify-between gap-4">
+                <div className="flex items-center gap-4">
                   <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
                     <SheetTrigger asChild>
                       <Button 
@@ -158,7 +210,13 @@ const Purses = () => {
                         Filters
                       </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-80 overflow-y-auto bg-background">
+                    <SheetContent
+                      side="left"
+                      className="w-80 overflow-y-auto bg-background"
+                      onTouchStart={handleSheetTouchStart}
+                      onTouchMove={handleSheetTouchMove}
+                      onTouchEnd={handleSheetTouchEnd}
+                    >
                       <div className="pt-6">{FiltersContent}</div>
                     </SheetContent>
                   </Sheet>
@@ -174,7 +232,26 @@ const Purses = () => {
                   </span>
                   <span className="text-muted-foreground">Products</span>
                 </div>
+                <p className="text-sm text-muted-foreground text-right leading-tight">
+                  <span className="block">
+                    <span className="font-semibold text-foreground">
+                      {filteredProducts.length}
+                    </span>{" "}
+                    Bags Found
+                  </span>
+                </p>
               </div>
+
+              {/* Mobile: count below */}
+              <p className="mt-3 sm:hidden text-sm text-muted-foreground leading-tight">
+                <span className="block">Showing</span>
+                <span className="block">
+                  <span className="font-semibold text-foreground">
+                    {filteredProducts.length}
+                  </span>{" "}
+                  Bags Found
+                </span>
+              </p>
             </div>
 
             {/* Active Filters */}
@@ -224,3 +301,4 @@ const Purses = () => {
 };
 
 export default Purses;
+	
