@@ -18,7 +18,7 @@ const ProductCarousel = ({
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { 
       loop: true, 
-      align: "center",
+      align: "start",
       skipSnaps: false,
       dragFree: true, // Smoother drag experience
       containScroll: false,

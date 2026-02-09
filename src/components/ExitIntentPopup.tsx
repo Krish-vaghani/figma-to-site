@@ -5,65 +5,31 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
+const COOLDOWN_MS = 3000; // Can show again after 3 seconds
+
 const ExitIntentPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState("");
-  const [hasShown, setHasShown] = useState(false);
+  const [lastClosedAt, setLastClosedAt] = useState<number>(0);
 
-  // Lock body scroll when popup is visible
-  useEffect(() => {
-    if (isVisible) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
-      document.body.style.top = `-${window.scrollY}px`;
-    } else {
-      const scrollY = document.body.style.top;
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-      if (scrollY) {
-        window.scrollTo(0, parseInt(scrollY || '0') * -1);
-      }
-    }
-    return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
-      document.body.style.top = '';
-    };
-  }, [isVisible]);
+  const canShow = () => Date.now() - lastClosedAt >= COOLDOWN_MS;
 
   useEffect(() => {
-    // Check if popup was already shown in this session
-    const alreadyShown = sessionStorage.getItem("exitPopupShown");
-    if (alreadyShown) {
-      setHasShown(true);
-      return;
-    }
-
     const handleMouseLeave = (e: MouseEvent) => {
-      // Detect when mouse leaves at the top of the viewport
-      if (e.clientY <= 0 && !hasShown) {
+      if (e.clientY <= 0 && canShow()) {
         setIsVisible(true);
-        setHasShown(true);
-        sessionStorage.setItem("exitPopupShown", "true");
       }
     };
 
-    // Also show on mobile when user scrolls up quickly (indicating intent to leave)
     let lastScrollY = window.scrollY;
     let scrollUpCount = 0;
-    
+
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       if (currentScrollY < lastScrollY && currentScrollY < 100) {
         scrollUpCount++;
-        if (scrollUpCount > 3 && !hasShown) {
+        if (scrollUpCount > 3 && canShow()) {
           setIsVisible(true);
-          setHasShown(true);
-          sessionStorage.setItem("exitPopupShown", "true");
         }
       } else {
         scrollUpCount = 0;
@@ -78,7 +44,12 @@ const ExitIntentPopup = () => {
       document.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [hasShown]);
+  }, [lastClosedAt]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setLastClosedAt(Date.now());
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,7 +58,7 @@ const ExitIntentPopup = () => {
         description: "Check your email for more exclusive offers!",
         duration: 5000,
       });
-      setIsVisible(false);
+      handleClose();
       setEmail("");
     }
   };
@@ -96,90 +67,83 @@ const ExitIntentPopup = () => {
     <AnimatePresence>
       {isVisible && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - click to dismiss */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-foreground/60 backdrop-blur-sm z-[100]"
-            onClick={() => setIsVisible(false)}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-foreground/20 backdrop-blur-[2px] z-[100]"
+            onClick={handleClose}
+            aria-hidden
           />
 
-          {/* Popup */}
+          {/* Centered popup - flex wrapper for reliable viewport center on all screens */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.9, y: 20 }}
-            transition={{ type: "spring", duration: 0.5 }}
-            className="fixed inset-0 z-[101] flex items-center justify-center p-4 overflow-hidden"
-            onClick={() => setIsVisible(false)}
+            initial={{ opacity: 0, scale: 0.96 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 400, damping: 30 }}
+            className="fixed inset-0 z-[101] flex items-center justify-center p-4 pointer-events-none"
+            role="dialog"
+            aria-labelledby="exit-popup-title"
+            aria-describedby="exit-popup-desc"
           >
-            <div 
-              className="w-full max-w-md max-h-[90vh] bg-background rounded-2xl sm:rounded-3xl overflow-hidden shadow-2xl relative flex flex-col"
+            <div
+              className="pointer-events-auto w-full max-w-[420px] sm:max-w-[440px] md:max-w-[480px] flex flex-col overflow-hidden rounded-3xl border border-border bg-background shadow-xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button */}
-              <button
-                onClick={() => setIsVisible(false)}
-                className="absolute top-3 right-3 sm:top-4 sm:right-4 p-1.5 sm:p-2 rounded-full bg-white/20 hover:bg-white/40 transition-colors z-10"
-                aria-label="Close popup"
-              >
-                <X className="h-4 w-4 sm:h-5 sm:w-5 text-white" />
-              </button>
-
-              {/* Decorative Header */}
-              <div className="bg-gradient-to-br from-coral via-coral/80 to-coral/60 p-5 sm:p-8 text-center">
-                <motion.div
-                  initial={{ rotate: -10 }}
-                  animate={{ rotate: [0, -5, 5, 0] }}
-                  transition={{ repeat: Infinity, duration: 2 }}
-                  className="inline-flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20 bg-white/20 backdrop-blur-sm rounded-full mb-3 sm:mb-4"
+              {/* Orange header section */}
+              <div className="relative flex shrink-0 flex-col items-center bg-[#FF7B4F] px-4 pb-6 pt-8 sm:px-6 sm:pb-8 sm:pt-10">
+                <button
+                  onClick={handleClose}
+                  className="absolute right-3 top-3 rounded-full p-2 text-white/90 transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 sm:right-4 sm:top-4"
+                  aria-label="Close offer"
                 >
-                  <Gift className="h-6 w-6 sm:h-10 sm:w-10 text-white" />
-                </motion.div>
-                <h3 className="text-xl sm:text-3xl font-bold text-white font-serif">
-                  Wait! Don't Leave Yet
-                </h3>
-                <p className="text-white/90 mt-1 sm:mt-2 text-xs sm:text-base">
-                  We have a special offer just for you
+                  <X className="h-5 w-5 sm:h-5 sm:w-5" />
+                </button>
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 sm:h-12 sm:w-12">
+                  <Gift className="h-5 w-5 text-white sm:h-6 sm:w-6" aria-hidden />
+                </div>
+                <h2 id="exit-popup-title" className="mt-3 text-center text-lg font-bold text-white sm:text-xl">
+                  Wait! Don&apos;t Leave Yet
+                </h2>
+                <p id="exit-popup-desc" className="mt-1 text-center text-sm text-white/95 sm:text-base">
+                  We have a special offer just for you.
                 </p>
               </div>
 
-              {/* Content */}
-              <div className="p-5 sm:p-8">
-                <div className="text-center mb-4 sm:mb-6">
-                  <div className="inline-flex items-center gap-2 bg-secondary px-3 sm:px-4 py-1.5 sm:py-2 rounded-full mb-3 sm:mb-4">
-                    <span className="text-3xl sm:text-5xl font-bold text-coral">15%</span>
-                    <span className="text-foreground font-medium text-sm sm:text-base">OFF</span>
-                  </div>
-                  <p className="text-muted-foreground text-xs sm:text-base">
-                    Subscribe to our newsletter and get an exclusive discount on your first order!
-                  </p>
+              {/* White content section - no scroll */}
+              <div className="flex flex-col p-4 sm:p-6">
+                <div className="flex items-baseline justify-center gap-1.5 pt-2 sm:gap-2 sm:pt-4">
+                  <span className="text-4xl font-bold text-[#FF7B4F] sm:text-5xl">15%</span>
+                  <span className="text-lg font-semibold text-foreground sm:text-xl">OFF</span>
                 </div>
-
-                <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+                <p className="mt-3 text-center text-sm text-muted-foreground sm:mt-4 sm:text-base">
+                  Subscribe to our newsletter and get an exclusive discount on your first order!
+                </p>
+                <form onSubmit={handleSubmit} className="mt-4 space-y-3 sm:mt-5 sm:space-y-4">
                   <div className="relative">
-                    <Mail className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground pointer-events-none sm:left-4 sm:h-[18px] sm:w-[18px]" />
                     <Input
                       type="email"
                       placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="pl-10 sm:pl-12 h-10 sm:h-12 text-sm sm:text-base rounded-full border-border focus:border-coral"
+                      className="h-11 rounded-xl border-border pl-9 text-sm focus-visible:ring-[#FF7B4F] sm:h-12 sm:pl-10 sm:text-base"
                       required
                     />
                   </div>
                   <Button
                     type="submit"
-                    className="w-full h-10 sm:h-12 rounded-full bg-foreground text-background hover:bg-coral transition-colors font-medium text-sm sm:text-base"
+                    className="h-11 w-full rounded-xl bg-foreground text-background hover:bg-[#FF7B4F] text-sm font-medium sm:h-12 sm:text-base"
                   >
                     Get My Discount
-                    <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 ml-2" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </form>
-
-                <p className="text-center text-muted-foreground text-[10px] sm:text-xs mt-3 sm:mt-4">
-                  No spam, ever. Unsubscribe anytime.
+                <p className="mt-3 text-center text-xs text-muted-foreground sm:mt-4">
+                  No spam. Unsubscribe anytime.
                 </p>
               </div>
             </div>

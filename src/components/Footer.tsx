@@ -1,17 +1,26 @@
 import { ArrowRight, Mail, Phone } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { logo, footerBackground } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 
+const footerNavLinks = [
+  { name: "Home", href: "/" },
+  { name: "Shop", href: "/purses" },
+  { name: "About Us", href: "/about" },
+  { name: "Contact Us", href: "#" },
+];
+
 const Footer = () => {
-  const exploreLinks = [
-    { name: "Home", href: "#" },
-    { name: "Jewellery", href: "#" },
-    { name: "Sale", href: "#" },
-    { name: "Purses", href: "#" },
-    { name: "About Us", href: "#" },
-    { name: "Contact Us", href: "#" },
-  ];
+  const location = useLocation();
+
+  const isActiveLink = (href: string) => {
+    if (href === "/") return location.pathname === "/";
+    if (href === "#") return false;
+    return location.pathname.startsWith(href);
+  };
+
+  const exploreLinks = footerNavLinks;
 
   const categoryLinks = [
     { name: "Handbags", href: "#" },
@@ -65,9 +74,11 @@ const Footer = () => {
               >
                 Subscribe & Save / Join Our List
               </Button>
-              <Button className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base gap-2 group">
-                Shop Now
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              <Button asChild className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base gap-2 group">
+                <Link to="/purses" className="inline-flex items-center gap-2">
+                  Shop Now
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -84,15 +95,21 @@ const Footer = () => {
                 Explore
               </h4>
               <div className="grid grid-cols-3 gap-x-3 sm:gap-x-4 gap-y-2 sm:gap-y-3">
-                {exploreLinks.map((link) => (
-                  <a
-                    key={link.name}
-                    href={link.href}
-                    className="text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm lg:text-base"
-                  >
-                    {link.name}
-                  </a>
-                ))}
+                {exploreLinks.map((link) => {
+                  const isActive = isActiveLink(link.href);
+                  const linkClass = `transition-colors text-xs sm:text-sm lg:text-base ${
+                    isActive ? "text-coral font-medium" : "text-muted-foreground hover:text-coral"
+                  }`;
+                  return link.href === "#" ? (
+                    <a key={link.name} href={link.href} className={linkClass}>
+                      {link.name}
+                    </a>
+                  ) : (
+                    <Link key={link.name} to={link.href} className={linkClass}>
+                      {link.name}
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </ScrollReveal>
@@ -174,9 +191,9 @@ const Footer = () => {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             {/* Logo & Compliance */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 lg:gap-6">
-              <div className="flex items-center gap-2">
+              <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 rounded">
                 <img src={logo} alt="Welcome Logo" className="h-7 sm:h-8 lg:h-10" />
-              </div>
+              </Link>
               <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                 <span className="font-medium">Privacy & Compliance :</span>
                 <span>Secure Payments</span>

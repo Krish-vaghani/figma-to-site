@@ -31,7 +31,7 @@ const Index = () => {
   const landingData = response?.data;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen min-w-0 overflow-x-hidden bg-background">
       {/* Skip to main content for accessibility */}
       <a href="#main-content" className="skip-link">
         Skip to main content
