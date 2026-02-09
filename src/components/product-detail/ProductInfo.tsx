@@ -151,14 +151,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* Action Buttons */}
       <div className="flex gap-3 sm:gap-4 pt-2">
         <motion.button
-          className="flex-1 bg-foreground text-background font-medium px-4 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base hover:bg-coral transition-colors duration-300"
+          className="flex-1 bg-foreground text-background font-medium px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base hover:bg-coral transition-colors duration-300"
           whileTap={{ scale: 0.98 }}
           onClick={handleAddToCart}
         >
           Add To Cart
         </motion.button>
         <motion.button
-          className={`flex-1 border-2 font-medium px-4 sm:px-6 py-3 sm:py-3.5 rounded-lg text-sm sm:text-base transition-colors duration-300 flex items-center justify-center gap-2 ${
+          className={`flex-1 border-2 font-medium px-4 sm:px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base transition-colors duration-300 flex items-center justify-center gap-2 ${
             isWishlisted
               ? "border-coral bg-coral/10 text-coral"
               : "border-foreground text-foreground hover:bg-foreground hover:text-background"

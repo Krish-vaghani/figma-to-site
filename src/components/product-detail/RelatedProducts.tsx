@@ -105,7 +105,7 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
           </div>
         </div>
         <p className="text-muted-foreground text-[10px] sm:text-xs truncate">{product.description}</p>
-        <div className="flex items-center justify-between pt-1">
+        <div className="flex flex-col gap-0.5 pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm sm:text-base font-bold text-foreground">
               ${product.price.toLocaleString()}.00
@@ -115,7 +115,7 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
             </span>
           </div>
           <div className="flex items-center gap-0.5">
-            <Star className="h-3 w-3 fill-coral text-coral" />
+            <Star className="h-3 w-3 fill-coral text-coral flex-shrink-0" />
             <span className="text-muted-foreground text-[10px] sm:text-xs">
               {product.rating}({product.reviews})
             </span>

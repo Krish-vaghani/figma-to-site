@@ -48,7 +48,7 @@ const ReviewsSection = () => {
         <h2 className="text-xl sm:text-2xl font-bold text-foreground font-serif">Reviews</h2>
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Sort By :</span>
-          <button className="flex items-center gap-1 text-sm font-medium text-foreground border border-border rounded-lg px-3 py-1.5 hover:bg-secondary/50 transition-colors">
+          <button className="flex items-center gap-1 text-sm font-medium text-foreground border border-border rounded-full px-3 py-1.5 hover:bg-secondary/50 transition-colors">
             {sortBy}
             <ChevronDown className="h-3.5 w-3.5" />
           </button>
