@@ -164,7 +164,7 @@ const CollectionsSection = ({ data }: CollectionsSectionProps) => {
   const collectionProducts = products.slice(0, 4);
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-background overflow-hidden">
+    <section className="pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-14 lg:pb-20 bg-background overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
         <div className="text-center mb-8 sm:mb-12 px-4">

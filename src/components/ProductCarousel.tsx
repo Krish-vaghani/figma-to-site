@@ -93,9 +93,9 @@ const ProductCarousel = ({
       <div className="overflow-hidden px-4 sm:px-8" ref={emblaRef}>
         <div className="flex items-stretch gap-4 sm:gap-6">
           {children.map((child, index) => (
-            <div 
-              key={index} 
-              className="flex-shrink-0 min-w-0 first:ml-4 last:mr-4 sm:first:ml-8 sm:last:mr-8"
+            <div
+              key={index}
+              className="flex-shrink-0 min-w-0"
               style={{ flex: "0 0 auto" }}
             >
               {child}
