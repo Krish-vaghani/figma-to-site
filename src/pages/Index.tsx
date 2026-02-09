@@ -41,13 +41,8 @@ const Index = () => {
 
       {/* Header area with shared hero background (Navbar + HeroSection) */}
       <div
-        className="relative overflow-hidden min-h-[50vh]"
-        style={{
-          backgroundImage: `url(${heroBgImage})`,
-          backgroundSize: "contain",
-          backgroundPosition: "top center",
-          backgroundRepeat: "no-repeat",
-        }}
+        className="hero-header-bg relative overflow-hidden min-h-[50vh]"
+        style={{ backgroundImage: `url(${heroBgImage})` }}
       >
         <div className="absolute inset-0 bg-background/40 pointer-events-none z-0" aria-hidden />
         <div className="relative z-10">

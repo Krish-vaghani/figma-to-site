@@ -189,4 +189,16 @@ All colors MUST be HSL.
   .contact-border-spin {
     animation: contact-border-spin 4s linear infinite;
   }
+
+  /* Hero header background: slightly zoomed on mobile so top is more visible */
+  .hero-header-bg {
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: 140% auto;
+  }
+  @media (min-width: 768px) {
+    .hero-header-bg {
+      background-size: contain;
+    }
+  }
 }
