@@ -128,9 +128,9 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
         <p className="text-sm font-medium text-foreground">Size & Fit :</p>
         <div className="flex flex-wrap items-center gap-3 sm:gap-0 text-sm sm:text-base text-foreground">
           <span>Height : 18 Cm</span>
-          <span className="hidden sm:inline text-coral mx-4">|</span>
+          <span className="hidden sm:inline w-[2px] h-4 bg-coral mx-4 rounded-full" />
           <span>Width : 22 Cm</span>
-          <span className="hidden sm:inline text-coral mx-4">|</span>
+          <span className="hidden sm:inline w-[2px] h-4 bg-coral mx-4 rounded-full" />
           <span>Depth : 10 Cm</span>
         </div>
       </div>
