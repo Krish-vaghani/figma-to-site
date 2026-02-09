@@ -1,4 +1,5 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import ScrollReveal from "./ScrollReveal";
@@ -137,9 +138,11 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
 
         {/* CTA Link */}
         <a
-          href="#"
+          href={`/product/${product.id}`}
           className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto"
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
         >
           Let's Check It Out
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
