@@ -40,7 +40,7 @@ const ProductDetail = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Product Section */}
         <section className="py-6 sm:py-10 lg:py-14">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             {/* Left: Image Gallery */}
             <ProductImageGallery
               images={[product.image]}
