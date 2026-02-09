@@ -5,14 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 
-const COOLDOWN_MS = 3000; // Can show again after 3 seconds
-
 const ExitIntentPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [email, setEmail] = useState("");
-  const [lastClosedAt, setLastClosedAt] = useState<number>(0);
+  const [hasShown, setHasShown] = useState(() => sessionStorage.getItem("exitPopupShown") === "true");
 
-  const canShow = () => Date.now() - lastClosedAt >= COOLDOWN_MS;
+  const canShow = () => !hasShown;
 
   useEffect(() => {
     const handleMouseLeave = (e: MouseEvent) => {
@@ -44,11 +42,12 @@ const ExitIntentPopup = () => {
       document.removeEventListener("mouseleave", handleMouseLeave);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastClosedAt]);
+  }, [hasShown]);
 
   const handleClose = () => {
     setIsVisible(false);
-    setLastClosedAt(Date.now());
+    setHasShown(true);
+    sessionStorage.setItem("exitPopupShown", "true");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
