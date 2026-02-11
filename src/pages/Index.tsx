@@ -14,7 +14,9 @@ const CollectionsSection = lazy(() => import("@/components/CollectionsSection"))
 const CategoriesSection = lazy(() => import("@/components/CategoriesSection"));
 const ElevateSection = lazy(() => import("@/components/ElevateSection"));
 const NewArrivalsSection = lazy(() => import("@/components/NewArrivalsSection"));
+const BundleDealsSection = lazy(() => import("@/components/BundleDealsSection"));
 const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
+const LoyaltyBanner = lazy(() => import("@/components/LoyaltyBanner"));
 const ExitIntentPopup = lazy(() => import("@/components/ExitIntentPopup"));
 
 import { useGetLandingPageDataQuery } from "@/store/services/landingApi";
@@ -79,12 +81,22 @@ const Index = () => {
           </ErrorBoundary>
         </Suspense>
 
+        <Suspense fallback={<SectionLoader />}>
+          <ErrorBoundary section="Bundle Deals">
+            <BundleDealsSection />
+          </ErrorBoundary>
+        </Suspense>
+
         <Suspense fallback={<SectionSkeleton variant="testimonials" />}>
           <ErrorBoundary section="Testimonials">
             <TestimonialsSection data={landingData?.testimonials} />
           </ErrorBoundary>
         </Suspense>
       </main>
+
+      <Suspense fallback={null}>
+        <LoyaltyBanner />
+      </Suspense>
 
       <Footer />
       <ScrollToTop />
