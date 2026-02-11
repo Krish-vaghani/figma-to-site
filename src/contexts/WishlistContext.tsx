@@ -8,6 +8,7 @@ interface WishlistContextType {
   toggleWishlist: (id: number, productName?: string) => void;
   isInWishlist: (id: number) => boolean;
   wishlistCount: number;
+  getShareUrl: () => string;
 }
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
@@ -50,6 +51,11 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   const isInWishlist = (id: number) => wishlist.includes(id);
 
+  const getShareUrl = () => {
+    const base = `${window.location.origin}/purses`;
+    return wishlist.length > 0 ? `${base}?wishlist=${wishlist.join(",")}` : base;
+  };
+
   return (
     <WishlistContext.Provider
       value={{
@@ -59,6 +65,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
         toggleWishlist,
         isInWishlist,
         wishlistCount: wishlist.length,
+        getShareUrl,
       }}
     >
       {children}

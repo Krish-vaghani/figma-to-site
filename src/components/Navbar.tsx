@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import SearchModal from "./SearchModal";
+import WishlistShareDialog from "./WishlistShareDialog";
 import { logo } from "@/lib/assetUrls";
 
 type NavbarProps = {
@@ -122,6 +123,9 @@ const Navbar = ({ className }: NavbarProps) => {
                 )}
               </AnimatePresence>
             </Button>
+
+            {/* Share Wishlist */}
+            {wishlistCount > 0 && <WishlistShareDialog />}
 
             <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
               Sign In
