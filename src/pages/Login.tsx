@@ -13,7 +13,7 @@ import loginIllustration from "@/assets/login-illustration.png";
 import otpIllustration from "@/assets/otp-illustration.png";
 import loginCardBg from "@/assets/login-card-bg.png";
 
-const OTP_LENGTH = 6;
+const OTP_LENGTH = 4;
 
 const Login = () => {
   useSeo("Login", "Sign in to manage your orders, wishlist, and account details.");
