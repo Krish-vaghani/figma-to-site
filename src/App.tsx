@@ -13,6 +13,7 @@ const Purses = lazy(() => import("./pages/Purses"));
 const AboutUs = lazy(() => import("./pages/AboutUs"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const Login = lazy(() => import("./pages/Login"));
 
 const RouteFallback = () => (
   <div className="min-h-[50vh] flex items-center justify-center">
@@ -31,6 +32,7 @@ const AnimatedRoutes = () => {
           <Route path="/purses" element={<PageTransition><Purses /></PageTransition>} />
           <Route path="/about" element={<PageTransition><AboutUs /></PageTransition>} />
           <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
+          <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
           <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
         </Routes>
       </Suspense>
