@@ -146,9 +146,11 @@ const CartDrawer = () => {
 
               {/* Actions */}
               <div className="space-y-3">
-                <button className="w-full bg-foreground text-background font-medium py-3.5 rounded-full hover:bg-coral transition-colors">
-                  Checkout
-                </button>
+                <a href="/login" className="block w-full">
+                  <button className="w-full bg-foreground text-background font-medium py-3.5 rounded-full hover:bg-coral transition-colors">
+                    Checkout
+                  </button>
+                </a>
                 <button
                   onClick={clearCart}
                   className="w-full border border-border text-foreground font-medium py-3 rounded-full hover:bg-secondary/50 transition-colors"

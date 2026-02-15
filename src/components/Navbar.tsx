@@ -127,9 +127,11 @@ const Navbar = ({ className }: NavbarProps) => {
             {/* Share Wishlist */}
             {wishlistCount > 0 && <WishlistShareDialog />}
 
-            <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
-              Sign In
-            </Button>
+            <Link to="/login">
+              <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
+                Login
+              </Button>
+            </Link>
 
             {/* Mobile Menu Button */}
             <Button
@@ -203,9 +205,11 @@ const Navbar = ({ className }: NavbarProps) => {
                   </span>
                 )}
               </Button>
-              <Button className="sm:hidden flex-1 rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
-                Sign In
-              </Button>
+              <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
+                <Button className="sm:hidden w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
+                  Login
+                </Button>
+              </Link>
             </div>
           </motion.div>
         )}
