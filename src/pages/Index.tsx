@@ -94,9 +94,9 @@ const Index = () => {
         </Suspense>
       </main>
 
-      <Suspense fallback={null}>
+      {/* <Suspense fallback={null}>
         <LoyaltyBanner />
-      </Suspense>
+      </Suspense> */}
 
       <Footer />
       <ScrollToTop />
