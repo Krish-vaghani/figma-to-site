@@ -12,7 +12,7 @@ import ActiveFilters from "@/components/shop/ActiveFilters";
 import ShopProductCard from "@/components/shop/ShopProductCard";
 import ShopPagination from "@/components/shop/ShopPagination";
 import SortDropdown from "@/components/shop/SortDropdown";
-import ProductQuickView from "@/components/ProductQuickView";
+
 import { useGetProductListQuery } from "@/store/services/productApi";
 import { mapApiProductToProduct } from "@/types/product";
 import type { Product } from "@/data/products";
@@ -28,7 +28,7 @@ const FETCH_LIMIT = 500;
 const Purses = () => {
   useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over $100.");
   const navigate = useNavigate();
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("featured");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -348,14 +348,6 @@ const Purses = () => {
 
       <Footer />
 
-      {/* Quick View Modal */}
-      {selectedProduct && (
-        <ProductQuickView
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </div>
   );
 };

@@ -1,9 +1,7 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import ScrollReveal from "./ScrollReveal";
-import ProductQuickView from "./ProductQuickView";
 import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -159,7 +157,7 @@ interface CollectionsSectionProps {
 }
 
 const CollectionsSection = ({ data }: CollectionsSectionProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const navigate = useNavigate();
   // Only show first 4 products for collections
   const collectionProducts = products.slice(0, 4);
 
@@ -185,20 +183,12 @@ const CollectionsSection = ({ data }: CollectionsSectionProps) => {
             <ProductCard
               key={product.id}
               product={product}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
             />
           ))}
         </ProductCarousel>
       </div>
 
-      {/* Quick View Modal */}
-      {selectedProduct && (
-        <ProductQuickView
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </section>
   );
 };
