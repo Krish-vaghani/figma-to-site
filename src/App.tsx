@@ -12,6 +12,8 @@ import AboutUs from "./pages/AboutUs";
 import NotFound from "./pages/NotFound";
 import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
+import Wishlist from "./pages/Wishlist";
+import Cart from "./pages/Cart";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -24,6 +26,8 @@ const AnimatedRoutes = () => {
         <Route path="/about" element={<PageTransition><AboutUs /></PageTransition>} />
         <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
+        <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
+        <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
