@@ -155,69 +155,89 @@ const Wishlist = () => {
               {wishlistProducts.map((product) => {
                 const qty = getQty(product.id);
                 return (
-                  <div
-                    key={product.id}
-                    className="py-4 md:py-5 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center"
-                  >
-                    {/* Product Info */}
-                    <div className="flex items-center gap-4">
-                      <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
-                        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
-                        <div className="absolute top-1 left-1 w-6 h-6 rounded-full bg-coral/80 flex items-center justify-center">
-                          <Heart className="h-3 w-3 text-white fill-white" />
+                  <div key={product.id}>
+                    {/* Desktop Row */}
+                    <div className="hidden md:grid py-5 grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="relative w-24 h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
+                          <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                          <div className="absolute top-1 left-1 w-6 h-6 rounded-full bg-coral/80 flex items-center justify-center">
+                            <Heart className="h-3 w-3 text-white fill-white" />
+                          </div>
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-foreground">{product.name}</h3>
+                          <p className="text-xs text-muted-foreground">{product.description}</p>
+                          <div className="flex items-center gap-1 mt-1">
+                            <span className="text-xs text-muted-foreground">Color :</span>
+                            {product.colors.map((c) => (
+                              <span key={c} className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: c }} />
+                            ))}
+                          </div>
+                          <div className="flex items-center gap-1 mt-0.5">
+                            <span className="text-xs text-muted-foreground">Review :</span>
+                            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                            <span className="text-xs text-muted-foreground">{product.rating}({product.reviews})</span>
+                          </div>
                         </div>
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm md:text-base">{product.name}</h3>
-                        <p className="text-xs text-muted-foreground">{product.description}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-xs text-muted-foreground">Color :</span>
-                          {product.colors.map((c) => (
-                            <span key={c} className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: c }} />
-                          ))}
+                      <div className="flex items-center justify-center">
+                        <div className="flex items-center border border-border rounded-lg overflow-hidden">
+                          <button onClick={() => setQty(product.id, qty - 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"><Minus className="h-3 w-3" /></button>
+                          <span className="w-10 text-center text-sm font-medium">{String(qty).padStart(2, "0")}</span>
+                          <button onClick={() => setQty(product.id, qty + 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"><Plus className="h-3 w-3" /></button>
                         </div>
-                        <div className="flex items-center gap-1 mt-0.5">
-                          <span className="text-xs text-muted-foreground">Review :</span>
-                          <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                          <span className="text-xs text-muted-foreground">
-                            {product.rating}({product.reviews})
+                      </div>
+                      <div className="text-center">
+                        <span className="font-semibold text-foreground">${product.price.toLocaleString()}.00</span>{" "}
+                        <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toLocaleString()}.00</span>
+                      </div>
+                      <div className="text-center font-semibold text-foreground">${(product.price * qty).toLocaleString()}.00</div>
+                      <div className="flex justify-center">
+                        <button onClick={() => removeFromWishlist(product.id)} className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mobile Card */}
+                    <div className="md:hidden py-4 flex gap-3">
+                      <div className="relative w-[72px] h-[72px] rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
+                        <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+                        <div className="absolute top-1 left-1 w-5 h-5 rounded-full bg-coral/80 flex items-center justify-center">
+                          <Heart className="h-2.5 w-2.5 text-white fill-white" />
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-semibold text-foreground text-sm leading-tight">{product.name}</h3>
+                          <button onClick={() => removeFromWishlist(product.id)} className="flex-shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground">
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-0.5">{product.description}</p>
+                        <div className="flex items-center gap-1 mt-1">
+                          {product.colors.map((c) => (
+                            <span key={c} className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: c }} />
+                          ))}
+                          <span className="ml-1 text-[11px] text-muted-foreground flex items-center gap-0.5">
+                            <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
                           </span>
                         </div>
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center border border-border rounded-md overflow-hidden">
+                            <button onClick={() => setQty(product.id, qty - 1)} className="px-2 py-1 text-muted-foreground"><Minus className="h-3 w-3" /></button>
+                            <span className="w-7 text-center text-xs font-medium">{String(qty).padStart(2, "0")}</span>
+                            <button onClick={() => setQty(product.id, qty + 1)} className="px-2 py-1 text-muted-foreground"><Plus className="h-3 w-3" /></button>
+                          </div>
+                          <div className="text-right">
+                            <span className="font-bold text-foreground text-sm">${(product.price * qty).toLocaleString()}.00</span>
+                            {product.originalPrice > product.price && (
+                              <span className="ml-1 text-[11px] text-muted-foreground line-through">${product.originalPrice.toLocaleString()}</span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="flex items-center justify-center">
-                      <div className="flex items-center border border-border rounded-lg overflow-hidden">
-                        <button onClick={() => setQty(product.id, qty - 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground">
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="w-10 text-center text-sm font-medium">{String(qty).padStart(2, "0")}</span>
-                        <button onClick={() => setQty(product.id, qty + 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground">
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Price */}
-                    <div className="text-center">
-                      <span className="font-semibold text-foreground">${product.price.toLocaleString()}.00</span>{" "}
-                      <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toLocaleString()}.00</span>
-                    </div>
-
-                    {/* Total */}
-                    <div className="text-center font-semibold text-foreground">
-                      ${(product.price * qty).toLocaleString()}.00
-                    </div>
-
-                    {/* Delete */}
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => removeFromWishlist(product.id)}
-                        className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
                     </div>
                   </div>
                 );
