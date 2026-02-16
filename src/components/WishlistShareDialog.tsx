@@ -1,5 +1,5 @@
 import { Copy, Check, Share2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -8,6 +8,15 @@ import { toast } from "@/lib/toast";
 const WishlistShareDialog = () => {
   const { wishlist, wishlistCount, getShareUrl } = useWishlist();
   const [copied, setCopied] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  // Close popover on scroll
+  useEffect(() => {
+    if (!open) return;
+    const handleScroll = () => setOpen(false);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [open]);
 
   if (wishlistCount === 0) return null;
 
@@ -42,7 +51,7 @@ const WishlistShareDialog = () => {
   const encodedText = encodeURIComponent(`Check out my wishlist! ${shareUrl}`);
 
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
