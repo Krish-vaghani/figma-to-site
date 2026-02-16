@@ -16,6 +16,14 @@ export interface Product {
   stock: number; // For urgency indicators
   /** From API; used for product detail URL when present */
   slug?: string;
+  /** For filter: API category mapped to filter label (e.g. "Handbags") */
+  category?: string;
+  /** For filter: e.g. "Leather" */
+  material?: string;
+  /** For filter: e.g. "Everyday Use" */
+  occasion?: string;
+  /** For filter: e.g. ["Best Sellers", "On Sale"] from tags */
+  collections?: string[];
 }
 
 export const products: Product[] = [

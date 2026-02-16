@@ -22,6 +22,8 @@ import { shopBackground } from "@/lib/assetUrls";
 
 const PRODUCTS_PER_PAGE = 12;
 const PURSE_CATEGORY = "purse";
+/** Fetch enough for frontend filtering (all filters applied client-side) */
+const FETCH_LIMIT = 500;
 
 const Purses = () => {
   useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over $100.");
@@ -29,7 +31,6 @@ const Purses = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("featured");
-  const [selectedTag] = useState<string | undefined>(undefined);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     categories: [] as string[],
@@ -41,20 +42,76 @@ const Purses = () => {
   });
 
   const { data: listResponse, isLoading, isError } = useGetProductListQuery({
-    page: currentPage,
-    limit: PRODUCTS_PER_PAGE,
+    page: 1,
+    limit: FETCH_LIMIT,
     category: PURSE_CATEGORY,
-    tag: selectedTag,
   });
 
-  const apiProducts = listResponse?.data ?? [];
-  const totalFromApi = listResponse?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(totalFromApi / PRODUCTS_PER_PAGE));
-
-  const mappedProducts = useMemo(
-    () => apiProducts.map(mapApiProductToProduct),
-    [apiProducts]
+  const allMappedProducts = useMemo(
+    () => (listResponse?.data ?? []).map(mapApiProductToProduct),
+    [listResponse?.data]
   );
+
+  const filteredProducts = useMemo(() => {
+    let result = [...allMappedProducts];
+
+    if (filters.categories.length > 0) {
+      result = result.filter((p) => p.category && filters.categories.includes(p.category));
+    }
+    if (filters.materials.length > 0) {
+      result = result.filter((p) => p.material && filters.materials.includes(p.material));
+    }
+    if (filters.occasions.length > 0) {
+      result = result.filter((p) => p.occasion && filters.occasions.includes(p.occasion));
+    }
+    if (filters.collections.length > 0) {
+      result = result.filter(
+        (p) => p.collections?.some((c) => filters.collections.includes(c))
+      );
+    }
+    result = result.filter(
+      (p) => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
+    );
+    if (filters.ratings.length > 0) {
+      result = result.filter((p) =>
+        filters.ratings.some((r) => Math.floor(p.rating) >= r)
+      );
+    }
+
+    switch (sortBy) {
+      case "newest":
+        return [...result].reverse();
+      case "price-low":
+        return [...result].sort((a, b) => a.price - b.price);
+      case "price-high":
+        return [...result].sort((a, b) => b.price - a.price);
+      case "rating":
+        return [...result].sort((a, b) => b.rating - a.rating);
+      default:
+        return result;
+    }
+  }, [allMappedProducts, filters, sortBy]);
+
+  const totalFiltered = filteredProducts.length;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / PRODUCTS_PER_PAGE));
+  const paginatedProducts = useMemo(
+    () =>
+      filteredProducts.slice(
+        (currentPage - 1) * PRODUCTS_PER_PAGE,
+        currentPage * PRODUCTS_PER_PAGE
+      ),
+    [filteredProducts, currentPage]
+  );
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filters, sortBy]);
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages >= 1) {
+      setCurrentPage(totalPages);
+    }
+  }, [currentPage, totalPages]);
 
   useEffect(() => {
     if (isError) {
@@ -63,22 +120,6 @@ const Purses = () => {
       });
     }
   }, [isError]);
-
-  const paginatedProducts = useMemo(() => {
-    const result = [...mappedProducts];
-    switch (sortBy) {
-      case "newest":
-        return result.reverse();
-      case "price-low":
-        return result.sort((a, b) => a.price - b.price);
-      case "price-high":
-        return result.sort((a, b) => b.price - a.price);
-      case "rating":
-        return result.sort((a, b) => b.rating - a.rating);
-      default:
-        return result;
-    }
-  }, [mappedProducts, sortBy]);
 
   const touchStartXRef = useRef<number | null>(null);
   const touchCurrentXRef = useRef<number | null>(null);
@@ -111,10 +152,24 @@ const Purses = () => {
   };
 
   const handleRemoveFilter = (type: string, value: string) => {
+    if (type === "priceRange") {
+      setFilters((prev) => ({ ...prev, priceRange: [0, 10000] }));
+      return;
+    }
+    if (type === "ratings") {
+      const num = Number(value);
+      if (!Number.isNaN(num)) {
+        setFilters((prev) => ({
+          ...prev,
+          ratings: prev.ratings.filter((r) => r !== num),
+        }));
+      }
+      return;
+    }
     setFilters((prev) => ({
       ...prev,
       [type]: (prev[type as keyof typeof prev] as string[]).filter(
-        (v) => v !== value
+        (v) => String(v) !== value
       ),
     }));
   };
@@ -225,12 +280,12 @@ const Purses = () => {
                   <span className="bg-coral/10 text-coral font-semibold px-3 py-1 rounded-full">
                     {paginatedProducts.length}
                   </span>
-                  <span className="text-muted-foreground">of {totalFromApi} Products</span>
+                  <span className="text-muted-foreground">of {totalFiltered} Products</span>
                 </div>
                 <p className="text-sm text-muted-foreground text-right leading-tight">
                   <span className="block">
                     <span className="font-semibold text-foreground">
-                      {totalFromApi}
+                      {totalFiltered}
                     </span>{" "}
                     Bags Found
                   </span>
@@ -239,10 +294,10 @@ const Purses = () => {
 
               {/* Mobile: count below */}
               <p className="mt-3 sm:hidden text-sm text-muted-foreground leading-tight">
-                <span className="block">Showing {paginatedProducts.length} of {totalFromApi}</span>
+                <span className="block">Showing {paginatedProducts.length} of {totalFiltered}</span>
                 <span className="block">
                   <span className="font-semibold text-foreground">
-                    {totalFromApi}
+                    {totalFiltered}
                   </span>{" "}
                   Bags Found
                 </span>

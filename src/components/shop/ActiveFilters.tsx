@@ -6,17 +6,24 @@ interface ActiveFiltersProps {
     materials: string[];
     occasions: string[];
     collections: string[];
+    priceRange: [number, number];
+    ratings: number[];
   };
   onRemove: (type: string, value: string) => void;
   onClearAll: () => void;
 }
 
 const ActiveFilters = ({ filters, onRemove, onClearAll }: ActiveFiltersProps) => {
+  const [minPrice, maxPrice] = filters.priceRange;
+  const hasDefaultPrice = minPrice === 0 && maxPrice === 10000;
+
   const allFilters = [
-    ...filters.categories.map((v) => ({ type: "categories", value: v })),
-    ...filters.materials.map((v) => ({ type: "materials", value: v })),
-    ...filters.occasions.map((v) => ({ type: "occasions", value: v })),
-    ...filters.collections.map((v) => ({ type: "collections", value: v })),
+    ...filters.categories.map((v) => ({ type: "categories" as const, value: v })),
+    ...filters.materials.map((v) => ({ type: "materials" as const, value: v })),
+    ...filters.occasions.map((v) => ({ type: "occasions" as const, value: v })),
+    ...filters.collections.map((v) => ({ type: "collections" as const, value: v })),
+    ...(!hasDefaultPrice ? [{ type: "priceRange" as const, value: "" }] : []),
+    ...filters.ratings.map((r) => ({ type: "ratings" as const, value: String(r) })),
   ];
 
   if (allFilters.length === 0) return null;
@@ -27,11 +34,15 @@ const ActiveFilters = ({ filters, onRemove, onClearAll }: ActiveFiltersProps) =>
       <div className="flex flex-wrap items-center gap-2">
         {allFilters.map(({ type, value }) => (
           <button
-            key={`${type}-${value}`}
+            key={type === "priceRange" ? "priceRange" : `${type}-${value}`}
             onClick={() => onRemove(type, value)}
             className="inline-flex items-center gap-2 px-4 py-2 bg-coral text-white text-sm font-medium rounded-full hover:bg-coral/90 transition-colors"
           >
-            {value}
+            {type === "priceRange"
+              ? `Price: $${minPrice.toLocaleString()} – $${maxPrice.toLocaleString()}`
+              : type === "ratings"
+                ? `${value} Star`
+                : value}
             <X className="h-4 w-4" />
           </button>
         ))}

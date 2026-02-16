@@ -43,9 +43,25 @@ export interface ProductListParams {
 /** BadgeType supported by UI (from @/data/products) */
 const VALID_BADGES = ["bestseller", "trending", "new", "hot", "limited", "sale"] as const;
 
+/** API category -> filter category label (By Category in ShopFilters) */
+const CATEGORY_TO_LABEL: Record<string, string> = {
+  purse: "Handbags",
+};
+
+/** Tag -> collection label (By Collection in ShopFilters) */
+const TAG_TO_COLLECTION: Record<string, string> = {
+  bestseller: "Best Sellers",
+  trending: "Trending",
+  sale: "On Sale",
+  new: "New Arrivals",
+};
+
 /** Map API product to the Product shape used by ShopProductCard etc. */
 export function mapApiProductToProduct(p: ApiProduct): import("@/data/products").Product {
   const badge = p.tags[0];
+  const collections = p.tags
+    .map((t) => TAG_TO_COLLECTION[t])
+    .filter(Boolean);
   return {
     id: p._id,
     name: p.name,
@@ -61,5 +77,9 @@ export function mapApiProductToProduct(p: ApiProduct): import("@/data/products")
     colors: p.colorVariants.map((c) => c.colorCode),
     stock: 0,
     slug: p.slug,
+    category: CATEGORY_TO_LABEL[p.category] ?? p.category,
+    material: "Leather",
+    occasion: "Everyday Use",
+    collections: collections.length > 0 ? collections : ["New Arrivals"],
   };
 }
