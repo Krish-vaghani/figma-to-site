@@ -47,7 +47,7 @@ const WishlistShareDialog = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="hidden sm:flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
+          className="flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
           aria-label="Share wishlist"
         >
           <Share2 className="h-4 w-4" />
@@ -98,8 +98,17 @@ const WishlistShareDialog = () => {
             Facebook
           </a>
 
+          {/* Email share */}
+          <a
+            href={`mailto:?subject=${encodeURIComponent("Check out my wishlist!")}&body=${encodedText}`}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-secondary transition-colors"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Email
+          </a>
+
           {/* Native share on supported devices */}
-          {typeof navigator !== "undefined" && navigator.share && (
+          {typeof navigator !== "undefined" && !!navigator.share && (
             <button
               onClick={handleNativeShare}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-secondary transition-colors text-coral font-medium"
