@@ -1,4 +1,5 @@
 import { Suspense, lazy } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import Footer from "@/components/Footer";
@@ -23,8 +24,16 @@ import { useGetLandingPageDataQuery } from "@/store/services/landingApi";
 
 // Minimal loading placeholder for non-product sections
 const SectionLoader = () => (
-  <div className="py-16 flex items-center justify-center">
-    <div className="w-8 h-8 border-2 border-coral border-t-transparent rounded-full animate-spin" />
+  <div className="py-16 px-4">
+    <div className="max-w-7xl mx-auto space-y-4">
+      <Skeleton className="h-8 w-48 mx-auto" />
+      <Skeleton className="h-4 w-72 mx-auto" />
+      <div className="flex gap-4 mt-6">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Skeleton key={i} className="h-40 flex-1 rounded-2xl" />
+        ))}
+      </div>
+    </div>
   </div>
 );
 
