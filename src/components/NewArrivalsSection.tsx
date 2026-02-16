@@ -1,8 +1,7 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ScrollReveal from "./ScrollReveal";
-import ProductQuickView from "./ProductQuickView";
 import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -156,7 +155,7 @@ interface NewArrivalsSectionProps {
 }
 
 const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const navigate = useNavigate();
   // Show 5 products for new arrivals
   const newArrivalProducts = products.slice(0, 5);
 
@@ -182,23 +181,12 @@ const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
             <NewProductCard
               key={product.id}
               product={product}
-              onClick={() => setSelectedProduct(product)}
+              onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
             />
           ))}
         </ProductCarousel>
       </div>
 
-      {/* Quick View Modal */}
-      {selectedProduct && (
-        <ProductQuickView
-          product={{
-            ...selectedProduct,
-            id: String(selectedProduct.id) + "_new",
-          }}
-          isOpen={!!selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
 
       {/* Explore Button */}
       <ScrollReveal delay={0.3}>

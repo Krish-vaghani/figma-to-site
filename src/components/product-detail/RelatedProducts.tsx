@@ -1,9 +1,8 @@
-import { useState } from "react";
 import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
-import ProductQuickView from "@/components/ProductQuickView";
 import ScrollReveal from "@/components/ScrollReveal";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
@@ -131,7 +130,7 @@ interface RelatedProductsProps {
 }
 
 const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const navigate = useNavigate();
   const relatedProducts = products.filter((p) => p.id !== currentProductId).slice(0, 4);
 
   return (
@@ -152,18 +151,10 @@ const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
           <RelatedProductCard
             key={product.id}
             product={product}
-            onClick={() => setSelectedProduct(product)}
+            onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
           />
         ))}
       </div>
-
-      {selectedProduct && (
-        <ProductQuickView
-          product={selectedProduct}
-          isOpen={!!selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
-      )}
     </section>
   );
 };

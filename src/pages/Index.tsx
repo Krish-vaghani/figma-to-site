@@ -18,7 +18,7 @@ const NewArrivalsSection = lazy(() => import("@/components/NewArrivalsSection"))
 const BundleDealsSection = lazy(() => import("@/components/BundleDealsSection"));
 const TestimonialsSection = lazy(() => import("@/components/TestimonialsSection"));
 const LoyaltyBanner = lazy(() => import("@/components/LoyaltyBanner"));
-const ExitIntentPopup = lazy(() => import("@/components/ExitIntentPopup"));
+
 
 import { useGetLandingPageDataQuery } from "@/store/services/landingApi";
 
@@ -110,9 +110,6 @@ const Index = () => {
       <Footer />
       <ScrollToTop />
 
-      <Suspense fallback={null}>
-        <ExitIntentPopup />
-      </Suspense>
     </div>
   );
 };
