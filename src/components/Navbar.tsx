@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -26,6 +26,14 @@ const Navbar = ({ className }: NavbarProps) => {
   const { wishlistCount } = useWishlist();
   const { cartCount, setIsCartOpen } = useCart();
   const location = useLocation();
+
+  // Close mobile menu on scroll
+  useEffect(() => {
+    if (!isMenuOpen) return;
+    const handleScroll = () => setIsMenuOpen(false);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMenuOpen]);
 
   const isActiveLink = (href: string) => {
     if (href === "/") return location.pathname === "/";
