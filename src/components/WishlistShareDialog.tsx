@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 const WishlistShareDialog = () => {
   const { wishlist, wishlistCount, getShareUrl } = useWishlist();
@@ -17,10 +17,10 @@ const WishlistShareDialog = () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
-      toast.success("Link Copied!", { description: "Share it with friends." });
+      toast.share.copied();
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast.error("Failed to copy link");
+      toast.share.copyError();
     }
   };
 

@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 export interface CartItem {
   id: number | string;
@@ -45,15 +45,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       if (existingIndex > -1) {
         const updated = [...prev];
         updated[existingIndex].quantity += quantity;
-        toast.success("Cart Updated 🛒", {
-          description: `${item.name} quantity increased to ${updated[existingIndex].quantity}.`,
-        });
+        toast.cart.updated(item.name, updated[existingIndex].quantity);
         return updated;
       }
 
-      toast.success("Added to Cart 🛒", {
-        description: `${quantity}x ${item.name} has been added to your cart.`,
-      });
+      toast.cart.added(item.name, quantity);
       return [...prev, { ...item, quantity }];
     });
   };
@@ -62,9 +58,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setCart((prev) => {
       const item = prev.find((i) => i.id === id && i.color === color);
       if (item) {
-        toast.success("Removed from Cart", {
-          description: `${item.name} has been removed from your cart.`,
-        });
+        toast.cart.removed(item.name);
       }
       return prev.filter((item) => !(item.id === id && item.color === color));
     });
@@ -84,9 +78,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const clearCart = () => {
     setCart([]);
-    toast.success("Cart Cleared", {
-      description: "All items have been removed from your cart.",
-    });
+    toast.cart.cleared();
   };
 
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);

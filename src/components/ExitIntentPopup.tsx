@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Gift, Mail, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 
 const ExitIntentPopup = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -53,10 +53,7 @@ const ExitIntentPopup = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
-      toast.success("Welcome! Your 15% discount code: SAVE15", {
-        description: "Check your email for more exclusive offers!",
-        duration: 5000,
-      });
+      toast.discount.codeReceived("SAVE15");
       handleClose();
       setEmail("");
     }

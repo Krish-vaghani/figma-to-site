@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { useSeo } from "@/hooks/useSeo";
 import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
 import { shopBackground } from "@/lib/assetUrls";
@@ -39,11 +39,11 @@ const Login = () => {
         name: fullName.trim(),
         phone: mobile.trim(),
       }).unwrap();
-      toast.success("OTP sent!", { description: "Check your phone for the verification code." });
+      toast.auth.otpSent();
       setStep("otp");
     } catch (err: unknown) {
-      const msg = (err as { data?: { message?: string } })?.data?.message ?? "Failed to send OTP. Please try again.";
-      toast.error("Could not send OTP", { description: msg });
+      const msg = (err as { data?: { message?: string } })?.data?.message;
+      toast.auth.otpError(msg);
     }
   };
 
@@ -83,11 +83,11 @@ const Login = () => {
     try {
       const result = await login({ phone: mobile, otp: otpString }).unwrap();
       localStorage.setItem(AUTH_TOKEN_KEY, result.data.token);
-      toast.success("Login successful!", { description: "Welcome back." });
+      toast.auth.loginSuccess();
       navigate("/", { replace: true });
     } catch (err: unknown) {
-      const msg = (err as { data?: { message?: string } })?.data?.message ?? "Invalid or expired code. Please try again.";
-      toast.error("Verification failed", { description: msg });
+      const msg = (err as { data?: { message?: string } })?.data?.message;
+      toast.auth.verifyError(msg);
     }
   };
 

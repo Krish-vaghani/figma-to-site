@@ -1,5 +1,5 @@
 import { useTheme } from "next-themes";
-import { Toaster as Sonner, toast } from "sonner";
+import { Toaster as Sonner } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
@@ -29,21 +29,26 @@ const Toaster = ({ ...props }: ToasterProps) => {
       position="top-right"
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      offset={16}
-      gap={12}
-      duration={4000}
+      offset={20}
+      gap={10}
+      duration={6500}
+      visibleToasts={1}
       closeButton
       richColors
       icons={{ close: <RoundCloseIcon /> }}
       toastOptions={{
         classNames: {
           toast:
-            "group toast group-[.toaster]:bg-background group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:border-border group-[.toaster]:shadow-xl group-[.toaster]:rounded-xl group-[.toaster]:p-4 group-[.toaster]:min-w-[320px] group-[.toaster]:max-w-[380px]",
-          title: "group-[.toast]:font-semibold group-[.toast]:text-[15px] group-[.toast]:leading-tight",
-          description: "group-[.toast]:text-muted-foreground group-[.toast]:text-sm group-[.toast]:mt-1",
-          actionButton: "group-[.toast]:bg-primary group-[.toast]:text-primary-foreground group-[.toast]:rounded-lg group-[.toast]:text-sm group-[.toast]:font-medium",
-          cancelButton: "group-[.toast]:bg-muted group-[.toast]:text-muted-foreground group-[.toast]:rounded-lg group-[.toast]:text-sm",
-          closeButton: "group-[.toast]:top-3 group-[.toast]:right-3 group-[.toast]:text-muted-foreground group-[.toast]:hover:text-foreground group-[.toast]:rounded-md",
+            "group toast group-[.toaster]:bg-white/10 group-[.toaster]:dark:bg-black/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:text-foreground group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:dark:border-white/10 group-[.toaster]:shadow-[0_8px_32px_0_rgba(0,0,0,0.12)] group-[.toaster]:dark:shadow-[0_8px_32px_0_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:p-5 group-[.toaster]:min-w-[360px] group-[.toaster]:max-w-[420px] group-[.toaster]:transition-all group-[.toaster]:duration-300 group-[.toaster]:relative group-[.toaster]:overflow-hidden",
+          title: "group-[.toast]:font-semibold group-[.toast]:text-base group-[.toast]:leading-tight group-[.toast]:tracking-tight group-[.toast]:relative group-[.toast]:z-10",
+          description: "group-[.toast]:text-foreground/80 group-[.toast]:text-sm group-[.toast]:mt-1.5 group-[.toast]:leading-relaxed group-[.toast]:relative group-[.toast]:z-10",
+          actionButton: "group-[.toast]:bg-coral/90 group-[.toast]:backdrop-blur-sm group-[.toast]:text-white group-[.toast]:rounded-lg group-[.toast]:text-sm group-[.toast]:font-medium group-[.toast]:px-4 group-[.toast]:py-2 group-[.toast]:hover:bg-coral group-[.toast]:transition-colors group-[.toast]:border group-[.toast]:border-white/20",
+          cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:backdrop-blur-sm group-[.toast]:text-foreground group-[.toast]:rounded-lg group-[.toast]:text-sm group-[.toast]:px-4 group-[.toast]:py-2 group-[.toast]:hover:bg-white/20 group-[.toast]:transition-colors group-[.toast]:border group-[.toast]:border-white/20",
+          closeButton: "group-[.toast]:top-4 group-[.toast]:right-4 group-[.toast]:text-foreground/60 group-[.toast]:hover:text-foreground group-[.toast]:rounded-full group-[.toast]:transition-all group-[.toast]:hover:bg-white/20 group-[.toast]:backdrop-blur-sm group-[.toast]:p-1.5 group-[.toast]:border group-[.toast]:border-white/20",
+          success: "group-[.toast]:border-green-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-green-500/10 group-[.toast]:to-emerald-500/5",
+          error: "group-[.toast]:border-red-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-red-500/10 group-[.toast]:to-rose-500/5",
+          info: "group-[.toast]:border-blue-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-blue-500/10 group-[.toast]:to-cyan-500/5",
+          warning: "group-[.toast]:border-amber-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-amber-500/10 group-[.toast]:to-yellow-500/5",
         },
       }}
       {...props}
@@ -51,4 +56,4 @@ const Toaster = ({ ...props }: ToasterProps) => {
   );
 };
 
-export { Toaster, toast };
+export { Toaster };

@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Menu } from "lucide-react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { useSeo } from "@/hooks/useSeo";
@@ -115,9 +115,7 @@ const Purses = () => {
 
   useEffect(() => {
     if (isError) {
-      toast.error("Could not load products", {
-        description: "Please try again later.",
-      });
+      toast.product.loadError();
     }
   }, [isError]);
 
