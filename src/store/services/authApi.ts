@@ -6,7 +6,7 @@ import type {
   LoginResponse,
 } from "@/types/auth";
 
-const AUTH_BASE_URL = "http://13.61.155.235:3000/api/v1";
+const AUTH_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
 
 export const authApi = createApi({
   reducerPath: "authApi",
