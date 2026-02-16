@@ -82,47 +82,50 @@ const Navbar = ({ className }: NavbarProps) => {
               <Search className="h-4 w-4" />
             </Button>
             {/* Cart Button with Badge */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="relative rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
-              onClick={() => setIsCartOpen(true)}
-            >
-              <ShoppingCart className="h-4 w-4" />
-              <AnimatePresence>
-                {cartCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-md"
-                  >
-                    {cartCount > 9 ? "9+" : cartCount}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Button>
+            <Link to="/cart">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="relative rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
+              >
+                <ShoppingCart className="h-4 w-4" />
+                <AnimatePresence>
+                  {cartCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-md"
+                    >
+                      {cartCount > 9 ? "9+" : cartCount}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Button>
+            </Link>
 
             {/* Wishlist Button with Badge */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hidden sm:flex relative rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
-            >
-              <Heart className="h-4 w-4" />
-              <AnimatePresence>
-                {wishlistCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    exit={{ scale: 0 }}
-                    className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-md"
-                  >
-                    {wishlistCount > 9 ? "9+" : wishlistCount}
-                  </motion.span>
-                )}
-              </AnimatePresence>
-            </Button>
+            <Link to="/wishlist">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="hidden sm:flex relative rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral"
+              >
+                <Heart className="h-4 w-4" />
+                <AnimatePresence>
+                  {wishlistCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      exit={{ scale: 0 }}
+                      className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center shadow-md"
+                    >
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </Button>
+            </Link>
 
             {/* Share Wishlist */}
             {wishlistCount > 0 && <WishlistShareDialog />}
@@ -193,18 +196,20 @@ const Navbar = ({ className }: NavbarProps) => {
               >
                 <Search className="h-4 w-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="sm:hidden relative rounded-full border border-border h-9 w-9"
-              >
-                <Heart className="h-4 w-4" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center">
-                    {wishlistCount > 9 ? "9+" : wishlistCount}
-                  </span>
-                )}
-              </Button>
+              <Link to="/wishlist" onClick={() => setIsMenuOpen(false)}>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="sm:hidden relative rounded-full border border-border h-9 w-9"
+                >
+                  <Heart className="h-4 w-4" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-coral text-white text-[10px] font-bold min-w-[18px] h-[18px] rounded-full flex items-center justify-center">
+                      {wishlistCount > 9 ? "9+" : wishlistCount}
+                    </span>
+                  )}
+                </Button>
+              </Link>
               <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                 <Button className="sm:hidden w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
                   Login
