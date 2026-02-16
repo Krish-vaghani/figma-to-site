@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import type { ProductListResponse, ProductListParams } from "@/types/product";
 
-const PRODUCT_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api/v1";
+const PRODUCT_BASE_URL = "http://13.61.155.235:3000/api/v1";
 
 export const productApi = createApi({
   reducerPath: "productApi",

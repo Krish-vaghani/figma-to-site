@@ -60,7 +60,7 @@ const ProductDetail = () => {
 
         {/* Related Products */}
         <div className="border-t border-border">
-          <RelatedProducts currentProductId={product.id} />
+          <RelatedProducts currentProductId={product.id as number} />
         </div>
       </main>
 

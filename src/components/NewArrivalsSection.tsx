@@ -66,7 +66,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 
 const NewProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const isWishlisted = isInWishlist(product.id + 100); // Offset to avoid ID collision with collections
+  const isWishlisted = isInWishlist(String(product.id) + "_new");
 
   return (
     <div
@@ -86,7 +86,7 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
             }`}
           onClick={(e) => {
             e.stopPropagation();
-            toggleWishlist(product.id + 100, product.name);
+            toggleWishlist(String(product.id) + "_new", product.name);
           }}
           whileTap={{ scale: 0.9 }}
         >
@@ -193,7 +193,7 @@ const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
         <ProductQuickView
           product={{
             ...selectedProduct,
-            id: selectedProduct.id + 100, // Offset for wishlist consistency
+            id: String(selectedProduct.id) + "_new",
           }}
           isOpen={!!selectedProduct}
           onClose={() => setSelectedProduct(null)}
