@@ -1,9 +1,9 @@
 import { product1, product2, product3, product4 } from "@/lib/assetUrls";
 
-export type BadgeType = "bestseller" | "trending" | "new" | "hot" | "limited";
+export type BadgeType = "bestseller" | "trending" | "new" | "hot" | "limited" | "sale";
 
 export interface Product {
-  id: number;
+  id: number | string;
   name: string;
   description: string;
   price: number;
@@ -14,6 +14,8 @@ export interface Product {
   badge?: BadgeType;
   colors: string[];
   stock: number; // For urgency indicators
+  /** From API; used for product detail URL when present */
+  slug?: string;
 }
 
 export const products: Product[] = [

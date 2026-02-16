@@ -1,4 +1,4 @@
-import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
+import { Heart, Star, Award, TrendingUp, Sparkles, Flame, Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
 import type { Product, BadgeType } from "@/data/products";
@@ -44,6 +44,13 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
       icon: Sparkles,
       text: "Limited",
       iconColor: "text-violet-100",
+    },
+    sale: {
+      bg: "bg-gradient-to-br from-green-400 via-green-500 to-emerald-600",
+      glow: "before:bg-green-400/30",
+      icon: Tag,
+      text: "Sale",
+      iconColor: "text-green-100",
     },
   };
 
@@ -139,9 +146,11 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
             <span className="text-lg font-bold text-foreground">
               ${product.price.toLocaleString()}.00
             </span>
-            <span className="text-muted-foreground line-through text-sm">
-              ${product.originalPrice.toLocaleString()}.00
-            </span>
+            {product.originalPrice > product.price && (
+              <span className="text-muted-foreground line-through text-sm">
+                ${product.originalPrice.toLocaleString()}.00
+              </span>
+            )}
           </div>
 
           {/* Rating */}

@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,33 +7,44 @@ import { Input } from "@/components/ui/input";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import { toast } from "sonner";
 import { useSeo } from "@/hooks/useSeo";
+import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
 import { shopBackground } from "@/lib/assetUrls";
 import loginIllustration from "@/assets/login-illustration.png";
 import otpIllustration from "@/assets/otp-illustration.png";
 import loginCardBg from "@/assets/login-card-bg.png";
 
-const OTP_LENGTH = 4;
+const OTP_LENGTH = 6;
+const AUTH_TOKEN_KEY = "auth_token";
 
 const Login = () => {
   useSeo("Login", "Sign in to manage your orders, wishlist, and account details.");
+  const navigate = useNavigate();
+
+  const [registerOrLogin, { isLoading: isSendingOtp }] = useRegisterOrLoginMutation();
+  const [login, { isLoading: isVerifying }] = useLoginMutation();
 
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [fullName, setFullName] = useState("");
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
-  const [isLoading, setIsLoading] = useState(false);
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
-  const handleSendOtp = (e: React.FormEvent) => {
+  const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!fullName.trim() || !mobile.trim()) return;
-    setIsLoading(true);
-    // Simulate OTP send
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      await registerOrLogin({
+        name: fullName.trim(),
+        phone: mobile.trim(),
+      }).unwrap();
+      toast.success("OTP sent!", { description: "Check your phone for the verification code." });
       setStep("otp");
-    }, 800);
+    } catch (err: unknown) {
+      const msg = (err as { data?: { message?: string } })?.data?.message ?? "Failed to send OTP. Please try again.";
+      toast.error("Could not send OTP", { description: msg });
+    }
   };
 
   const handleOtpChange = (index: number, value: string) => {
@@ -65,15 +76,19 @@ const Login = () => {
     }
   };
 
-  const handleVerify = (e: React.FormEvent) => {
+  const handleVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (otp.some((d) => !d)) return;
-    setIsLoading(true);
-    // Simulate verification
-    setTimeout(() => {
-      setIsLoading(false);
-      // TODO: actual auth logic
-    }, 800);
+    const otpString = otp.join("");
+    try {
+      const result = await login({ phone: mobile, otp: otpString }).unwrap();
+      localStorage.setItem(AUTH_TOKEN_KEY, result.data.token);
+      toast.success("Login successful!", { description: "Welcome back." });
+      navigate("/", { replace: true });
+    } catch (err: unknown) {
+      const msg = (err as { data?: { message?: string } })?.data?.message ?? "Invalid or expired code. Please try again.";
+      toast.error("Verification failed", { description: msg });
+    }
   };
 
   return (
@@ -177,10 +192,10 @@ const Login = () => {
 
                     <Button
                       type="submit"
-                      disabled={isLoading || !fullName.trim() || !mobile.trim()}
+                      disabled={isSendingOtp || !fullName.trim() || !mobile.trim()}
                       className="w-full h-12 rounded-full bg-foreground text-background hover:bg-coral text-base font-semibold transition-colors"
                     >
-                      {isLoading ? "Sending OTP..." : "Login"}
+                      {isSendingOtp ? "Sending OTP..." : "Login"}
                     </Button>
                   </motion.form>
                 ) : (
@@ -208,7 +223,7 @@ const Login = () => {
                         Secure Login <span className="text-coral">Verification</span>
                       </h2>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Enter The 6-Digit Verification Code Sent To Your Registered Mobile Number.
+                        Enter the 6-digit verification code sent to your registered mobile number.
                       </p>
                     </div>
 
@@ -239,10 +254,10 @@ const Login = () => {
 
                     <Button
                       type="submit"
-                      disabled={isLoading || otp.some((d) => !d)}
+                      disabled={isVerifying || otp.some((d) => !d)}
                       className="w-full h-12 rounded-full bg-foreground text-background hover:bg-coral text-base font-semibold transition-colors"
                     >
-                      {isLoading ? "Verifying..." : "Verify"}
+                      {isVerifying ? "Verifying..." : "Verify"}
                     </Button>
 
                     <p className="text-sm text-muted-foreground text-center">

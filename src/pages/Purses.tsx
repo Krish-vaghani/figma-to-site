@@ -1,5 +1,6 @@
-import { useState, useMemo, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { Menu } from "lucide-react";
+import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import { useSeo } from "@/hooks/useSeo";
@@ -12,13 +13,15 @@ import ShopProductCard from "@/components/shop/ShopProductCard";
 import ShopPagination from "@/components/shop/ShopPagination";
 import SortDropdown from "@/components/shop/SortDropdown";
 import ProductQuickView from "@/components/ProductQuickView";
-import { products, type Product } from "@/data/products";
+import { useGetProductListQuery } from "@/store/services/productApi";
+import { mapApiProductToProduct } from "@/types/product";
+import type { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { shopBackground } from "@/lib/assetUrls";
 
-
 const PRODUCTS_PER_PAGE = 12;
+const PURSE_CATEGORY = "purse";
 
 const Purses = () => {
   useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over $100.");
@@ -26,6 +29,7 @@ const Purses = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState("featured");
+  const [selectedTag] = useState<string | undefined>(undefined);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
     categories: [] as string[],
@@ -36,56 +40,45 @@ const Purses = () => {
     collections: [] as string[],
   });
 
-  // For demo purposes, we'll repeat the products to show pagination
-  const allProducts = useMemo(() => {
-    const repeated = [];
-    for (let i = 0; i < 5; i++) {
-      repeated.push(...products.map((p) => ({ ...p, id: p.id + i * 100 })));
+  const { data: listResponse, isLoading, isError } = useGetProductListQuery({
+    page: currentPage,
+    limit: PRODUCTS_PER_PAGE,
+    category: PURSE_CATEGORY,
+    tag: selectedTag,
+  });
+
+  const apiProducts = listResponse?.data ?? [];
+  const totalFromApi = listResponse?.total ?? 0;
+  const totalPages = Math.max(1, Math.ceil(totalFromApi / PRODUCTS_PER_PAGE));
+
+  const mappedProducts = useMemo(
+    () => apiProducts.map(mapApiProductToProduct),
+    [apiProducts]
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error("Could not load products", {
+        description: "Please try again later.",
+      });
     }
-    return repeated;
-  }, []);
+  }, [isError]);
 
-  // Filter and sort products
-  const filteredProducts = useMemo(() => {
-    let result = [...allProducts];
-
-    // Apply price filter
-    result = result.filter(
-      (p) =>
-        p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
-    );
-
-    // Apply rating filter
-    if (filters.ratings.length > 0) {
-      result = result.filter((p) =>
-        filters.ratings.some((r) => Math.floor(p.rating) >= r)
-      );
-    }
-
-    // Sort
+  const paginatedProducts = useMemo(() => {
+    const result = [...mappedProducts];
     switch (sortBy) {
       case "newest":
-        result = result.reverse();
-        break;
+        return result.reverse();
       case "price-low":
-        result = result.sort((a, b) => a.price - b.price);
-        break;
+        return result.sort((a, b) => a.price - b.price);
       case "price-high":
-        result = result.sort((a, b) => b.price - a.price);
-        break;
+        return result.sort((a, b) => b.price - a.price);
       case "rating":
-        result = result.sort((a, b) => b.rating - a.rating);
-        break;
+        return result.sort((a, b) => b.rating - a.rating);
+      default:
+        return result;
     }
-
-    return result;
-  }, [allProducts, filters, sortBy]);
-
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  const paginatedProducts = filteredProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  }, [mappedProducts, sortBy]);
 
   const touchStartXRef = useRef<number | null>(null);
   const touchCurrentXRef = useRef<number | null>(null);
@@ -230,14 +223,14 @@ const Purses = () => {
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-muted-foreground">Showing</span>
                   <span className="bg-coral/10 text-coral font-semibold px-3 py-1 rounded-full">
-                    {filteredProducts.length}
+                    {paginatedProducts.length}
                   </span>
-                  <span className="text-muted-foreground">Products</span>
+                  <span className="text-muted-foreground">of {totalFromApi} Products</span>
                 </div>
                 <p className="text-sm text-muted-foreground text-right leading-tight">
                   <span className="block">
                     <span className="font-semibold text-foreground">
-                      {filteredProducts.length}
+                      {totalFromApi}
                     </span>{" "}
                     Bags Found
                   </span>
@@ -246,10 +239,10 @@ const Purses = () => {
 
               {/* Mobile: count below */}
               <p className="mt-3 sm:hidden text-sm text-muted-foreground leading-tight">
-                <span className="block">Showing</span>
+                <span className="block">Showing {paginatedProducts.length} of {totalFromApi}</span>
                 <span className="block">
                   <span className="font-semibold text-foreground">
-                    {filteredProducts.length}
+                    {totalFromApi}
                   </span>{" "}
                   Bags Found
                 </span>
@@ -267,13 +260,25 @@ const Purses = () => {
 
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              {paginatedProducts.map((product) => (
-                <ShopProductCard
-                  key={product.id}
-                  product={product}
-                  onClick={() => navigate(`/product/${product.id}`)}
-                />
-              ))}
+              {isLoading ? (
+                <div className="col-span-full py-12 text-center text-muted-foreground">
+                  Loading products…
+                </div>
+              ) : (
+                paginatedProducts.length === 0 ? (
+                  <div className="col-span-full py-12 text-center text-muted-foreground">
+                    No products to show right now.
+                  </div>
+                ) : (
+                paginatedProducts.map((product) => (
+                  <ShopProductCard
+                    key={product.id}
+                    product={product}
+                    onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
+                  />
+                ))
+                )
+              )}
             </div>
 
             {/* Pagination */}

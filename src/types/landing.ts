@@ -32,5 +32,5 @@ export interface LandingSection {
 
 export interface LandingPageResponse {
     message: string;
-    data: Record<LandingSectionKey, LandingSection>;
+    data: Partial<Record<LandingSectionKey, LandingSection>>;
 }

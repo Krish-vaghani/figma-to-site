@@ -9,19 +9,10 @@ import {
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
+import type { Product } from "@/data/products";
 
 interface ProductQuickViewProps {
-  product: {
-    id: number;
-    name: string;
-    description?: string;
-    price: number;
-    originalPrice: number;
-    image: string;
-    colors: string[];
-    rating?: number;
-    reviews?: string;
-  };
+  product: Product;
   isOpen: boolean;
   onClose: () => void;
 }

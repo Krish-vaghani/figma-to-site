@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { toast } from "sonner";
 
 export interface CartItem {
-  id: number;
+  id: number | string;
   name: string;
   price: number;
   originalPrice: number;
@@ -14,8 +14,8 @@ export interface CartItem {
 interface CartContextType {
   cart: CartItem[];
   addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
-  removeFromCart: (id: number, color: string) => void;
-  updateQuantity: (id: number, color: string, quantity: number) => void;
+  removeFromCart: (id: number | string, color: string) => void;
+  updateQuantity: (id: number | string, color: string, quantity: number) => void;
   clearCart: () => void;
   cartCount: number;
   cartTotal: number;
@@ -58,7 +58,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const removeFromCart = (id: number, color: string) => {
+  const removeFromCart = (id: number | string, color: string) => {
     setCart((prev) => {
       const item = prev.find((i) => i.id === id && i.color === color);
       if (item) {
@@ -70,7 +70,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const updateQuantity = (id: number, color: string, quantity: number) => {
+  const updateQuantity = (id: number | string, color: string, quantity: number) => {
     if (quantity < 1) {
       removeFromCart(id, color);
       return;

@@ -2,11 +2,11 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { toast } from "sonner";
 
 interface WishlistContextType {
-  wishlist: number[];
-  addToWishlist: (id: number) => void;
-  removeFromWishlist: (id: number) => void;
-  toggleWishlist: (id: number, productName?: string) => void;
-  isInWishlist: (id: number) => boolean;
+  wishlist: (string | number)[];
+  addToWishlist: (id: string | number) => void;
+  removeFromWishlist: (id: string | number) => void;
+  toggleWishlist: (id: string | number, productName?: string) => void;
+  isInWishlist: (id: string | number) => boolean;
   wishlistCount: number;
   getShareUrl: () => string;
 }
@@ -14,7 +14,7 @@ interface WishlistContextType {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
-  const [wishlist, setWishlist] = useState<number[]>(() => {
+  const [wishlist, setWishlist] = useState<(string | number)[]>(() => {
     const stored = localStorage.getItem("wishlist");
     return stored ? JSON.parse(stored) : [];
   });
@@ -23,15 +23,15 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const addToWishlist = (id: number) => {
+  const addToWishlist = (id: string | number) => {
     setWishlist((prev) => (prev.includes(id) ? prev : [...prev, id]));
   };
 
-  const removeFromWishlist = (id: number) => {
+  const removeFromWishlist = (id: string | number) => {
     setWishlist((prev) => prev.filter((item) => item !== id));
   };
 
-  const toggleWishlist = (id: number, productName?: string) => {
+  const toggleWishlist = (id: string | number, productName?: string) => {
     setWishlist((prev) => {
       const isAdding = !prev.includes(id);
       
@@ -49,7 +49,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
-  const isInWishlist = (id: number) => wishlist.includes(id);
+  const isInWishlist = (id: string | number) => wishlist.includes(id);
 
   const getShareUrl = () => {
     const base = `${window.location.origin}/purses`;
