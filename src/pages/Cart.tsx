@@ -70,72 +70,81 @@ const Cart = () => {
               {cart.map((item) => {
                 const product = getProduct(item.id);
                 return (
-                  <div
-                    key={`${item.id}-${item.color}`}
-                    className="py-4 md:py-5 grid grid-cols-1 md:grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center"
-                  >
-                    {/* Product Info */}
-                    <div className="flex items-center gap-4">
-                      <div className="w-20 h-20 md:w-24 md:h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
+                  <div key={`${item.id}-${item.color}`}>
+                    {/* Desktop Row */}
+                    <div className="hidden md:grid py-5 grid-cols-[2fr_1fr_1fr_1fr_auto] gap-4 items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="w-24 h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                        </div>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-foreground">{item.name}</h3>
+                          {product && <p className="text-xs text-muted-foreground">{product.description}</p>}
+                          <div className="flex items-center gap-1 mt-1">
+                            <span className="text-xs text-muted-foreground">Color :</span>
+                            <span className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: item.color }} />
+                          </div>
+                          {product && (
+                            <div className="flex items-center gap-1 mt-0.5">
+                              <span className="text-xs text-muted-foreground">Review :</span>
+                              <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                              <span className="text-xs text-muted-foreground">{product.rating}({product.reviews})</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-center">
+                        <div className="flex items-center border border-border rounded-lg overflow-hidden">
+                          <button onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"><Minus className="h-3 w-3" /></button>
+                          <span className="w-10 text-center text-sm font-medium">{String(item.quantity).padStart(2, "0")}</span>
+                          <button onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)} className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"><Plus className="h-3 w-3" /></button>
+                        </div>
+                      </div>
+                      <div className="text-center">
+                        <span className="font-semibold text-foreground">${item.price.toLocaleString()}.00</span>{" "}
+                        <span className="text-sm text-muted-foreground line-through">${item.originalPrice.toLocaleString()}.00</span>
+                      </div>
+                      <div className="text-center font-semibold text-foreground">${(item.price * item.quantity).toLocaleString()}.00</div>
+                      <div className="flex justify-center">
+                        <button onClick={() => removeFromCart(item.id, item.color)} className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground">
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Mobile Card */}
+                    <div className="md:hidden py-4 flex gap-3">
+                      <div className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="min-w-0">
-                        <h3 className="font-semibold text-foreground text-sm md:text-base">{item.name}</h3>
-                        {product && <p className="text-xs text-muted-foreground">{product.description}</p>}
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="text-xs text-muted-foreground">Color :</span>
-                          <span className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: item.color }} />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
+                          <h3 className="font-semibold text-foreground text-sm leading-tight">{item.name}</h3>
+                          <button onClick={() => removeFromCart(item.id, item.color)} className="flex-shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground">
+                            <X className="h-3 w-3" />
+                          </button>
                         </div>
-                        {product && (
-                          <div className="flex items-center gap-1 mt-0.5">
-                            <span className="text-xs text-muted-foreground">Review :</span>
-                            <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                            <span className="text-xs text-muted-foreground">
-                              {product.rating}({product.reviews})
+                        {product && <p className="text-[11px] text-muted-foreground mt-0.5">{product.description}</p>}
+                        <div className="flex items-center gap-1 mt-1">
+                          <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: item.color }} />
+                          {product && (
+                            <span className="ml-1 text-[11px] text-muted-foreground flex items-center gap-0.5">
+                              <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
                             </span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between mt-2">
+                          <div className="flex items-center border border-border rounded-md overflow-hidden">
+                            <button onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)} className="px-2 py-1 text-muted-foreground"><Minus className="h-3 w-3" /></button>
+                            <span className="w-7 text-center text-xs font-medium">{String(item.quantity).padStart(2, "0")}</span>
+                            <button onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)} className="px-2 py-1 text-muted-foreground"><Plus className="h-3 w-3" /></button>
                           </div>
-                        )}
+                          <div className="text-right">
+                            <span className="font-bold text-foreground text-sm">${(item.price * item.quantity).toLocaleString()}.00</span>
+                            <span className="ml-1 text-[11px] text-muted-foreground line-through">${item.originalPrice.toLocaleString()}</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="flex items-center justify-center">
-                      <div className="flex items-center border border-border rounded-lg overflow-hidden">
-                        <button
-                          onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)}
-                          className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"
-                        >
-                          <Minus className="h-3 w-3" />
-                        </button>
-                        <span className="w-10 text-center text-sm font-medium">{String(item.quantity).padStart(2, "0")}</span>
-                        <button
-                          onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)}
-                          className="px-3 py-2 hover:bg-secondary/50 transition-colors text-muted-foreground"
-                        >
-                          <Plus className="h-3 w-3" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Price */}
-                    <div className="text-center">
-                      <span className="font-semibold text-foreground">${item.price.toLocaleString()}.00</span>{" "}
-                      <span className="text-sm text-muted-foreground line-through">${item.originalPrice.toLocaleString()}.00</span>
-                    </div>
-
-                    {/* Total */}
-                    <div className="text-center font-semibold text-foreground">
-                      ${(item.price * item.quantity).toLocaleString()}.00
-                    </div>
-
-                    {/* Delete */}
-                    <div className="flex justify-center">
-                      <button
-                        onClick={() => removeFromCart(item.id, item.color)}
-                        className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
                     </div>
                   </div>
                 );
