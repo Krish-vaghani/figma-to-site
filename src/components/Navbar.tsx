@@ -127,8 +127,10 @@ const Navbar = ({ className }: NavbarProps) => {
               </Button>
             </Link>
 
-            {/* Share Wishlist */}
-            {wishlistCount > 0 && <WishlistShareDialog />}
+            {/* Share Wishlist - desktop only */}
+            <span className="hidden sm:inline-flex">
+              {wishlistCount > 0 && <WishlistShareDialog />}
+            </span>
 
             <Link to="/login">
               <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
@@ -210,6 +212,10 @@ const Navbar = ({ className }: NavbarProps) => {
                   )}
                 </Button>
               </Link>
+              {/* Share Wishlist - mobile */}
+              <span className="sm:hidden">
+                {wishlistCount > 0 && <WishlistShareDialog />}
+              </span>
               <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
                 <Button className="sm:hidden w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
                   Login
