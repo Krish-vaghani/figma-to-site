@@ -66,7 +66,7 @@ const Wishlist = () => {
         style={{
           backgroundImage: `url(${shopBackground})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "top left",
         }}
       >
         <div className="absolute inset-0 bg-background/60" />
@@ -164,9 +164,9 @@ const Wishlist = () => {
                             <Heart className="h-3 w-3 text-white fill-white" />
                           </div>
                         </div>
-                        <div className="min-w-0 flex flex-col gap-0.5">
-                          <h3 className="font-semibold text-foreground">{product.name}</h3>
-                          <p className="text-xs text-muted-foreground">{product.description}</p>
+                        <div className="min-w-0 flex flex-col gap-0.5 [&_h3]:m-0 [&_p]:m-0">
+                          <h3 className="font-semibold text-foreground leading-tight">{product.name}</h3>
+                          <p className="text-xs text-muted-foreground leading-tight">{product.description}</p>
                           <div className="flex items-center gap-1">
                             <span className="text-xs text-muted-foreground">Color :</span>
                             {product.colors.map((c) => (
@@ -207,14 +207,14 @@ const Wishlist = () => {
                           <Heart className="h-2.5 w-2.5 text-white fill-white" />
                         </div>
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                      <div className="flex-1 min-w-0 flex flex-col gap-0.5 [&_h3]:m-0 [&_p]:m-0">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-semibold text-foreground text-sm leading-tight">{product.name}</h3>
+                          <h3 className="font-semibold text-foreground text-sm leading-tight m-0">{product.name}</h3>
                           <button onClick={() => removeFromWishlist(product.id)} className="flex-shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground">
                             <X className="h-3 w-3" />
                           </button>
                         </div>
-                        <p className="text-[11px] text-muted-foreground">{product.description}</p>
+                        <p className="text-[11px] text-muted-foreground leading-tight m-0">{product.description}</p>
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[11px] text-muted-foreground flex items-center gap-1">
                             Colour : {product.colors.map((c) => (

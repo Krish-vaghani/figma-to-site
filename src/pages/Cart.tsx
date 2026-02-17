@@ -21,7 +21,7 @@ const Cart = () => {
         style={{
           backgroundImage: `url(${shopBackground})`,
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: "top left",
         }}
       >
         <div className="absolute inset-0 bg-background/60" />
@@ -77,9 +77,9 @@ const Cart = () => {
                         <div className="w-24 h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         </div>
-                        <div className="min-w-0 flex flex-col gap-0.5">
-                          <h3 className="font-semibold text-foreground">{item.name}</h3>
-                          {product && <p className="text-xs text-muted-foreground">{product.description}</p>}
+                        <div className="min-w-0 flex flex-col gap-0.5 [&_h3]:m-0 [&_p]:m-0">
+                          <h3 className="font-semibold text-foreground leading-tight">{item.name}</h3>
+                          {product && <p className="text-xs text-muted-foreground leading-tight">{product.description}</p>}
                           <div className="flex items-center gap-1">
                             <span className="text-xs text-muted-foreground">Color :</span>
                             <span className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: item.color }} />
@@ -117,14 +117,14 @@ const Cart = () => {
                       <div className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                      <div className="flex-1 min-w-0 flex flex-col gap-0.5 [&_h3]:m-0 [&_p]:m-0">
                         <div className="flex items-start justify-between gap-2">
-                          <h3 className="font-semibold text-foreground text-sm leading-tight">{item.name}</h3>
+                          <h3 className="font-semibold text-foreground text-sm leading-tight m-0">{item.name}</h3>
                           <button onClick={() => removeFromCart(item.id, item.color)} className="flex-shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground">
                             <X className="h-3 w-3" />
                           </button>
                         </div>
-                        {product && <p className="text-[11px] text-muted-foreground">{product.description}</p>}
+                        {product && <p className="text-[11px] text-muted-foreground leading-tight m-0">{product.description}</p>}
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[11px] text-muted-foreground flex items-center gap-1">
                             Colour : <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: item.color }} />
