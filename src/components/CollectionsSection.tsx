@@ -125,10 +125,10 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-baseline gap-2">
             <span className="text-lg sm:text-xl font-bold text-foreground">
-              ${product.price.toLocaleString()}.00
+              ₹{product.price.toLocaleString()}
             </span>
             <span className="text-muted-foreground line-through text-xs">
-              ${product.originalPrice.toLocaleString()}.00
+              ₹{product.originalPrice.toLocaleString()}
             </span>
           </div>
           <StockBadge stock={product.stock} variant="text" showIcon={false} />

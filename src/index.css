@@ -232,12 +232,46 @@ All colors MUST be HSL.
     }
   }
 
-  /* Glassmorphism/Frosted Glass Toast Styling */
+  /* Glassmorphism/Frosted Glass Toast – same transparent look on ALL screens */
   [data-sonner-toast] {
     animation: toast-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: rgba(255, 255, 255, 0.1) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     position: relative;
+  }
+
+  .dark [data-sonner-toast] {
+    background: rgba(0, 0, 0, 0.1) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  /* Force same transparent style on mobile/tablet – no solid background */
+  @media (max-width: 1024px) {
+    [data-sonner-toast] {
+      background: rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    .dark [data-sonner-toast] {
+      background: rgba(0, 0, 0, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+  }
+
+  @media (max-width: 640px) {
+    [data-sonner-toast] {
+      background: rgba(255, 255, 255, 0.1) !important;
+      backdrop-filter: blur(20px) saturate(180%) !important;
+      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+    .dark [data-sonner-toast] {
+      background: rgba(0, 0, 0, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
   }
 
   /* Water-like shimmer effect */

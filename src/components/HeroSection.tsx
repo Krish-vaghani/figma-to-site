@@ -109,9 +109,9 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   <p className="text-sm text-muted-foreground mb-3">Structured Crossbody With Top Handle</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-foreground">${data?.price || "500.00"}</span>
+                      <span className="text-lg font-bold text-foreground">₹{data?.price ?? "500"}</span>
                       {data?.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">${data.originalPrice}</span>
+                        <span className="text-sm text-muted-foreground line-through">₹{data?.originalPrice}</span>
                       )}
                     </div>
                     <div className="flex items-center gap-1">
@@ -398,9 +398,9 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   <p className="text-sm text-muted-foreground mb-3">Structured Crossbody With Top Handle</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-foreground">${data?.price || "500.00"}</span>
+                      <span className="text-lg font-bold text-foreground">₹{data?.price ?? "500"}</span>
                       {data?.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">${data.originalPrice}</span>
+                        <span className="text-sm text-muted-foreground line-through">₹{data?.originalPrice}</span>
                       )}
                     </div>
                     <div className="flex items-center gap-1">

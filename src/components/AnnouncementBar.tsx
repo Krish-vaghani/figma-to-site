@@ -5,9 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 const promos = [
   {
     id: 1,
-    text: "Free Shipping on Orders Over $50",
+    text: "Free Shipping on Orders Over ₹500",
     icon: Truck,
-    highlight: "$50",
+    highlight: "₹500",
   },
   {
     id: 2,

@@ -86,7 +86,7 @@ const CartDrawer = () => {
                             style={{ backgroundColor: item.color }}
                           />
                           <span className="text-sm text-muted-foreground">
-                            ${item.price.toLocaleString()}.00
+                            ₹{item.price.toLocaleString()}
                           </span>
                         </div>
                       </div>
@@ -126,7 +126,7 @@ const CartDrawer = () => {
                     {/* Item Total */}
                     <div className="text-right">
                       <span className="font-bold text-foreground">
-                        ${(item.price * item.quantity).toLocaleString()}.00
+                        ₹{(item.price * item.quantity).toLocaleString()}
                       </span>
                     </div>
                   </motion.div>
@@ -140,7 +140,7 @@ const CartDrawer = () => {
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Subtotal</span>
                 <span className="text-xl font-bold text-foreground">
-                  ${cartTotal.toLocaleString()}.00
+                  ₹{cartTotal.toLocaleString()}
                 </span>
               </div>
 

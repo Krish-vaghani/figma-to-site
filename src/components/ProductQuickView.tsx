@@ -118,14 +118,14 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
             {/* Price */}
             <div className="flex flex-wrap items-baseline gap-1.5 sm:gap-3">
               <span className="text-lg sm:text-2xl md:text-3xl font-bold text-foreground">
-                ${product.price.toLocaleString()}.00
+                ₹{product.price.toLocaleString()}
               </span>
               <span className="text-xs sm:text-base text-muted-foreground line-through">
-                ${product.originalPrice.toLocaleString()}.00
+                ₹{product.originalPrice.toLocaleString()}
               </span>
               {discount > 0 && (
                 <span className="text-[10px] sm:text-sm font-medium text-coral">
-                  Save ${(product.originalPrice - product.price).toLocaleString()}
+                  Save ₹{(product.originalPrice - product.price).toLocaleString()}
                 </span>
               )}
             </div>
@@ -215,7 +215,7 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
 
             {/* Additional Info - Hidden on mobile */}
             <div className="hidden sm:block pt-3 border-t border-border space-y-1.5 text-xs sm:text-sm text-muted-foreground">
-              <p>✓ Free shipping on orders over $50</p>
+              <p>✓ Free shipping on orders over ₹500</p>
               <p>✓ 30-day return policy</p>
             </div>
           </div>

@@ -132,11 +132,11 @@ const ShopFilters = ({ filters, onFiltersChange }: ShopFiltersProps) => {
         <h3 className="font-semibold text-foreground">Price Range</h3>
         <div className="flex items-center gap-3">
           <div className="flex-1 px-3 py-2 bg-muted/50 rounded-lg text-sm text-muted-foreground">
-            ${filters.priceRange[0].toLocaleString()}
+            ₹{filters.priceRange[0].toLocaleString()}
           </div>
           <span className="text-muted-foreground">–</span>
           <div className="flex-1 px-3 py-2 bg-muted/50 rounded-lg text-sm text-muted-foreground">
-            ${filters.priceRange[1].toLocaleString()}
+            ₹{filters.priceRange[1].toLocaleString()}
           </div>
         </div>
         <Slider

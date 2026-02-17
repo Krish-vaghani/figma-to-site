@@ -26,7 +26,7 @@ const PURSE_CATEGORY = "purse";
 const FETCH_LIMIT = 500;
 
 const Purses = () => {
-  useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over $100.");
+  useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over ₹1,000.");
   const navigate = useNavigate();
   
   const [currentPage, setCurrentPage] = useState(1);

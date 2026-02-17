@@ -39,7 +39,7 @@ const ActiveFilters = ({ filters, onRemove, onClearAll }: ActiveFiltersProps) =>
             className="inline-flex items-center gap-2 px-4 py-2 bg-coral text-white text-sm font-medium rounded-full hover:bg-coral/90 transition-colors"
           >
             {type === "priceRange"
-              ? `Price: $${minPrice.toLocaleString()} – $${maxPrice.toLocaleString()}`
+              ? `Price: ₹${minPrice.toLocaleString()} – ₹${maxPrice.toLocaleString()}`
               : type === "ratings"
                 ? `${value} Star`
                 : value}

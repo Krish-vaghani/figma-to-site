@@ -101,10 +101,10 @@ const Cart = () => {
                         </div>
                       </div>
                       <div className="text-center">
-                        <span className="font-semibold text-foreground">${item.price.toLocaleString()}.00</span>{" "}
-                        <span className="text-sm text-muted-foreground line-through">${item.originalPrice.toLocaleString()}.00</span>
+                        <span className="font-semibold text-foreground">₹{item.price.toLocaleString()}</span>{" "}
+                        <span className="text-sm text-muted-foreground line-through">₹{item.originalPrice.toLocaleString()}</span>
                       </div>
-                      <div className="text-center font-semibold text-foreground">${(item.price * item.quantity).toLocaleString()}.00</div>
+                      <div className="text-center font-semibold text-foreground">₹{(item.price * item.quantity).toLocaleString()}</div>
                       <div className="flex justify-center">
                         <button onClick={() => removeFromCart(item.id, item.color)} className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground">
                           <X className="h-4 w-4" />
@@ -140,8 +140,8 @@ const Cart = () => {
                             <button onClick={() => updateQuantity(item.id, item.color, item.quantity + 1)} className="px-2 py-1 text-muted-foreground"><Plus className="h-3 w-3" /></button>
                           </div>
                           <div className="text-right">
-                            <span className="font-bold text-foreground text-sm">${(item.price * item.quantity).toLocaleString()}.00</span>
-                            <span className="ml-1 text-[11px] text-muted-foreground line-through">${item.originalPrice.toLocaleString()}</span>
+                            <span className="font-bold text-foreground text-sm">₹{(item.price * item.quantity).toLocaleString()}</span>
+                            <span className="ml-1 text-[11px] text-muted-foreground line-through">₹{item.originalPrice.toLocaleString()}</span>
                           </div>
                         </div>
                       </div>
@@ -154,7 +154,7 @@ const Cart = () => {
             {/* Footer */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8 pt-6 border-t border-border">
               <h3 className="text-xl font-bold text-foreground">
-                Sub Total : ${cartTotal.toLocaleString()}.00
+                Sub Total : ₹{cartTotal.toLocaleString()}
               </h3>
               <div className="flex items-center gap-3">
                 <Link to="/purses">

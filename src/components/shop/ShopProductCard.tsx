@@ -144,11 +144,11 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           {/* Price */}
           <div className="flex items-baseline gap-2">
             <span className="text-lg font-bold text-foreground">
-              ${product.price.toLocaleString()}.00
+              ₹{product.price.toLocaleString()}
             </span>
             {product.originalPrice > product.price && (
               <span className="text-muted-foreground line-through text-sm">
-                ${product.originalPrice.toLocaleString()}.00
+                ₹{product.originalPrice.toLocaleString()}
               </span>
             )}
           </div>

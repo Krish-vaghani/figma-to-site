@@ -107,10 +107,10 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
         <div className="flex flex-col gap-0.5 pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
           <div className="flex items-baseline gap-1.5">
             <span className="text-sm sm:text-base font-bold text-foreground">
-              ${product.price.toLocaleString()}.00
+              ₹{product.price.toLocaleString()}
             </span>
             <span className="text-muted-foreground line-through text-[10px] sm:text-xs">
-              ${product.originalPrice.toLocaleString()}.00
+              ₹{product.originalPrice.toLocaleString()}
             </span>
           </div>
           <div className="flex items-center gap-0.5">

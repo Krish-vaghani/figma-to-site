@@ -67,14 +67,14 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* Price */}
       <div className="flex flex-wrap items-baseline gap-2 sm:gap-3">
         <span className="text-2xl sm:text-3xl font-bold text-foreground">
-          ${product.price.toLocaleString()}
+          ₹{product.price.toLocaleString()}
         </span>
         <span className="text-base sm:text-lg text-muted-foreground line-through">
-          ${product.originalPrice.toLocaleString()}
+          ₹{product.originalPrice.toLocaleString()}
         </span>
         {savings > 0 && (
           <span className="text-sm font-medium text-coral">
-            (You Save ${savings.toLocaleString()})
+            (You Save ₹{savings.toLocaleString()})
           </span>
         )}
       </div>

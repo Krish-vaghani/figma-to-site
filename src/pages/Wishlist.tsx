@@ -189,10 +189,10 @@ const Wishlist = () => {
                         </div>
                       </div>
                       <div className="text-center">
-                        <span className="font-semibold text-foreground">${product.price.toLocaleString()}.00</span>{" "}
-                        <span className="text-sm text-muted-foreground line-through">${product.originalPrice.toLocaleString()}.00</span>
+                        <span className="font-semibold text-foreground">₹{product.price.toLocaleString()}</span>{" "}
+                        <span className="text-sm text-muted-foreground line-through">₹{product.originalPrice.toLocaleString()}</span>
                       </div>
-                      <div className="text-center font-semibold text-foreground">${(product.price * qty).toLocaleString()}.00</div>
+                      <div className="text-center font-semibold text-foreground">₹{(product.price * qty).toLocaleString()}</div>
                       <div className="flex justify-center">
                         <button onClick={() => removeFromWishlist(product.id)} className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:border-coral hover:text-coral transition-colors text-muted-foreground">
                           <X className="h-4 w-4" />
@@ -231,9 +231,9 @@ const Wishlist = () => {
                             <button onClick={() => setQty(product.id, qty + 1)} className="px-2 py-1 text-muted-foreground"><Plus className="h-3 w-3" /></button>
                           </div>
                           <div className="text-right">
-                            <span className="font-bold text-foreground text-sm">${(product.price * qty).toLocaleString()}.00</span>
+                            <span className="font-bold text-foreground text-sm">₹{(product.price * qty).toLocaleString()}</span>
                             {product.originalPrice > product.price && (
-                              <span className="ml-1 text-[11px] text-muted-foreground line-through">${product.originalPrice.toLocaleString()}</span>
+                              <span className="ml-1 text-[11px] text-muted-foreground line-through">₹{product.originalPrice.toLocaleString()}</span>
                             )}
                           </div>
                         </div>
@@ -247,7 +247,7 @@ const Wishlist = () => {
             {/* Footer */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mt-8 pt-6 border-t border-border">
               <h3 className="text-xl font-bold text-foreground">
-                Sub Total : ${subtotal.toLocaleString()}.00
+                Sub Total : ₹{subtotal.toLocaleString()}
               </h3>
               <div className="flex items-center gap-3">
                 <Link to="/purses">
