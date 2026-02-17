@@ -232,60 +232,16 @@ All colors MUST be HSL.
     }
   }
 
-  /* Glassmorphism base – blur and border; colour per type below */
+  /* Glassmorphism base – blur and border; neutral style (no type colour) */
   [data-sonner-toast] {
     animation: toast-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     backdrop-filter: blur(20px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
     position: relative;
-  }
-
-  /* Success – transparent green tint */
-  [data-sonner-toast][data-type="success"] {
-    background: rgba(34, 197, 94, 0.12) !important;
-    border: 1px solid rgba(34, 197, 94, 0.35) !important;
-  }
-  .dark [data-sonner-toast][data-type="success"] {
-    background: rgba(34, 197, 94, 0.15) !important;
-    border-color: rgba(34, 197, 94, 0.4) !important;
-  }
-
-  /* Error – transparent red tint */
-  [data-sonner-toast][data-type="error"] {
-    background: rgba(239, 68, 68, 0.12) !important;
-    border: 1px solid rgba(239, 68, 68, 0.35) !important;
-  }
-  .dark [data-sonner-toast][data-type="error"] {
-    background: rgba(239, 68, 68, 0.15) !important;
-    border-color: rgba(239, 68, 68, 0.4) !important;
-  }
-
-  /* Warning – transparent amber tint */
-  [data-sonner-toast][data-type="warning"] {
-    background: rgba(245, 158, 11, 0.12) !important;
-    border: 1px solid rgba(245, 158, 11, 0.35) !important;
-  }
-  .dark [data-sonner-toast][data-type="warning"] {
-    background: rgba(245, 158, 11, 0.15) !important;
-    border-color: rgba(245, 158, 11, 0.4) !important;
-  }
-
-  /* Info – transparent blue tint */
-  [data-sonner-toast][data-type="info"] {
-    background: rgba(59, 130, 246, 0.12) !important;
-    border: 1px solid rgba(59, 130, 246, 0.35) !important;
-  }
-  .dark [data-sonner-toast][data-type="info"] {
-    background: rgba(59, 130, 246, 0.15) !important;
-    border-color: rgba(59, 130, 246, 0.4) !important;
-  }
-
-  /* Default (no type) – neutral transparent */
-  [data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="warning"]):not([data-type="info"]) {
     background: rgba(255, 255, 255, 0.1) !important;
     border: 1px solid rgba(255, 255, 255, 0.2) !important;
   }
-  .dark [data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="warning"]):not([data-type="info"]) {
+  .dark [data-sonner-toast] {
     background: rgba(0, 0, 0, 0.1) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
   }
@@ -329,28 +285,16 @@ All colors MUST be HSL.
     }
   }
 
-  /* Left accent + shadow for all toasts */
+  /* Left accent + shadow for all toasts (neutral) */
   [data-sonner-toast][data-styled="true"] {
     border-left-width: 4px !important;
+    border-left-color: rgba(255, 255, 255, 0.35) !important;
     box-shadow: 
       0 8px 32px 0 rgba(0, 0, 0, 0.12),
       inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   }
-
-  [data-sonner-toast][data-type="success"] {
-    border-left-color: rgba(34, 197, 94, 0.8) !important;
-  }
-
-  [data-sonner-toast][data-type="error"] {
-    border-left-color: rgba(239, 68, 68, 0.8) !important;
-  }
-
-  [data-sonner-toast][data-type="info"] {
-    border-left-color: rgba(59, 130, 246, 0.8) !important;
-  }
-
-  [data-sonner-toast][data-type="warning"] {
-    border-left-color: rgba(245, 158, 11, 0.8) !important;
+  .dark [data-sonner-toast][data-styled="true"] {
+    border-left-color: rgba(255, 255, 255, 0.2) !important;
   }
 
   /* Dark mode adjustments */

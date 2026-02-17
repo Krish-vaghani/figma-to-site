@@ -17,7 +17,7 @@ const Cart = () => {
 
       {/* Header */}
       <div
-        className="relative w-full py-16 md:py-20 flex flex-col items-center justify-center text-center"
+        className="relative w-full py-8 md:py-10 flex flex-col items-center justify-center text-center"
         style={{
           backgroundImage: `url(${shopBackground})`,
           backgroundSize: "cover",
@@ -27,7 +27,7 @@ const Cart = () => {
         <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10">
           <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Cart</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-1">
             <Link to="/" className="hover:text-coral transition-colors">Home</Link>
           </p>
         </div>
@@ -125,15 +125,17 @@ const Cart = () => {
                           </button>
                         </div>
                         {product && <p className="text-[11px] text-muted-foreground mt-0.5">{product.description}</p>}
-                        <div className="flex items-center gap-1 mt-1">
-                          <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: item.color }} />
+                        <div className="flex flex-col gap-0.5 mt-0.5">
+                          <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                            Colour : <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: item.color }} />
+                          </span>
                           {product && (
-                            <span className="ml-1 text-[11px] text-muted-foreground flex items-center gap-0.5">
-                              <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
+                            <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
+                              Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center justify-between mt-2">
+                        <div className="flex items-center justify-between mt-1.5">
                           <div className="flex items-center border border-border rounded-md overflow-hidden">
                             <button onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)} className="px-2 py-1 text-muted-foreground"><Minus className="h-3 w-3" /></button>
                             <span className="w-7 text-center text-xs font-medium">{String(item.quantity).padStart(2, "0")}</span>

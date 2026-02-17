@@ -60,7 +60,7 @@ const Wishlist = () => {
 
       {/* Header */}
       <div
-        className="relative w-full py-16 md:py-20 flex flex-col items-center justify-center text-center"
+        className="relative w-full py-8 md:py-10 flex flex-col items-center justify-center text-center"
         style={{
           backgroundImage: `url(${shopBackground})`,
           backgroundSize: "cover",
@@ -70,7 +70,7 @@ const Wishlist = () => {
         <div className="absolute inset-0 bg-background/60" />
         <div className="relative z-10">
           <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Wishlist</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-1">
             <Link to="/" className="hover:text-coral transition-colors">Home</Link>
           </p>
         </div>
@@ -216,15 +216,17 @@ const Wishlist = () => {
                           </button>
                         </div>
                         <p className="text-[11px] text-muted-foreground mt-0.5">{product.description}</p>
-                        <div className="flex items-center gap-1 mt-1">
-                          {product.colors.map((c) => (
-                            <span key={c} className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: c }} />
-                          ))}
-                          <span className="ml-1 text-[11px] text-muted-foreground flex items-center gap-0.5">
-                            <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
+                        <div className="flex flex-col gap-0.5 mt-0.5">
+                          <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                            Colour : {product.colors.map((c) => (
+                              <span key={c} className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: c }} />
+                            ))}
+                          </span>
+                          <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
+                            Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between mt-2">
+                        <div className="flex items-center justify-between mt-1.5">
                           <div className="flex items-center border border-border rounded-md overflow-hidden">
                             <button onClick={() => setQty(product.id, qty - 1)} className="px-2 py-1 text-muted-foreground"><Minus className="h-3 w-3" /></button>
                             <span className="w-7 text-center text-xs font-medium">{String(qty).padStart(2, "0")}</span>
@@ -249,9 +251,9 @@ const Wishlist = () => {
               <h3 className="text-xl font-bold text-foreground">
                 Sub Total : ₹{subtotal.toLocaleString()}
               </h3>
-              <div className="flex items-center gap-3">
-                <Link to="/purses">
-                  <button className="border border-border text-foreground font-medium px-6 py-3 rounded-full hover:bg-secondary/50 transition-colors">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                <Link to="/purses" className="flex-1 sm:flex-initial min-w-0">
+                  <button className="w-full sm:w-auto border border-border text-foreground font-medium text-sm sm:text-base px-4 py-2.5 sm:px-6 sm:py-3 rounded-full hover:bg-secondary/50 transition-colors">
                     Back To Shop
                   </button>
                 </Link>
@@ -260,7 +262,7 @@ const Wishlist = () => {
                     wishlistProducts.forEach((p) => handleAddToCart(p));
                     toast.cart.added("All wishlist items");
                   }}
-                  className="bg-coral text-white font-medium px-8 py-3 rounded-full hover:bg-coral/90 transition-colors"
+                  className="flex-1 sm:flex-initial min-w-0 w-full sm:w-auto bg-coral text-white font-medium text-sm sm:text-base px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-coral/90 transition-colors"
                 >
                   Add All To Cart
                 </button>

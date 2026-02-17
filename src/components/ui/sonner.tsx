@@ -34,7 +34,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
       duration={6500}
       visibleToasts={1}
       closeButton
-      richColors
       icons={{ close: <RoundCloseIcon /> }}
       toastOptions={{
         classNames: {
@@ -45,10 +44,6 @@ const Toaster = ({ ...props }: ToasterProps) => {
           actionButton: "group-[.toast]:bg-coral/90 group-[.toast]:backdrop-blur-sm group-[.toast]:text-white group-[.toast]:rounded-lg group-[.toast]:text-sm group-[.toast]:font-medium group-[.toast]:px-4 group-[.toast]:py-2 group-[.toast]:hover:bg-coral group-[.toast]:transition-colors group-[.toast]:border group-[.toast]:border-white/20",
           cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:backdrop-blur-sm group-[.toast]:text-foreground group-[.toast]:rounded-lg group-[.toast]:text-sm group-[.toast]:px-4 group-[.toast]:py-2 group-[.toast]:hover:bg-white/20 group-[.toast]:transition-colors group-[.toast]:border group-[.toast]:border-white/20",
           closeButton: "group-[.toast]:top-4 group-[.toast]:right-4 group-[.toast]:text-foreground/60 group-[.toast]:hover:text-foreground group-[.toast]:rounded-full group-[.toast]:transition-all group-[.toast]:hover:bg-white/20 group-[.toast]:backdrop-blur-sm group-[.toast]:p-1.5 group-[.toast]:border group-[.toast]:border-white/20",
-          success: "group-[.toast]:border-green-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-green-500/10 group-[.toast]:to-emerald-500/5",
-          error: "group-[.toast]:border-red-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-red-500/10 group-[.toast]:to-rose-500/5",
-          info: "group-[.toast]:border-blue-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-blue-500/10 group-[.toast]:to-cyan-500/5",
-          warning: "group-[.toast]:border-amber-400/30 group-[.toast]:bg-gradient-to-br group-[.toast]:from-amber-500/10 group-[.toast]:to-yellow-500/5",
         },
       }}
       {...props}
