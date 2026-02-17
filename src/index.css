@@ -232,46 +232,62 @@ All colors MUST be HSL.
     }
   }
 
-  /* Glassmorphism/Frosted Glass Toast – same transparent look on ALL screens */
+  /* Glassmorphism base – blur and border; colour per type below */
   [data-sonner-toast] {
     animation: toast-slide-in 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    background: rgba(255, 255, 255, 0.1) !important;
     backdrop-filter: blur(20px) saturate(180%) !important;
     -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
     position: relative;
   }
 
-  .dark [data-sonner-toast] {
+  /* Success – transparent green tint */
+  [data-sonner-toast][data-type="success"] {
+    background: rgba(34, 197, 94, 0.12) !important;
+    border: 1px solid rgba(34, 197, 94, 0.35) !important;
+  }
+  .dark [data-sonner-toast][data-type="success"] {
+    background: rgba(34, 197, 94, 0.15) !important;
+    border-color: rgba(34, 197, 94, 0.4) !important;
+  }
+
+  /* Error – transparent red tint */
+  [data-sonner-toast][data-type="error"] {
+    background: rgba(239, 68, 68, 0.12) !important;
+    border: 1px solid rgba(239, 68, 68, 0.35) !important;
+  }
+  .dark [data-sonner-toast][data-type="error"] {
+    background: rgba(239, 68, 68, 0.15) !important;
+    border-color: rgba(239, 68, 68, 0.4) !important;
+  }
+
+  /* Warning – transparent amber tint */
+  [data-sonner-toast][data-type="warning"] {
+    background: rgba(245, 158, 11, 0.12) !important;
+    border: 1px solid rgba(245, 158, 11, 0.35) !important;
+  }
+  .dark [data-sonner-toast][data-type="warning"] {
+    background: rgba(245, 158, 11, 0.15) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+  }
+
+  /* Info – transparent blue tint */
+  [data-sonner-toast][data-type="info"] {
+    background: rgba(59, 130, 246, 0.12) !important;
+    border: 1px solid rgba(59, 130, 246, 0.35) !important;
+  }
+  .dark [data-sonner-toast][data-type="info"] {
+    background: rgba(59, 130, 246, 0.15) !important;
+    border-color: rgba(59, 130, 246, 0.4) !important;
+  }
+
+  /* Default (no type) – neutral transparent */
+  [data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="warning"]):not([data-type="info"]) {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+  .dark [data-sonner-toast]:not([data-type="success"]):not([data-type="error"]):not([data-type="warning"]):not([data-type="info"]) {
     background: rgba(0, 0, 0, 0.1) !important;
     border-color: rgba(255, 255, 255, 0.1) !important;
-  }
-
-  /* Force same transparent style on mobile/tablet – no solid background */
-  @media (max-width: 1024px) {
-    [data-sonner-toast] {
-      background: rgba(255, 255, 255, 0.1) !important;
-      backdrop-filter: blur(20px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-    .dark [data-sonner-toast] {
-      background: rgba(0, 0, 0, 0.1) !important;
-      border-color: rgba(255, 255, 255, 0.1) !important;
-    }
-  }
-
-  @media (max-width: 640px) {
-    [data-sonner-toast] {
-      background: rgba(255, 255, 255, 0.1) !important;
-      backdrop-filter: blur(20px) saturate(180%) !important;
-      -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-      border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-    .dark [data-sonner-toast] {
-      background: rgba(0, 0, 0, 0.1) !important;
-      border-color: rgba(255, 255, 255, 0.1) !important;
-    }
   }
 
   /* Water-like shimmer effect */
@@ -313,28 +329,28 @@ All colors MUST be HSL.
     }
   }
 
-  /* Subtle border glow effect */
+  /* Left accent + shadow for all toasts */
   [data-sonner-toast][data-styled="true"] {
-    border-left-width: 3px;
+    border-left-width: 4px !important;
     box-shadow: 
       0 8px 32px 0 rgba(0, 0, 0, 0.12),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
   }
 
   [data-sonner-toast][data-type="success"] {
-    border-left-color: rgba(34, 197, 94, 0.5);
+    border-left-color: rgba(34, 197, 94, 0.8) !important;
   }
 
   [data-sonner-toast][data-type="error"] {
-    border-left-color: rgba(239, 68, 68, 0.5);
+    border-left-color: rgba(239, 68, 68, 0.8) !important;
   }
 
   [data-sonner-toast][data-type="info"] {
-    border-left-color: rgba(59, 130, 246, 0.5);
+    border-left-color: rgba(59, 130, 246, 0.8) !important;
   }
 
   [data-sonner-toast][data-type="warning"] {
-    border-left-color: rgba(245, 158, 11, 0.5);
+    border-left-color: rgba(245, 158, 11, 0.8) !important;
   }
 
   /* Dark mode adjustments */
