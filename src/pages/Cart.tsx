@@ -25,9 +25,9 @@ const Cart = () => {
         }}
       >
         <div className="absolute inset-0 bg-background/60" />
-        <div className="relative z-10">
+        <div className="relative z-10 flex flex-col gap-0.5">
           <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Cart</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="text-muted-foreground">
             <Link to="/" className="hover:text-coral transition-colors">Home</Link>
           </p>
         </div>
@@ -77,15 +77,15 @@ const Cart = () => {
                         <div className="w-24 h-24 rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         </div>
-                        <div className="min-w-0">
+                        <div className="min-w-0 flex flex-col gap-0.5">
                           <h3 className="font-semibold text-foreground">{item.name}</h3>
                           {product && <p className="text-xs text-muted-foreground">{product.description}</p>}
-                          <div className="flex items-center gap-1 mt-1">
+                          <div className="flex items-center gap-1">
                             <span className="text-xs text-muted-foreground">Color :</span>
                             <span className="w-3.5 h-3.5 rounded-full border border-border" style={{ backgroundColor: item.color }} />
                           </div>
                           {product && (
-                            <div className="flex items-center gap-1 mt-0.5">
+                            <div className="flex items-center gap-1">
                               <span className="text-xs text-muted-foreground">Review :</span>
                               <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
                               <span className="text-xs text-muted-foreground">{product.rating}({product.reviews})</span>
@@ -117,15 +117,15 @@ const Cart = () => {
                       <div className="w-[72px] h-[72px] rounded-xl overflow-hidden bg-secondary/30 flex-shrink-0">
                         <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                       </div>
-                      <div className="flex-1 min-w-0">
+                      <div className="flex-1 min-w-0 flex flex-col gap-0.5">
                         <div className="flex items-start justify-between gap-2">
                           <h3 className="font-semibold text-foreground text-sm leading-tight">{item.name}</h3>
                           <button onClick={() => removeFromCart(item.id, item.color)} className="flex-shrink-0 w-7 h-7 rounded-md border border-border flex items-center justify-center text-muted-foreground">
                             <X className="h-3 w-3" />
                           </button>
                         </div>
-                        {product && <p className="text-[11px] text-muted-foreground mt-0.5">{product.description}</p>}
-                        <div className="flex flex-col gap-0.5 mt-0.5">
+                        {product && <p className="text-[11px] text-muted-foreground">{product.description}</p>}
+                        <div className="flex flex-col gap-0.5">
                           <span className="text-[11px] text-muted-foreground flex items-center gap-1">
                             Colour : <span className="w-3 h-3 rounded-full border border-border" style={{ backgroundColor: item.color }} />
                           </span>
@@ -135,7 +135,7 @@ const Cart = () => {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center justify-between mt-1.5">
+                        <div className="flex items-center justify-between mt-0.5">
                           <div className="flex items-center border border-border rounded-md overflow-hidden">
                             <button onClick={() => updateQuantity(item.id, item.color, item.quantity - 1)} className="px-2 py-1 text-muted-foreground"><Minus className="h-3 w-3" /></button>
                             <span className="w-7 text-center text-xs font-medium">{String(item.quantity).padStart(2, "0")}</span>
