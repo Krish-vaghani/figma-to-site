@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { OrderProvider } from "@/contexts/OrderContext";
+import { AddressProvider } from "@/contexts/AddressContext";
 import { AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
@@ -18,6 +19,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import OrderSuccess from "./pages/OrderSuccess";
+import Addresses from "./pages/Addresses";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -35,6 +37,7 @@ const AnimatedRoutes = () => {
         <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
         <Route path="/orders" element={<PageTransition><Orders /></PageTransition>} />
         <Route path="/order-success/:id" element={<PageTransition><OrderSuccess /></PageTransition>} />
+        <Route path="/addresses" element={<PageTransition><Addresses /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -45,13 +48,15 @@ const App = () => (
   <WishlistProvider>
     <CartProvider>
       <OrderProvider>
-        <TooltipProvider>
-          <Toaster />
-          <CartDrawer />
-          <BrowserRouter>
-            <AnimatedRoutes />
-          </BrowserRouter>
-        </TooltipProvider>
+        <AddressProvider>
+          <TooltipProvider>
+            <Toaster />
+            <CartDrawer />
+            <BrowserRouter>
+              <AnimatedRoutes />
+            </BrowserRouter>
+          </TooltipProvider>
+        </AddressProvider>
       </OrderProvider>
     </CartProvider>
   </WishlistProvider>
