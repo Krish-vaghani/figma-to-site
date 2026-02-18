@@ -3,6 +3,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CartProvider } from "@/contexts/CartContext";
+import { OrderProvider } from "@/contexts/OrderContext";
 import { AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
@@ -14,6 +15,9 @@ import ProductDetail from "./pages/ProductDetail";
 import Login from "./pages/Login";
 import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
+import OrderSuccess from "./pages/OrderSuccess";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -28,6 +32,9 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
         <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
+        <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
+        <Route path="/orders" element={<PageTransition><Orders /></PageTransition>} />
+        <Route path="/order-success/:id" element={<PageTransition><OrderSuccess /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -37,15 +44,18 @@ const AnimatedRoutes = () => {
 const App = () => (
   <WishlistProvider>
     <CartProvider>
-      <TooltipProvider>
-        <Toaster />
-        <CartDrawer />
-        <BrowserRouter>
-          <AnimatedRoutes />
-        </BrowserRouter>
-      </TooltipProvider>
+      <OrderProvider>
+        <TooltipProvider>
+          <Toaster />
+          <CartDrawer />
+          <BrowserRouter>
+            <AnimatedRoutes />
+          </BrowserRouter>
+        </TooltipProvider>
+      </OrderProvider>
     </CartProvider>
   </WishlistProvider>
 );
 
 export default App;
+

@@ -164,9 +164,9 @@ const Cart = () => {
                     Back To Shop
                   </button>
                 </Link>
-                <Link to="/login">
+                <Link to="/checkout">
                   <button className="bg-coral text-white font-medium px-8 py-3 rounded-full hover:bg-coral/90 transition-colors">
-                    Checkout
+                    Proceed to Checkout
                   </button>
                 </Link>
               </div>
