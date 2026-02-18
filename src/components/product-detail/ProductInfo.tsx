@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Star, Minus, Plus, Heart } from "lucide-react";
+import { Star, Minus, Plus, Heart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import type { Product } from "@/data/products";
@@ -12,6 +13,7 @@ interface ProductInfoProps {
 const ProductInfo = ({ product }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(5);
   const [selectedColor, setSelectedColor] = useState(0);
+  const navigate = useNavigate();
   const { addToCart, setIsCartOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
@@ -22,19 +24,23 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     setQuantity((prev) => Math.max(1, prev + delta));
   };
 
+  const getCartItem = () => ({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    originalPrice: product.originalPrice,
+    image: product.image,
+    color: product.colors[selectedColor],
+  });
+
   const handleAddToCart = () => {
-    addToCart(
-      {
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        originalPrice: product.originalPrice,
-        image: product.image,
-        color: product.colors[selectedColor],
-      },
-      quantity
-    );
+    addToCart(getCartItem(), quantity);
     setIsCartOpen(true);
+  };
+
+  const handleBuyNow = () => {
+    addToCart(getCartItem(), quantity);
+    navigate("/checkout");
   };
 
   return (
@@ -149,26 +155,38 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       </div>
 
       {/* Action Buttons */}
-      <div className="flex gap-2 sm:gap-4 pt-2">
+      <div className="flex flex-col gap-2 sm:gap-3 pt-2">
+        {/* Buy Now (primary CTA) */}
         <motion.button
-          className="flex-1 bg-foreground text-background font-medium px-3 py-2.5 sm:px-6 sm:py-3.5 rounded-full text-xs sm:text-base hover:bg-coral transition-colors duration-300"
+          className="w-full bg-coral text-white font-semibold px-6 py-3 sm:py-3.5 rounded-full text-sm sm:text-base hover:bg-coral/90 transition-colors duration-300 flex items-center justify-center gap-2"
           whileTap={{ scale: 0.98 }}
-          onClick={handleAddToCart}
+          onClick={handleBuyNow}
         >
-          Add To Cart
+          <Zap className="h-4 w-4 fill-current" />
+          Buy Now
         </motion.button>
-        <motion.button
-          className={`flex-1 border-2 font-medium px-3 py-2.5 sm:px-6 sm:py-3.5 rounded-full text-xs sm:text-base transition-colors duration-300 flex items-center justify-center gap-1.5 sm:gap-2 ${
-            isWishlisted
-              ? "border-coral bg-coral/10 text-coral"
-              : "border-foreground text-foreground hover:bg-foreground hover:text-background"
-          }`}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => toggleWishlist(product.id, product.name)}
-        >
-          <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${isWishlisted ? "fill-current" : ""}`} />
-          Add To Wishlist
-        </motion.button>
+
+        <div className="flex gap-2 sm:gap-3">
+          <motion.button
+            className="flex-1 bg-foreground text-background font-medium px-3 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-base hover:bg-coral transition-colors duration-300"
+            whileTap={{ scale: 0.98 }}
+            onClick={handleAddToCart}
+          >
+            Add To Cart
+          </motion.button>
+          <motion.button
+            className={`flex-1 border-2 font-medium px-3 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-base transition-colors duration-300 flex items-center justify-center gap-1.5 sm:gap-2 ${
+              isWishlisted
+                ? "border-coral bg-coral/10 text-coral"
+                : "border-foreground text-foreground hover:bg-foreground hover:text-background"
+            }`}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => toggleWishlist(product.id, product.name)}
+          >
+            <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${isWishlisted ? "fill-current" : ""}`} />
+            Add To Wishlist
+          </motion.button>
+        </div>
       </div>
     </div>
   );
