@@ -19,6 +19,7 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
 import OrderSuccess from "./pages/OrderSuccess";
+import OrderDetail from "./pages/OrderDetail";
 import Addresses from "./pages/Addresses";
 
 const AnimatedRoutes = () => {
@@ -37,6 +38,7 @@ const AnimatedRoutes = () => {
         <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
         <Route path="/orders" element={<PageTransition><Orders /></PageTransition>} />
         <Route path="/order-success/:id" element={<PageTransition><OrderSuccess /></PageTransition>} />
+        <Route path="/order/:id" element={<PageTransition><OrderDetail /></PageTransition>} />
         <Route path="/addresses" element={<PageTransition><Addresses /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>

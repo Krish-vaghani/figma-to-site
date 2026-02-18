@@ -1,17 +1,18 @@
 import { Link } from "react-router-dom";
-import { Package, MapPin, ShoppingBag, ChevronRight, Clock, CheckCircle2, Truck, Star } from "lucide-react";
+import { Package, MapPin, ShoppingBag, ChevronRight, Clock, CheckCircle2, Truck, Star, Navigation, PartyPopper, XCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import { useOrders, Order } from "@/contexts/OrderContext";
+import { useOrders, Order, OrderStatus } from "@/contexts/OrderContext";
 import { shopBackground } from "@/lib/assetUrls";
 
-const STATUS_CONFIG: Record<Order["status"], { label: string; color: string; icon: React.ElementType }> = {
-  placed:    { label: "Order Placed",  color: "text-foreground bg-secondary",    icon: Clock },
-  confirmed: { label: "Confirmed",     color: "text-foreground bg-secondary",    icon: CheckCircle2 },
-  shipped:   { label: "Shipped",       color: "text-foreground bg-secondary",    icon: Truck },
-  delivered: { label: "Delivered",     color: "text-[hsl(var(--toast-success))] bg-secondary", icon: CheckCircle2 },
-  cancelled: { label: "Cancelled",     color: "text-destructive bg-destructive/10", icon: Clock },
+const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; icon: React.ElementType }> = {
+  placed:           { label: "Order Placed",    color: "text-foreground bg-secondary",                              icon: Clock },
+  confirmed:        { label: "Confirmed",        color: "text-foreground bg-secondary",                              icon: CheckCircle2 },
+  shipped:          { label: "Shipped",          color: "text-coral bg-coral/10",                                   icon: Truck },
+  out_for_delivery: { label: "Out for Delivery", color: "text-[hsl(var(--toast-warning))] bg-[hsl(var(--toast-warning))]/10", icon: Navigation },
+  delivered:        { label: "Delivered",        color: "text-[hsl(var(--toast-success))] bg-[hsl(var(--toast-success))]/10", icon: PartyPopper },
+  cancelled:        { label: "Cancelled",        color: "text-destructive bg-destructive/10",                       icon: XCircle },
 };
 
 const Orders = () => {
@@ -123,9 +124,9 @@ const Orders = () => {
                             <Star className="h-3 w-3" /> Rate Order
                           </button>
                         )}
-                        <Link to={`/order-success/${order.id}`}>
+                        <Link to={`/order/${order.id}`}>
                           <button className="flex items-center gap-1 text-xs text-foreground border border-border rounded-full px-3 py-1.5 hover:bg-secondary/50 transition-colors">
-                            View Details <ChevronRight className="h-3 w-3" />
+                            Track Order <ChevronRight className="h-3 w-3" />
                           </button>
                         </Link>
                       </div>
