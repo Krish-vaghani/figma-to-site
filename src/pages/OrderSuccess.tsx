@@ -95,9 +95,9 @@ const OrderSuccess = () => {
 
         {/* Actions */}
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link to="/orders">
+          <Link to={`/order/${order.id}`}>
             <button className="border border-border text-foreground font-medium px-6 py-3 rounded-full hover:bg-secondary/50 transition-colors flex items-center gap-2">
-              <ShoppingBag className="h-4 w-4" /> My Orders
+              <Package className="h-4 w-4" /> Track Order
             </button>
           </Link>
           <Link to="/purses">
