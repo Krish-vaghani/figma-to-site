@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { User, Phone, Mail, Home, MapPin, Landmark } from "lucide-react";
+import { User, Phone, Mail, Home, MapPin, Landmark, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DeliveryAddress } from "@/contexts/OrderContext";
@@ -33,6 +33,29 @@ export const addressSchema = z.object({
 
 export type AddressFormData = z.infer<typeof addressSchema>;
 
+// ── Pincode lookup via India Post public API ──────────────────────────────────
+type PincodeStatus = "idle" | "loading" | "success" | "error";
+
+// Normalize state name from API to one of our INDIAN_STATES list
+const normalizeState = (raw: string): string => {
+  const lower = raw.toLowerCase().trim();
+  return INDIAN_STATES.find((s) => s.toLowerCase() === lower) ?? raw;
+};
+
+async function lookupPincode(pin: string): Promise<{ city: string; state: string } | null> {
+  const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+  if (!res.ok) return null;
+  const json = await res.json();
+  const record = json?.[0];
+  if (record?.Status !== "Success" || !record?.PostOffice?.length) return null;
+  const po = record.PostOffice[0];
+  // Prefer District as city; fall back to Name
+  const city = po.District || po.Name || "";
+  const state = normalizeState(po.State || "");
+  return { city, state };
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 interface AddressFormProps {
   defaultValues?: Partial<AddressFormData>;
   onSubmit: (data: AddressFormData) => void;
@@ -52,10 +75,39 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
     },
   });
 
+  const [pincodeStatus, setPincodeStatus] = useState<PincodeStatus>("idle");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Reset when defaultValues change (edit mode)
   useEffect(() => {
     if (defaultValues) form.reset({ label: "Home", ...defaultValues });
   }, [JSON.stringify(defaultValues)]);
+
+  // Watch pincode field and trigger auto-fill
+  const pincodeValue = form.watch("pincode");
+  useEffect(() => {
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    if (!/^\d{6}$/.test(pincodeValue)) {
+      setPincodeStatus("idle");
+      return;
+    }
+    setPincodeStatus("loading");
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const result = await lookupPincode(pincodeValue);
+        if (result) {
+          form.setValue("city", result.city, { shouldValidate: true });
+          form.setValue("state", result.state, { shouldValidate: true });
+          setPincodeStatus("success");
+        } else {
+          setPincodeStatus("error");
+        }
+      } catch {
+        setPincodeStatus("error");
+      }
+    }, 500);
+    return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
+  }, [pincodeValue]);
 
   return (
     <Form {...form}>
@@ -146,22 +198,59 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
             </FormItem>
           )} />
 
+          {/* ── Pincode with auto-fill indicator ── */}
           <FormField control={form.control} name="pincode" render={({ field }) => (
             <FormItem>
               <FormLabel>Pincode *</FormLabel>
               <FormControl>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input placeholder="400001" maxLength={6} className="pl-9" {...field} />
+                  <Input
+                    placeholder="400001"
+                    maxLength={6}
+                    className="pl-9 pr-9"
+                    {...field}
+                  />
+                  {/* Status icon */}
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {pincodeStatus === "loading" && (
+                      <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
+                    )}
+                    {pincodeStatus === "success" && (
+                      <CheckCircle2 className="h-4 w-4 text-[hsl(var(--toast-success))]" />
+                    )}
+                    {pincodeStatus === "error" && (
+                      <AlertCircle className="h-4 w-4 text-destructive" />
+                    )}
+                  </div>
                 </div>
               </FormControl>
+              {/* Inline status message */}
+              {pincodeStatus === "success" && (
+                <p className="text-xs text-[hsl(var(--toast-success))] flex items-center gap-1 mt-1">
+                  <CheckCircle2 className="h-3 w-3" /> City &amp; State auto-filled
+                </p>
+              )}
+              {pincodeStatus === "error" && (
+                <p className="text-xs text-destructive flex items-center gap-1 mt-1">
+                  <AlertCircle className="h-3 w-3" /> Pincode not found — please fill manually
+                </p>
+              )}
               <FormMessage />
             </FormItem>
           )} />
 
+          {/* City — may be auto-filled */}
           <FormField control={form.control} name="city" render={({ field }) => (
             <FormItem>
-              <FormLabel>City *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                City *
+                {pincodeStatus === "success" && (
+                  <span className="text-[10px] font-normal bg-[hsl(var(--toast-success))]/10 text-[hsl(var(--toast-success))] px-1.5 py-0.5 rounded-full">
+                    Auto-filled
+                  </span>
+                )}
+              </FormLabel>
               <FormControl>
                 <Input placeholder="Mumbai" {...field} />
               </FormControl>
@@ -169,13 +258,25 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
             </FormItem>
           )} />
 
+          {/* State — auto-filled & highlighted */}
           <FormField control={form.control} name="state" render={({ field }) => (
             <FormItem>
-              <FormLabel>State *</FormLabel>
+              <FormLabel className="flex items-center gap-1.5">
+                State *
+                {pincodeStatus === "success" && (
+                  <span className="text-[10px] font-normal bg-[hsl(var(--toast-success))]/10 text-[hsl(var(--toast-success))] px-1.5 py-0.5 rounded-full">
+                    Auto-filled
+                  </span>
+                )}
+              </FormLabel>
               <FormControl>
                 <select
                   {...field}
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-foreground"
+                  className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-foreground transition-colors ${
+                    pincodeStatus === "success"
+                      ? "border-[hsl(var(--toast-success))]"
+                      : "border-input"
+                  }`}
                 >
                   <option value="">Select State</option>
                   {INDIAN_STATES.map((s) => (
