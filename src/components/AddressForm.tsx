@@ -243,14 +243,7 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
           {/* City — may be auto-filled */}
           <FormField control={form.control} name="city" render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                City *
-                {pincodeStatus === "success" && (
-                  <span className="text-[10px] font-normal bg-[hsl(var(--toast-success))]/10 text-[hsl(var(--toast-success))] px-1.5 py-0.5 rounded-full">
-                    Auto-filled
-                  </span>
-                )}
-              </FormLabel>
+              <FormLabel>City *</FormLabel>
               <FormControl>
                 <Input placeholder="Mumbai" {...field} />
               </FormControl>
@@ -258,25 +251,14 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
             </FormItem>
           )} />
 
-          {/* State — auto-filled & highlighted */}
+          {/* State */}
           <FormField control={form.control} name="state" render={({ field }) => (
             <FormItem>
-              <FormLabel className="flex items-center gap-1.5">
-                State *
-                {pincodeStatus === "success" && (
-                  <span className="text-[10px] font-normal bg-[hsl(var(--toast-success))]/10 text-[hsl(var(--toast-success))] px-1.5 py-0.5 rounded-full">
-                    Auto-filled
-                  </span>
-                )}
-              </FormLabel>
+              <FormLabel>State *</FormLabel>
               <FormControl>
                 <select
                   {...field}
-                  className={`flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-foreground transition-colors ${
-                    pincodeStatus === "success"
-                      ? "border-[hsl(var(--toast-success))]"
-                      : "border-input"
-                  }`}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-foreground transition-colors"
                 >
                   <option value="">Select State</option>
                   {INDIAN_STATES.map((s) => (
