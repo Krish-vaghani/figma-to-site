@@ -10,17 +10,18 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { toast } from "@/lib/toast";
 import { useSeo } from "@/hooks/useSeo";
 import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
+import { useAuth } from "@/contexts/AuthContext";
 import { shopBackground } from "@/lib/assetUrls";
 import loginIllustration from "@/assets/login-illustration.png";
 import otpIllustration from "@/assets/otp-illustration.png";
 import loginCardBg from "@/assets/login-card-bg.png";
 
 const OTP_LENGTH = 6;
-const AUTH_TOKEN_KEY = "auth_token";
 
 const Login = () => {
   useSeo("Login", "Sign in to manage your orders, wishlist, and account details.");
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const [registerOrLogin, { isLoading: isSendingOtp }] = useRegisterOrLoginMutation();
   const [login, { isLoading: isVerifying }] = useLoginMutation();
@@ -82,7 +83,7 @@ const Login = () => {
     const otpString = otp.join("");
     try {
       const result = await login({ phone: mobile, otp: otpString }).unwrap();
-      localStorage.setItem(AUTH_TOKEN_KEY, result.data.token);
+      auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
       toast.auth.loginSuccess();
       navigate("/", { replace: true });
     } catch (err: unknown) {
