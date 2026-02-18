@@ -1,6 +1,8 @@
-import { Heart, Star, Award, TrendingUp, Sparkles, Flame, Tag } from "lucide-react";
+import { Heart, Star, Award, TrendingUp, Sparkles, Flame, Tag, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 
 interface ShopProductCardProps {
@@ -72,8 +74,23 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 };
 
 const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
+  const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
+
+  const handleBuyNow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.originalPrice,
+      image: product.image,
+      color: product.colors[0],
+    });
+    navigate("/checkout");
+  };
 
   return (
     <div
@@ -112,6 +129,18 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           decoding="async"
           draggable={false}
         />
+
+        {/* Buy Now overlay on hover */}
+        <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+          <motion.button
+            className="w-full bg-coral text-white text-xs sm:text-sm font-semibold py-2.5 flex items-center justify-center gap-1.5 hover:bg-coral/90 transition-colors"
+            onClick={handleBuyNow}
+            whileTap={{ scale: 0.98 }}
+          >
+            <Zap className="h-3.5 w-3.5 fill-current" />
+            Buy Now
+          </motion.button>
+        </div>
       </div>
 
       {/* Product Info */}
