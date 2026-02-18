@@ -1,13 +1,15 @@
-import { useState, useEffect } from "react";
-import { Search, ShoppingCart, Heart, Menu, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Search, ShoppingCart, Heart, Menu, X, User, ShoppingBag, MapPin, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchModal from "./SearchModal";
 import WishlistShareDialog from "./WishlistShareDialog";
 import { logo } from "@/lib/assetUrls";
+import { showToast } from "@/lib/toast";
 
 type NavbarProps = {
   className?: string;
@@ -21,12 +23,23 @@ const navLinks = [
   { label: "Contact Us", href: "#" },
 ];
 
+const profileMenuItems = [
+  { icon: User, label: "My Profile", href: "/profile" },
+  { icon: ShoppingBag, label: "My Orders", href: "/orders" },
+  { icon: MapPin, label: "My Addresses", href: "/addresses" },
+  { icon: Heart, label: "My Wishlist", href: "/wishlist" },
+];
+
 const Navbar = ({ className }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { wishlistCount } = useWishlist();
-  const { cartCount, setIsCartOpen } = useCart();
+  const { cartCount } = useCart();
+  const { isLoggedIn, user, logout } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
+  const profileRef = useRef<HTMLDivElement>(null);
 
   // Close mobile menu on scroll
   useEffect(() => {
@@ -36,17 +49,41 @@ const Navbar = ({ className }: NavbarProps) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMenuOpen]);
 
+  // Close profile dropdown on outside click
+  useEffect(() => {
+    if (!isProfileOpen) return;
+    const handleClick = (e: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
+        setIsProfileOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [isProfileOpen]);
+
   const isActiveLink = (href: string) => {
     if (href === "/") return location.pathname === "/";
     return location.pathname.startsWith(href);
   };
+
+  const handleLogout = () => {
+    logout();
+    setIsProfileOpen(false);
+    setIsMenuOpen(false);
+    showToast.success({ title: "Logged out", description: "See you soon!" });
+    navigate("/");
+  };
+
+  const initials = user?.name
+    ? user.name.split(" ").map((n) => n[0]).join("").toUpperCase().slice(0, 2)
+    : "U";
 
   return (
     <nav className={["sticky top-0 z-50 py-3 px-4 sm:px-6 lg:px-8", className ?? "bg-background"].join(" ")}>
       {/* Rounded pill container */}
       <div className="max-w-7xl mx-auto bg-background border border-border rounded-full px-4 sm:px-6 py-3 shadow-sm">
         <div className="flex items-center justify-between">
-          {/* Logo - click to home */}
+          {/* Logo */}
           <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 rounded">
             <img src={logo} alt="Welcome" className="h-6 sm:h-8" />
           </Link>
@@ -56,23 +93,17 @@ const Navbar = ({ className }: NavbarProps) => {
             {navLinks.map((link, index) => {
               const isActive = isActiveLink(link.href);
               const isExternal = link.href === "#";
-
               const linkClasses = `px-3 xl:px-4 py-2 text-sm font-medium transition-all duration-300 relative ${
                 isActive
                   ? "text-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:bg-coral after:rounded-full"
                   : "text-muted-foreground hover:text-coral"
               }`;
-
               return (
                 <li key={link.label} className="flex items-center">
                   {isExternal ? (
-                    <a href={link.href} className={linkClasses}>
-                      {link.label}
-                    </a>
+                    <a href={link.href} className={linkClasses}>{link.label}</a>
                   ) : (
-                    <Link to={link.href} className={linkClasses}>
-                      {link.label}
-                    </Link>
+                    <Link to={link.href} className={linkClasses}>{link.label}</Link>
                   )}
                   {index < navLinks.length - 1 && <span className="text-border">|</span>}
                 </li>
@@ -90,7 +121,8 @@ const Navbar = ({ className }: NavbarProps) => {
             >
               <Search className="h-4 w-4" />
             </Button>
-            {/* Cart Button with Badge */}
+
+            {/* Cart Button */}
             <Link to="/cart">
               <Button
                 variant="ghost"
@@ -113,7 +145,7 @@ const Navbar = ({ className }: NavbarProps) => {
               </Button>
             </Link>
 
-            {/* Wishlist Button with Badge */}
+            {/* Wishlist Button */}
             <Link to="/wishlist">
               <Button
                 variant="ghost"
@@ -136,16 +168,75 @@ const Navbar = ({ className }: NavbarProps) => {
               </Button>
             </Link>
 
-            {/* Share Wishlist - desktop only */}
+            {/* Share Wishlist */}
             <span className="hidden sm:inline-flex">
               {wishlistCount > 0 && <WishlistShareDialog />}
             </span>
 
-            <Link to="/login">
-              <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
-                Login
-              </Button>
-            </Link>
+            {/* Profile or Login */}
+            {isLoggedIn ? (
+              <div className="relative hidden sm:block" ref={profileRef}>
+                <button
+                  onClick={() => setIsProfileOpen((v) => !v)}
+                  className="flex items-center gap-1.5 ml-2 rounded-full border border-border px-3 h-9 hover:border-coral transition-all duration-300 focus:outline-none"
+                  aria-expanded={isProfileOpen}
+                >
+                  <span className="h-5 w-5 rounded-full bg-coral flex items-center justify-center text-white text-[10px] font-bold">
+                    {initials}
+                  </span>
+                  <span className="text-sm font-medium text-foreground max-w-[80px] truncate">
+                    {user?.name?.split(" ")[0]}
+                  </span>
+                  <ChevronDown className={`h-3 w-3 text-muted-foreground transition-transform duration-200 ${isProfileOpen ? "rotate-180" : ""}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isProfileOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: -8, scale: 0.97 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-52 bg-background border border-border rounded-2xl shadow-lg overflow-hidden z-50"
+                    >
+                      <div className="px-4 py-3 border-b border-border">
+                        <p className="text-sm font-semibold text-foreground truncate">{user?.name}</p>
+                        <p className="text-xs text-muted-foreground">{user?.phone}</p>
+                      </div>
+                      <ul className="py-1">
+                        {profileMenuItems.map(({ icon: Icon, label, href }) => (
+                          <li key={href}>
+                            <Link
+                              to={href}
+                              onClick={() => setIsProfileOpen(false)}
+                              className="flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-secondary transition-colors"
+                            >
+                              <Icon className="h-4 w-4 text-muted-foreground" />
+                              {label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                      <div className="border-t border-border py-1">
+                        <button
+                          onClick={handleLogout}
+                          className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-destructive hover:bg-destructive/10 transition-colors"
+                        >
+                          <LogOut className="h-4 w-4" />
+                          Logout
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button className="hidden sm:flex ml-2 rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
+                  Login
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
@@ -169,41 +260,59 @@ const Navbar = ({ className }: NavbarProps) => {
             exit={{ opacity: 0, y: -10 }}
             className="lg:hidden mt-3 mx-auto max-w-7xl bg-background border border-border rounded-3xl shadow-lg overflow-hidden"
           >
+            {/* User info (mobile, when logged in) */}
+            {isLoggedIn && (
+              <div className="px-4 pt-4 pb-2 flex items-center gap-3 border-b border-border">
+                <span className="h-8 w-8 rounded-full bg-coral flex items-center justify-center text-white text-xs font-bold shrink-0">
+                  {initials}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-foreground truncate">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground">{user?.phone}</p>
+                </div>
+              </div>
+            )}
+
             <ul className="py-4 px-4 space-y-2">
               {navLinks.map((link) => {
                 const isActive = isActiveLink(link.href);
                 const isExternal = link.href === "#";
-
                 const linkClasses = `block px-4 py-3 rounded-xl text-sm font-medium transition-colors ${
                   isActive
                     ? "text-foreground bg-secondary"
                     : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                 }`;
-
                 return (
                   <li key={link.label}>
                     {isExternal ? (
-                      <a href={link.href} className={linkClasses} onClick={() => setIsMenuOpen(false)}>
-                        {link.label}
-                      </a>
+                      <a href={link.href} className={linkClasses} onClick={() => setIsMenuOpen(false)}>{link.label}</a>
                     ) : (
-                      <Link to={link.href} className={linkClasses} onClick={() => setIsMenuOpen(false)}>
-                        {link.label}
-                      </Link>
+                      <Link to={link.href} className={linkClasses} onClick={() => setIsMenuOpen(false)}>{link.label}</Link>
                     )}
                   </li>
                 );
               })}
+
+              {/* Profile links when logged in (mobile) */}
+              {isLoggedIn && (
+                <li>
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-3 rounded-xl text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                </li>
+              )}
             </ul>
+
             <div className="px-4 pb-4 flex gap-2">
               <Button
                 variant="ghost"
                 size="icon"
                 className="sm:hidden rounded-full border border-border h-9 w-9"
-                onClick={() => {
-                  setIsSearchOpen(true);
-                  setIsMenuOpen(false);
-                }}
+                onClick={() => { setIsSearchOpen(true); setIsMenuOpen(false); }}
               >
                 <Search className="h-4 w-4" />
               </Button>
@@ -221,15 +330,25 @@ const Navbar = ({ className }: NavbarProps) => {
                   )}
                 </Button>
               </Link>
-              {/* Share Wishlist - mobile */}
               <span className="sm:hidden">
                 {wishlistCount > 0 && <WishlistShareDialog />}
               </span>
-              <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
-                <Button className="sm:hidden w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
-                  Login
+
+              {isLoggedIn ? (
+                <Button
+                  className="sm:hidden flex-1 w-full rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 text-sm"
+                  variant="ghost"
+                  onClick={handleLogout}
+                >
+                  <LogOut className="h-4 w-4 mr-1" /> Logout
                 </Button>
-              </Link>
+              ) : (
+                <Link to="/login" className="flex-1" onClick={() => setIsMenuOpen(false)}>
+                  <Button className="sm:hidden w-full rounded-full bg-foreground text-background hover:bg-foreground/90 text-sm">
+                    Login
+                  </Button>
+                </Link>
+              )}
             </div>
           </motion.div>
         )}

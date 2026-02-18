@@ -5,6 +5,7 @@ import { WishlistProvider } from "@/contexts/WishlistContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { OrderProvider } from "@/contexts/OrderContext";
 import { AddressProvider } from "@/contexts/AddressContext";
+import { AuthProvider } from "@/contexts/AuthContext";
 import { AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
@@ -21,6 +22,7 @@ import Orders from "./pages/Orders";
 import OrderSuccess from "./pages/OrderSuccess";
 import OrderDetail from "./pages/OrderDetail";
 import Addresses from "./pages/Addresses";
+import Profile from "./pages/Profile";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -40,6 +42,7 @@ const AnimatedRoutes = () => {
         <Route path="/order-success/:id" element={<PageTransition><OrderSuccess /></PageTransition>} />
         <Route path="/order/:id" element={<PageTransition><OrderDetail /></PageTransition>} />
         <Route path="/addresses" element={<PageTransition><Addresses /></PageTransition>} />
+        <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
@@ -47,22 +50,23 @@ const AnimatedRoutes = () => {
 };
 
 const App = () => (
-  <WishlistProvider>
-    <CartProvider>
-      <OrderProvider>
-        <AddressProvider>
-          <TooltipProvider>
-            <Toaster />
-            <CartDrawer />
-            <BrowserRouter>
-              <AnimatedRoutes />
-            </BrowserRouter>
-          </TooltipProvider>
-        </AddressProvider>
-      </OrderProvider>
-    </CartProvider>
-  </WishlistProvider>
+  <AuthProvider>
+    <WishlistProvider>
+      <CartProvider>
+        <OrderProvider>
+          <AddressProvider>
+            <TooltipProvider>
+              <Toaster />
+              <CartDrawer />
+              <BrowserRouter>
+                <AnimatedRoutes />
+              </BrowserRouter>
+            </TooltipProvider>
+          </AddressProvider>
+        </OrderProvider>
+      </CartProvider>
+    </WishlistProvider>
+  </AuthProvider>
 );
 
 export default App;
-
