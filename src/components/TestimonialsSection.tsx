@@ -80,13 +80,13 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div
-      className="flex-shrink-0 w-[320px] sm:w-[380px] rounded-3xl border border-border/60 bg-card shadow-md select-none flex flex-col overflow-hidden transition-shadow hover:shadow-lg"
+      className="flex-shrink-0 w-[280px] sm:w-[380px] rounded-2xl border border-border/40 bg-card shadow-lg select-none flex flex-col overflow-hidden transition-all hover:shadow-xl"
     >
       {/* Top section with quote */}
-      <div className="px-7 pt-7 pb-5 flex-grow flex flex-col">
-        <div className="flex items-center gap-2 mb-4">
-          <div className="h-9 w-9 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
-            <Quote className="h-4 w-4 text-coral fill-coral/30" />
+      <div className="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5 flex-grow flex flex-col">
+        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+          <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
+            <Quote className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral fill-coral/30" />
           </div>
           <div className="flex gap-0.5">
             {[...Array(5)].map((_, i) => (
@@ -96,18 +96,18 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
             ))}
           </div>
         </div>
-        <p className="text-foreground/85 text-sm leading-relaxed font-normal">{testimonial.quote}</p>
+        <p className="text-foreground/85 text-xs sm:text-sm leading-relaxed font-normal">{testimonial.quote}</p>
       </div>
 
       {/* Author divider */}
-      <div className="border-t border-border/50 mx-7" />
+      <div className="border-t border-border/50 mx-5 sm:mx-7" />
 
       {/* Author section */}
-      <div className="flex items-center gap-3 px-7 py-5">
+      <div className="flex items-center gap-2.5 sm:gap-3 px-5 sm:px-7 py-4 sm:py-5">
         <img
           src={testimonial.avatar}
           alt={`${testimonial.name} - Customer testimonial`}
-          className="w-10 h-10 rounded-full object-cover pointer-events-none ring-2 ring-coral/20"
+          className="w-9 h-9 sm:w-10 sm:h-10 rounded-full object-cover pointer-events-none ring-2 ring-coral/20"
           loading="lazy"
           draggable={false}
         />
@@ -170,7 +170,7 @@ interface TestimonialsSectionProps {
 
 const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
   return (
-    <section className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 bg-secondary/30 overflow-hidden">
+    <section className="py-4 sm:py-6 lg:py-8 px-4 sm:px-8 lg:px-16 overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
         <div className="text-center mb-8 sm:mb-12 px-4">
