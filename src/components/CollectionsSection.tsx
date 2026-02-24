@@ -162,10 +162,10 @@ const CollectionsSection = ({ data }: CollectionsSectionProps) => {
   const collectionProducts = products.slice(0, 4);
 
   return (
-    <section className="pt-8 pb-12 sm:pt-10 sm:pb-16 lg:pt-14 lg:pb-20 bg-background overflow-hidden">
+    <section className="pt-6 pb-10 sm:pt-8 sm:pb-12 lg:pt-10 lg:pb-14 bg-background overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
-        <div className="text-center mb-8 sm:mb-12 px-4">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-10 px-4">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
             Our Best <span className="text-coral">Collections</span>
           </h2>

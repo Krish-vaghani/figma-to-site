@@ -10,11 +10,11 @@ interface ElevateSectionProps {
 
 const ElevateSection = ({ data }: ElevateSectionProps) => {
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-background">
+    <section className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         {/* Section Header */}
         <ScrollReveal>
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+          <div className="text-center mb-6 sm:mb-8 lg:mb-10">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
               Elevate Your <span className="text-coral">Everyday Look</span>
             </h2>

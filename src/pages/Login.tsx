@@ -137,8 +137,8 @@ const Login = () => {
           />
 
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-0">
-            {/* Left: Form */}
-            <div className="p-6 sm:p-10 lg:p-14 flex flex-col justify-center">
+            {/* Form: on mobile show after image (order-2), on desktop first (order-1) */}
+            <div className="order-2 md:order-1 p-6 sm:p-10 lg:p-14 flex flex-col justify-center">
               <AnimatePresence mode="wait">
                 {step === "phone" ? (
                   <motion.form
@@ -279,8 +279,8 @@ const Login = () => {
               </AnimatePresence>
             </div>
 
-            {/* Right: Illustration */}
-            <div className="hidden md:flex items-end justify-center p-6 lg:p-10">
+            {/* Right: Illustration (desktop only) */}
+            <div className="hidden md:flex order-2 items-end justify-center p-6 lg:p-10">
               <AnimatePresence mode="wait">
                 <motion.img
                   key={step}
@@ -295,8 +295,8 @@ const Login = () => {
               </AnimatePresence>
             </div>
 
-            {/* Mobile illustration (below form) */}
-            <div className="md:hidden flex justify-center px-6 pb-6">
+            {/* Mobile: illustration first (left/top), left-aligned */}
+            <div className="md:hidden flex order-1 justify-start px-6 pt-6 pb-2">
               <img
                 src={step === "phone" ? loginIllustration : otpIllustration}
                 alt="Login illustration"

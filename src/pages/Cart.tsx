@@ -15,7 +15,7 @@ const Cart = () => {
     <div className="min-h-screen bg-background">
       {/* Header area with background from top (Navbar + title) */}
       <div
-        className="relative w-full overflow-hidden bg-cover bg-top"
+        className="relative w-full overflow-hidden bg-cover bg-left-top sm:bg-center"
         style={{
           backgroundImage: `url(${shopBackground})`,
         }}
@@ -157,15 +157,15 @@ const Cart = () => {
               <h3 className="text-xl font-bold text-foreground">
                 Sub Total : ₹{cartTotal.toLocaleString()}
               </h3>
-              <div className="flex items-center gap-3">
-                <Link to="/purses">
-                  <button className="border border-border text-foreground font-medium px-6 py-3 rounded-full hover:bg-secondary/50 transition-colors">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                <Link to="/purses" className="flex-1 sm:flex-initial min-w-0">
+                  <button className="w-full sm:w-auto border border-border text-foreground font-medium text-sm sm:text-base px-4 py-2.5 sm:px-6 sm:py-3 rounded-full hover:bg-secondary/50 transition-colors">
                     Back To Shop
                   </button>
                 </Link>
-                <Link to="/checkout">
-                  <button className="bg-coral text-white font-medium px-8 py-3 rounded-full hover:bg-coral/90 transition-colors">
-                    Proceed to Checkout
+                <Link to="/checkout" className="flex-1 sm:flex-initial min-w-0">
+                  <button className="w-full sm:w-auto bg-coral text-white font-medium text-sm sm:text-base px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-coral/90 transition-colors">
+                    Checkout
                   </button>
                 </Link>
               </div>

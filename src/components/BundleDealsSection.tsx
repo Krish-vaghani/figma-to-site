@@ -35,7 +35,7 @@ const BundleDealsSection = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8">
+    <section className="py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         <ScrollReveal>
           <div className="text-center mb-8 sm:mb-10">

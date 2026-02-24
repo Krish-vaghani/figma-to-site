@@ -160,10 +160,10 @@ const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
   const newArrivalProducts = products.slice(0, 5);
 
   return (
-    <section className="py-12 sm:py-16 lg:py-20 bg-background overflow-hidden">
+    <section className="py-8 sm:py-12 lg:py-16 bg-background overflow-hidden">
       {/* Section Header */}
       <ScrollReveal>
-        <div className="text-center mb-8 sm:mb-12 px-4">
+        <div className="text-center mb-6 sm:mb-8 lg:mb-10 px-4">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground">
             Fresh Styles <span className="text-coral">Just Dropped</span>
           </h2>
@@ -190,7 +190,7 @@ const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
 
       {/* Explore Button */}
       <ScrollReveal delay={0.3}>
-        <div className="flex justify-center mt-10 sm:mt-14 px-4">
+        <div className="flex justify-center mt-6 sm:mt-8 px-4">
           <button className="bg-foreground text-background font-medium px-8 py-4 rounded-full flex items-center gap-2 hover:bg-coral transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
             Explore All New Arrivals
             <ArrowRight className="h-5 w-5" />

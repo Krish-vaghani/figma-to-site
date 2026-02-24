@@ -60,7 +60,7 @@ const Wishlist = () => {
     <div className="min-h-screen bg-background">
       {/* Header area with background from top (Navbar + title) */}
       <div
-        className="relative w-full overflow-hidden bg-cover bg-top"
+        className="relative w-full overflow-hidden bg-cover bg-left-top sm:bg-center"
         style={{
           backgroundImage: `url(${shopBackground})`,
         }}

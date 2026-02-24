@@ -66,14 +66,16 @@ const Footer = () => {
               With Confidence.
             </p>
 
-            {/* CTA Buttons */}
+            {/* CTA Buttons - Subscribe & Save / Join Our List commented out, not in use */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              {/* Subscribe & Save / Join Our List - not in use for now
               <Button
                 variant="outline"
                 className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 border-foreground/20 hover:bg-foreground hover:text-background transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base"
               >
                 Subscribe & Save / Join Our List
               </Button>
+              */}
               <Button asChild className="w-full sm:w-auto rounded-full px-5 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 bg-foreground text-background hover:bg-coral transition-all duration-300 font-medium text-xs sm:text-sm lg:text-base gap-2 group">
                 <Link to="/purses" className="inline-flex items-center gap-2">
                   Shop Now
