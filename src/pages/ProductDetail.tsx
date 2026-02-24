@@ -8,6 +8,7 @@ import ProductInfo from "@/components/product-detail/ProductInfo";
 import RatingBreakdown from "@/components/product-detail/RatingBreakdown";
 import ReviewsSection from "@/components/product-detail/ReviewsSection";
 import RelatedProducts from "@/components/product-detail/RelatedProducts";
+import ScrollReveal from "@/components/ScrollReveal";
 import { products } from "@/data/products";
 import { useSeo } from "@/hooks/useSeo";
 
@@ -37,31 +38,39 @@ const ProductDetail = () => {
         {/* Product Section */}
         <section className="py-6 sm:py-10 lg:py-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-            {/* Left: Image Gallery */}
-            <ProductImageGallery
-              images={[product.image]}
-              productName={product.name}
-            />
+            <ScrollReveal variant="fadeLeft" duration={0.6}>
+              <ProductImageGallery
+                images={[product.image]}
+                productName={product.name}
+              />
+            </ScrollReveal>
 
-            {/* Right: Product Info */}
-            <ProductInfo product={product} />
+            <ScrollReveal variant="fadeRight" duration={0.6} delay={0.15}>
+              <ProductInfo product={product} />
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Rating Breakdown */}
-        <div className="border-t border-border">
-          <RatingBreakdown rating={product.rating} totalReviews={78} />
-        </div>
+        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
+          <div className="border-t border-border">
+            <RatingBreakdown rating={product.rating} totalReviews={78} />
+          </div>
+        </ScrollReveal>
 
         {/* Reviews */}
-        <div className="border-t border-border">
-          <ReviewsSection />
-        </div>
+        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
+          <div className="border-t border-border">
+            <ReviewsSection />
+          </div>
+        </ScrollReveal>
 
         {/* Related Products */}
-        <div className="border-t border-border">
-          <RelatedProducts currentProductId={product.id as number} />
-        </div>
+        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
+          <div className="border-t border-border">
+            <RelatedProducts currentProductId={product.id as number} />
+          </div>
+        </ScrollReveal>
       </main>
 
       <Footer />
