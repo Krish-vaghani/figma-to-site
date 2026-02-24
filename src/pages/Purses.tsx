@@ -272,28 +272,30 @@ const Purses = () => {
                   <SortDropdown value={sortBy} onChange={setSortBy} />
                 </div>
 
-                {/* Right side: Product count */}
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-muted-foreground">Showing</span>
-                  <span className="bg-coral/10 text-coral font-semibold px-3 py-1 rounded-full">
-                    {paginatedProducts.length}
-                  </span>
-                  <span className="text-muted-foreground">of {totalFiltered} Products</span>
+                {/* Right side: Product count + Bags Found (extra spacing between them) */}
+                <div className="flex items-center gap-8">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-muted-foreground">Showing</span>
+                    <span className="bg-coral/10 text-coral font-semibold px-3 py-1 rounded-full">
+                      {paginatedProducts.length}
+                    </span>
+                    <span className="text-muted-foreground">of {totalFiltered} Products</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground text-right leading-tight">
+                    <span className="block">
+                      <span className="font-semibold text-foreground">
+                        {totalFiltered}
+                      </span>{" "}
+                      Bags Found
+                    </span>
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground text-right leading-tight">
-                  <span className="block">
-                    <span className="font-semibold text-foreground">
-                      {totalFiltered}
-                    </span>{" "}
-                    Bags Found
-                  </span>
-                </p>
               </div>
 
               {/* Mobile: count below */}
               <p className="mt-3 sm:hidden text-sm text-muted-foreground leading-tight">
                 <span className="block">Showing {paginatedProducts.length} of {totalFiltered}</span>
-                <span className="block">
+                <span className="block mt-2">
                   <span className="font-semibold text-foreground">
                     {totalFiltered}
                   </span>{" "}

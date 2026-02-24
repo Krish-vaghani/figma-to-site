@@ -222,7 +222,7 @@ const Profile = () => {
 
       {/* Header */}
       <div
-        className="relative overflow-hidden bg-cover bg-right sm:bg-top"
+        className="relative bg-cover bg-right sm:bg-top"
         style={{ backgroundImage: `url(${shopBackground})` }}
       >
         <div className="absolute inset-0 bg-background/50" aria-hidden="true" />
@@ -241,7 +241,7 @@ const Profile = () => {
         </div>
       </div>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 -mt-8 pb-20 space-y-6">
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 -mt-4 sm:-mt-8 pb-20 space-y-6">
         {/* User Info Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

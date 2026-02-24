@@ -80,10 +80,10 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div
-      className="flex-shrink-0 w-[280px] sm:w-[380px] rounded-2xl border border-border/40 bg-card shadow-lg select-none flex flex-col overflow-hidden transition-all hover:shadow-xl"
+      className="flex-shrink-0 w-[280px] sm:w-[380px] rounded-2xl border border-border/40 shadow-lg select-none flex flex-col overflow-hidden transition-all hover:shadow-xl"
     >
-      {/* Top section with quote */}
-      <div className="px-5 sm:px-7 pt-5 sm:pt-7 pb-4 sm:pb-5 flex-grow flex flex-col">
+      {/* Top section with quote (extra inner padding so content doesn't crop) */}
+      <div className="px-5 sm:px-7 pt-7 sm:pt-8 pb-4 sm:pb-4 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-3 sm:mb-4">
           <div className="h-8 w-8 sm:h-9 sm:w-9 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
             <Quote className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral fill-coral/30" />
@@ -96,7 +96,17 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
             ))}
           </div>
         </div>
-        <p className="text-foreground/85 text-xs sm:text-sm leading-relaxed font-normal">{testimonial.quote}</p>
+        <p
+          className="text-foreground/85 text-xs sm:text-sm leading-relaxed font-normal"
+          style={{
+            display: "-webkit-box",
+            WebkitLineClamp: 3,
+            WebkitBoxOrient: "vertical",
+            overflow: "hidden",
+          }}
+        >
+          {testimonial.quote}
+        </p>
       </div>
 
       {/* Author divider */}
@@ -149,10 +159,6 @@ const MarqueeRow = ({
       style={{ scrollBehavior: "auto" }}
       {...handlers}
     >
-      {/* Gradient overlays for smooth edges */}
-      <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background/50 to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background/50 to-transparent z-10 pointer-events-none" />
-
       <div className="flex gap-4 w-max">
         {items.map((testimonial, index) => (
           <TestimonialCard key={`${direction}-${testimonial.id}-${index}`} testimonial={testimonial} />
@@ -184,8 +190,8 @@ const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
       </ScrollReveal>
 
       {/* Scrolling Rows */}
-      <div className="space-y-0">
-        <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35} />
+      <div className="space-y-4">
+        <MarqueeRow testimonials={testimonialsRow1} direction="left" speed={35}  />
         <MarqueeRow testimonials={testimonialsRow2} direction="right" speed={35} />
       </div>
 
