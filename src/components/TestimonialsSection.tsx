@@ -80,31 +80,40 @@ const testimonialsRow2: Testimonial[] = [
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
   return (
     <div
-      className="flex-shrink-0 w-[340px] sm:w-[400px] rounded-2xl p-10 sm:p-12 select-none [&_*]:no-underline flex flex-col overflow-hidden"
-      style={{
-        backgroundImage: `url(${testimonialCardBg})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className="flex-shrink-0 w-[320px] sm:w-[380px] rounded-3xl border border-border/60 bg-card shadow-md select-none flex flex-col overflow-hidden transition-shadow hover:shadow-lg"
     >
-      {/* Quote Icon */}
-      <Quote className="h-8 w-8 text-coral fill-coral/20 mb-4 flex-shrink-0" />
+      {/* Top section with quote */}
+      <div className="px-7 pt-7 pb-5 flex-grow flex flex-col">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="h-9 w-9 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
+            <Quote className="h-4 w-4 text-coral fill-coral/30" />
+          </div>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <svg key={i} className="w-3.5 h-3.5 text-coral fill-coral" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+              </svg>
+            ))}
+          </div>
+        </div>
+        <p className="text-foreground/85 text-sm leading-relaxed font-normal">{testimonial.quote}</p>
+      </div>
 
-      {/* Quote Text */}
-      <p className="text-foreground text-sm sm:text-base leading-relaxed mb-6 flex-grow">{testimonial.quote}</p>
+      {/* Author divider */}
+      <div className="border-t border-border/50 mx-7" />
 
-      {/* Author */}
-      <div className="flex items-center gap-3 flex-shrink-0 mt-auto">
+      {/* Author section */}
+      <div className="flex items-center gap-3 px-7 py-5">
         <img
           src={testimonial.avatar}
           alt={`${testimonial.name} - Customer testimonial`}
-          className="w-12 h-12 rounded-full object-cover pointer-events-none"
+          className="w-10 h-10 rounded-full object-cover pointer-events-none ring-2 ring-coral/20"
           loading="lazy"
           draggable={false}
         />
-        <div>
-          <h4 className="font-semibold text-foreground text-sm sm:text-base">{testimonial.name}</h4>
-          <p className="text-muted-foreground text-xs sm:text-sm">{testimonial.title}</p>
+        <div className="min-w-0">
+          <h4 className="font-semibold text-foreground text-sm truncate">{testimonial.name}</h4>
+          <p className="text-muted-foreground text-xs truncate">{testimonial.title}</p>
         </div>
       </div>
     </div>
