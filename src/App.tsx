@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
+import ScrollRestoration from "@/components/ScrollRestoration";
 import Index from "./pages/Index";
 import Purses from "./pages/Purses";
 import AboutUs from "./pages/AboutUs";
@@ -59,6 +60,7 @@ const App = () => (
               <Toaster />
               <CartDrawer />
               <BrowserRouter>
+                <ScrollRestoration />
                 <AnimatedRoutes />
               </BrowserRouter>
             </TooltipProvider>

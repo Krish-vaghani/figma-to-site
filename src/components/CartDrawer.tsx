@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { ShoppingBag, X, Minus, Plus, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -7,6 +8,7 @@ import {
   SheetTitle,
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CartDrawer = () => {
@@ -20,6 +22,7 @@ const CartDrawer = () => {
     isCartOpen,
     setIsCartOpen,
   } = useCart();
+  const { isLoggedIn } = useAuth();
 
   return (
     <Sheet open={isCartOpen} onOpenChange={setIsCartOpen}>
@@ -146,11 +149,15 @@ const CartDrawer = () => {
 
               {/* Actions */}
               <div className="space-y-3">
-                <a href="/login" className="block w-full">
+                <Link
+                  to={isLoggedIn ? "/checkout" : "/login"}
+                  className="block w-full"
+                  onClick={() => setIsCartOpen(false)}
+                >
                   <button className="w-full bg-foreground text-background font-medium py-3.5 rounded-full hover:bg-coral transition-colors">
                     Checkout
                   </button>
-                </a>
+                </Link>
                 <button
                   onClick={clearCart}
                   className="w-full border border-border text-foreground font-medium py-3 rounded-full hover:bg-secondary/50 transition-colors"
