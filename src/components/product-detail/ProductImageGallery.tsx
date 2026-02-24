@@ -16,11 +16,15 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   // Use the same image repeated if only one provided
   const galleryImages = images.length >= 4 ? images : Array(4).fill(images[0]);
 
-  // Subtle transform based on device tilt (mobile only)
+  // On tilt: subtle zoom from center (no translate, no crop initially)
+  // tilt magnitude 0-1 maps to scale 1 → 1.08
+  const tiltMagnitude = Math.sqrt(tilt.x * tilt.x + tilt.y * tilt.y);
+  const tiltScale = isMobile ? 1 + tiltMagnitude * 0.08 : 1;
+
   const tiltStyle = isMobile
     ? {
-        transform: `scale(1.06) translate(${tilt.x * 8}px, ${tilt.y * 5}px)`,
-        transition: "transform 0.3s ease-out",
+        transform: `scale(${tiltScale})`,
+        transition: "transform 0.35s ease-out",
       }
     : {};
 
@@ -33,7 +37,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
             key={selectedIndex}
             src={galleryImages[selectedIndex]}
             alt={`${productName} - View ${selectedIndex + 1}`}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-contain"
             style={tiltStyle}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
