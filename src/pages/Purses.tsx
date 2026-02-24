@@ -19,6 +19,7 @@ import type { Product } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { shopBackground } from "@/lib/assetUrls";
+import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 
 const PRODUCTS_PER_PAGE = 12;
 const PURSE_CATEGORY = "purse";
@@ -316,15 +317,14 @@ const Purses = () => {
             {/* Product Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
               {isLoading ? (
+                Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
+                  <ProductCardSkeleton key={i} variant="collection" />
+                ))
+              ) : paginatedProducts.length === 0 ? (
                 <div className="col-span-full py-12 text-center text-muted-foreground">
-                  Loading products…
+                  No products to show right now.
                 </div>
               ) : (
-                paginatedProducts.length === 0 ? (
-                  <div className="col-span-full py-12 text-center text-muted-foreground">
-                    No products to show right now.
-                  </div>
-                ) : (
                 paginatedProducts.map((product) => (
                   <ShopProductCard
                     key={product.id}
@@ -332,7 +332,6 @@ const Purses = () => {
                     onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
                   />
                 ))
-                )
               )}
             </div>
 
