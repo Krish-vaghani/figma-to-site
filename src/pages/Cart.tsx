@@ -13,23 +13,22 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Navbar />
-
-      {/* Header */}
+      {/* Header area with background from top (Navbar + title) */}
       <div
-        className="relative w-full py-8 md:py-10 flex flex-col items-center justify-center text-center"
+        className="relative w-full overflow-hidden bg-cover bg-top"
         style={{
           backgroundImage: `url(${shopBackground})`,
-          backgroundSize: "cover",
-          backgroundPosition: "top left",
         }}
       >
-        <div className="absolute inset-0 bg-background/60" />
-        <div className="relative z-10 flex flex-col gap-0.5">
-          <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Cart</h1>
-          <p className="text-muted-foreground">
-            <Link to="/" className="hover:text-coral transition-colors">Home</Link>
-          </p>
+        <div className="absolute inset-0 bg-background/60" aria-hidden="true" />
+        <div className="relative z-10">
+          <Navbar className="bg-transparent" />
+          <div className="w-full py-8 md:py-10 flex flex-col items-center justify-center text-center">
+            <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Cart</h1>
+            <p className="text-muted-foreground">
+              <Link to="/" className="hover:text-coral transition-colors">Home</Link>
+            </p>
+          </div>
         </div>
       </div>
 
