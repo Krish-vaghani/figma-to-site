@@ -3,7 +3,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import ScrollReveal from "@/components/ScrollReveal";
 import ProductImageGallery from "@/components/product-detail/ProductImageGallery";
 import ProductInfo from "@/components/product-detail/ProductInfo";
 import RatingBreakdown from "@/components/product-detail/RatingBreakdown";
@@ -38,39 +37,31 @@ const ProductDetail = () => {
         {/* Product Section */}
         <section className="py-6 sm:py-10 lg:py-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
-            <ScrollReveal variant="fadeLeft" duration={0.6}>
-              <ProductImageGallery
-                images={[product.image]}
-                productName={product.name}
-              />
-            </ScrollReveal>
+            {/* Left: Image Gallery */}
+            <ProductImageGallery
+              images={[product.image]}
+              productName={product.name}
+            />
 
-            <ScrollReveal variant="fadeRight" duration={0.6} delay={0.15}>
-              <ProductInfo product={product} />
-            </ScrollReveal>
+            {/* Right: Product Info */}
+            <ProductInfo product={product} />
           </div>
         </section>
 
         {/* Rating Breakdown */}
-        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
-          <div className="border-t border-border">
-            <RatingBreakdown rating={product.rating} totalReviews={78} />
-          </div>
-        </ScrollReveal>
+        <div className="border-t border-border">
+          <RatingBreakdown rating={product.rating} totalReviews={78} />
+        </div>
 
         {/* Reviews */}
-        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
-          <div className="border-t border-border">
-            <ReviewsSection />
-          </div>
-        </ScrollReveal>
+        <div className="border-t border-border">
+          <ReviewsSection />
+        </div>
 
         {/* Related Products */}
-        <ScrollReveal variant="fadeUp" duration={0.5} delay={0.1}>
-          <div className="border-t border-border">
-            <RelatedProducts currentProductId={product.id as number} />
-          </div>
-        </ScrollReveal>
+        <div className="border-t border-border">
+          <RelatedProducts currentProductId={product.id as number} />
+        </div>
       </main>
 
       <Footer />
