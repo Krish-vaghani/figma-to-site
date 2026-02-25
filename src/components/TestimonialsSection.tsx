@@ -45,23 +45,12 @@ function mapApiToTestimonial(item: ApiTestimonial): Testimonial {
   };
 }
 
-/** Split testimonials into rows: max 4 per row (e.g. 3 → [2,1], 8 → [4,4], 5 → [3,2]). */
+/** Always 2 rows; distribute evenly (e.g. 3 → [2,1], 4 → [2,2], 5 → [3,2]). */
 function splitIntoRows(items: Testimonial[]): Testimonial[][] {
   const n = items.length;
   if (n === 0) return [];
-  const numRows =
-    n === 3 ? 2 : n <= 4 ? 1 : Math.ceil(n / 4);
-  const base = Math.floor(n / numRows);
-  const remainder = n % numRows;
-  const sizes: number[] = [];
-  for (let r = 0; r < numRows; r++) sizes.push(r < remainder ? base + 1 : base);
-  const rows: Testimonial[][] = [];
-  let i = 0;
-  for (const size of sizes) {
-    rows.push(items.slice(i, i + size));
-    i += size;
-  }
-  return rows;
+  const firstRowSize = Math.ceil(n / 2);
+  return [items.slice(0, firstRowSize), items.slice(firstRowSize)];
 }
 
 const fallbackRow1: Testimonial[] = [
@@ -246,14 +235,16 @@ const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
         <div className="flex justify-center py-12 text-muted-foreground">Loading testimonials…</div>
       ) : (
         <div className="space-y-4">
-          {displayRows.map((rowTestimonials, index) => (
-            <MarqueeRow
-              key={index}
-              testimonials={rowTestimonials}
-              direction={index % 2 === 0 ? "left" : "right"}
-              speed={35}
-            />
-          ))}
+          {displayRows
+            .filter((row) => row.length > 0)
+            .map((rowTestimonials, index) => (
+              <MarqueeRow
+                key={index}
+                testimonials={rowTestimonials}
+                direction={index % 2 === 0 ? "left" : "right"}
+                speed={35}
+              />
+            ))}
         </div>
       )}
 
