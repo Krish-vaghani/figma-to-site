@@ -199,7 +199,7 @@ const ContactUs = () => {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
         {/* ── Contact Cards ──────────────────────────────────────── */}
         <ScrollReveal>
-          <section className="rounded-3xl bg-gradient-to-b from-coral/5 to-coral/[0.02] p-4 sm:p-8 -mt-6 sm:-mt-10 relative z-10">
+          <section className="-mt-6 sm:-mt-10 relative z-10">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
               {contactCards.map((card, i) => (
                 <motion.a
