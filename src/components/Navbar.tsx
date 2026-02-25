@@ -135,28 +135,6 @@ const Navbar = ({ className }: NavbarProps) => {
               </Button>
             </Link>
 
-            {/* Profile Icon (when logged in) or Login Button */}
-            {isLoggedIn ? (
-              <Link to="/profile">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral p-0 overflow-hidden"
-                  title={user?.name ?? "Profile"}
-                >
-                  <span className="h-full w-full rounded-full bg-coral flex items-center justify-center text-white text-[11px] font-bold">
-                    {initials}
-                  </span>
-                </Button>
-              </Link>
-            ) : (
-              <Link to="/login">
-                <Button className="hidden sm:flex rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
-                  Login
-                </Button>
-              </Link>
-            )}
-
             {/* Wishlist Button */}
             <Link to="/wishlist">
               <Button
@@ -179,6 +157,28 @@ const Navbar = ({ className }: NavbarProps) => {
                 </AnimatePresence>
               </Button>
             </Link>
+
+            {/* Profile Icon (when logged in) or Login Button - always rightmost on desktop */}
+            {isLoggedIn ? (
+              <Link to="/profile">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="hidden sm:flex rounded-full border border-border h-9 w-9 transition-all duration-300 hover:border-coral hover:text-coral p-0 overflow-hidden"
+                  title={user?.name ?? "Profile"}
+                >
+                  <span className="h-full w-full rounded-full bg-coral flex items-center justify-center text-white text-[11px] font-bold">
+                    {initials}
+                  </span>
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button className="hidden sm:flex rounded-full bg-foreground text-background hover:bg-coral px-4 sm:px-6 text-sm transition-all duration-300">
+                  Login
+                </Button>
+              </Link>
+            )}
 
             {/* Mobile Menu Button */}
             <Button
