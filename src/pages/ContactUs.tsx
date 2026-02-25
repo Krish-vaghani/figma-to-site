@@ -199,32 +199,34 @@ const ContactUs = () => {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 pb-16 sm:pb-24">
         {/* ── Contact Cards ──────────────────────────────────────── */}
         <ScrollReveal>
-          <section className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 -mt-6 sm:-mt-10 relative z-10">
-            {contactCards.map((card, i) => (
-              <motion.a
-                key={card.title}
-                href={card.href}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.1 }}
-                className="group flex flex-col items-center text-center rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm hover:shadow-md transition-all hover:border-coral/30"
-              >
-                <span
-                  className={`h-14 w-14 rounded-2xl ${card.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+          <section className="rounded-3xl bg-gradient-to-b from-coral/5 to-coral/[0.02] p-4 sm:p-8 -mt-6 sm:-mt-10 relative z-10">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+              {contactCards.map((card, i) => (
+                <motion.a
+                  key={card.title}
+                  href={card.href}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  className="group flex flex-col items-center text-center rounded-2xl border border-coral/10 bg-card p-6 sm:p-8 shadow-sm hover:shadow-md transition-all hover:border-coral/30"
                 >
-                  <card.icon className={`h-6 w-6 ${card.color}`} />
-                </span>
-                <h3 className="font-semibold text-foreground text-base mb-1">
-                  {card.title}
-                </h3>
-                <p className="text-muted-foreground text-xs mb-3 leading-relaxed">
-                  {card.description}
-                </p>
-                <span className="text-coral font-medium text-sm group-hover:underline">
-                  {card.action}
-                </span>
-              </motion.a>
-            ))}
+                  <span
+                    className={`h-14 w-14 rounded-2xl ${card.bg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}
+                  >
+                    <card.icon className={`h-6 w-6 ${card.color}`} />
+                  </span>
+                  <h3 className="font-semibold text-foreground text-base mb-1">
+                    {card.title}
+                  </h3>
+                  <p className="text-muted-foreground text-xs mb-3 leading-relaxed">
+                    {card.description}
+                  </p>
+                  <span className="text-coral font-medium text-sm group-hover:underline">
+                    {card.action}
+                  </span>
+                </motion.a>
+              ))}
+            </div>
           </section>
         </ScrollReveal>
 
@@ -268,7 +270,7 @@ const ContactUs = () => {
               {/* Right: form */}
               <form
                 onSubmit={handleSubmit}
-                className="rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-sm space-y-5"
+                className="rounded-2xl border border-coral/10 bg-gradient-to-br from-coral/[0.06] to-coral/[0.02] p-6 sm:p-8 shadow-sm space-y-5"
                 noValidate
               >
                 <div>
@@ -363,7 +365,7 @@ const ContactUs = () => {
                 <AccordionItem
                   key={i}
                   value={`faq-${i}`}
-                  className="rounded-2xl border border-border bg-card px-5 sm:px-6 shadow-sm data-[state=open]:shadow-md transition-shadow"
+                  className="rounded-2xl border border-coral/10 bg-card px-5 sm:px-6 shadow-sm data-[state=open]:bg-gradient-to-br data-[state=open]:from-coral/[0.06] data-[state=open]:to-coral/[0.02] data-[state=open]:border-coral/20 data-[state=open]:shadow-md transition-all"
                 >
                   <AccordionTrigger className="text-sm sm:text-[15px] font-semibold text-foreground hover:no-underline py-4 sm:py-5">
                     {faq.q}
