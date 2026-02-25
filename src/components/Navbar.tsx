@@ -30,7 +30,7 @@ const navLinks = [
   { label: "Shop", href: "/purses" },
   { label: "About Us", href: "/about" },
   { label: "My Orders", href: "/orders" },
-  { label: "Contact Us", href: "#" },
+  { label: "Contact Us", href: "/contact" },
 ];
 
 const Navbar = ({ className }: NavbarProps) => {
