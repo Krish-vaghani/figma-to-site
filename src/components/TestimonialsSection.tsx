@@ -5,7 +5,7 @@ import { avatar, avatarFemale, avatarMale } from "@/lib/assetUrls";
 import type { LandingSection } from "@/types/landing";
 import ScrollReveal from "./ScrollReveal";
 
-const TESTIMONIAL_API_URL = "https://api.pursolina.com/api/v1/testimonial/list?limit=10";
+const TESTIMONIAL_API_URL = "https://api.pursolina.com/api/v1/testimonial/list";
 const DEFAULT_AVATAR = avatar;
 
 interface Testimonial {
