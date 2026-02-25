@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Mail, MessageCircle, Phone, Send, Clock } from "lucide-react";
@@ -92,6 +92,48 @@ const ContactUs = () => {
     "Contact Us | Get In Touch",
     "Have questions? Reach out to our team via email, live chat, or phone. We're here to help!"
   );
+
+  // JSON-LD structured data for ContactPage
+  useEffect(() => {
+    const jsonLd = {
+      "@context": "https://schema.org",
+      "@type": "ContactPage",
+      name: "Contact Us",
+      description:
+        "Have questions? Reach out to our team via email, live chat, or phone. We're here to help!",
+      url: window.location.href,
+      mainEntity: {
+        "@type": "Organization",
+        name: "Purse",
+        contactPoint: [
+          {
+            "@type": "ContactPoint",
+            telephone: "+1-555-123-4567",
+            contactType: "customer support",
+            email: "support@purse.com",
+            availableLanguage: "English",
+            hoursAvailable: {
+              "@type": "OpeningHoursSpecification",
+              dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+              opens: "09:00",
+              closes: "17:00",
+            },
+          },
+        ],
+      },
+    };
+
+    const script = document.createElement("script");
+    script.type = "application/ld+json";
+    script.textContent = JSON.stringify(jsonLd);
+    script.id = "contact-jsonld";
+    document.head.appendChild(script);
+
+    return () => {
+      const el = document.getElementById("contact-jsonld");
+      if (el) el.remove();
+    };
+  }, []);
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
