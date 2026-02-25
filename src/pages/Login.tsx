@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ const OTP_LENGTH = 6;
 const Login = () => {
   useSeo("Login", "Sign in to manage your orders, wishlist, and account details.");
   const navigate = useNavigate();
+  const location = useLocation();
   const auth = useAuth();
 
   const [registerOrLogin, { isLoading: isSendingOtp }] = useRegisterOrLoginMutation();
@@ -31,6 +32,12 @@ const Login = () => {
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Redirect if already logged in
+  if (auth.isLoggedIn) {
+    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/profile";
+    return <Navigate to={from} replace />;
+  }
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,7 +92,8 @@ const Login = () => {
       const result = await login({ phone: mobile, otp: otpString }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
       toast.auth.loginSuccess();
-      navigate("/", { replace: true });
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
+      navigate(from, { replace: true });
     } catch (err: unknown) {
       const msg = (err as { data?: { message?: string } })?.data?.message;
       toast.auth.verifyError(msg);
@@ -266,10 +274,16 @@ const Login = () => {
                       <button
                         type="button"
                         className="text-coral font-medium hover:underline"
-                        onClick={() => {
+                        onClick={async () => {
                           setOtp(Array(OTP_LENGTH).fill(""));
-                          // resend logic
+                          try {
+                            await registerOrLogin({ name: fullName.trim(), phone: mobile.trim() }).unwrap();
+                            toast.auth.otpSent();
+                          } catch {
+                            toast.auth.otpError("Failed to resend OTP. Please try again.");
+                          }
                         }}
+                        disabled={isSendingOtp}
                       >
                         Resend
                       </button>

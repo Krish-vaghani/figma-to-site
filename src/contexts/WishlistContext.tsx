@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "@/lib/toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface WishlistContextType {
   wishlist: (string | number)[];
@@ -13,15 +14,25 @@ interface WishlistContextType {
 
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
+const getStorageKey = (phone: string | undefined) => phone ? `wishlist_${phone}` : "wishlist";
+
 export const WishlistProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
+  const storageKey = getStorageKey(user?.phone);
+
   const [wishlist, setWishlist] = useState<(string | number)[]>(() => {
-    const stored = localStorage.getItem("wishlist");
+    const stored = localStorage.getItem(storageKey);
     return stored ? JSON.parse(stored) : [];
   });
 
   useEffect(() => {
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  }, [wishlist]);
+    const stored = localStorage.getItem(storageKey);
+    setWishlist(stored ? JSON.parse(stored) : []);
+  }, [storageKey]);
+
+  useEffect(() => {
+    localStorage.setItem(storageKey, JSON.stringify(wishlist));
+  }, [wishlist, storageKey]);
 
   const addToWishlist = (id: string | number) => {
     setWishlist((prev) => (prev.includes(id) ? prev : [...prev, id]));
@@ -34,7 +45,6 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
   const toggleWishlist = (id: string | number, productName?: string) => {
     setWishlist((prev) => {
       const isAdding = !prev.includes(id);
-      
       if (isAdding) {
         toast.wishlist.added(productName);
         return [...prev, id];
@@ -54,15 +64,7 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <WishlistContext.Provider
-      value={{
-        wishlist,
-        addToWishlist,
-        removeFromWishlist,
-        toggleWishlist,
-        isInWishlist,
-        wishlistCount: wishlist.length,
-        getShareUrl,
-      }}
+      value={{ wishlist, addToWishlist, removeFromWishlist, toggleWishlist, isInWishlist, wishlistCount: wishlist.length, getShareUrl }}
     >
       {children}
     </WishlistContext.Provider>
@@ -71,8 +73,6 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
 
 export const useWishlist = () => {
   const context = useContext(WishlistContext);
-  if (!context) {
-    throw new Error("useWishlist must be used within a WishlistProvider");
-  }
+  if (!context) throw new Error("useWishlist must be used within a WishlistProvider");
   return context;
 };

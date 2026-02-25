@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
@@ -11,6 +12,16 @@ import {
   Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -60,7 +71,7 @@ const RecentOrders = ({ orders }: { orders: Order[] }) => {
       {recent.map((order) => (
         <li key={order.id}>
           <Link
-            to={`/orders/${order.id}`}
+            to={`/order/${order.id}`}
             className="flex items-center gap-4 px-3 py-3 rounded-2xl hover:bg-secondary transition-colors group"
           >
             <span className="h-10 w-10 rounded-xl bg-coral/10 flex items-center justify-center shrink-0">
@@ -199,6 +210,7 @@ const Profile = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
   const { addresses } = useAddresses();
   const navigate = useNavigate();
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -330,7 +342,7 @@ const Profile = () => {
           <Button
             variant="ghost"
             className="w-full justify-start gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 rounded-2xl h-12 px-3"
-            onClick={handleLogout}
+            onClick={() => setShowLogoutDialog(true)}
           >
             <span className="h-10 w-10 rounded-xl flex items-center justify-center bg-destructive/10 shrink-0">
               <LogOut className="h-5 w-5" />
@@ -338,6 +350,26 @@ const Profile = () => {
             <span className="font-semibold">Logout</span>
           </Button>
         </motion.div>
+
+        <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+          <AlertDialogContent className="rounded-2xl">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+              <AlertDialogDescription>
+                You'll need to sign in again to access your orders and profile.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={handleLogout}
+              >
+                Logout
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </main>
 
       <Footer />

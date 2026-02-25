@@ -10,6 +10,7 @@ import { AnimatePresence } from "framer-motion";
 import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
 import ScrollRestoration from "@/components/ScrollRestoration";
+import ProtectedRoute from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Purses from "./pages/Purses";
 import AboutUs from "./pages/AboutUs";
@@ -38,12 +39,12 @@ const AnimatedRoutes = () => {
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
         <Route path="/cart" element={<PageTransition><Cart /></PageTransition>} />
-        <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
-        <Route path="/orders" element={<PageTransition><Orders /></PageTransition>} />
-        <Route path="/order-success/:id" element={<PageTransition><OrderSuccess /></PageTransition>} />
-        <Route path="/order/:id" element={<PageTransition><OrderDetail /></PageTransition>} />
-        <Route path="/addresses" element={<PageTransition><Addresses /></PageTransition>} />
-        <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
+        <Route path="/checkout" element={<PageTransition><ProtectedRoute><Checkout /></ProtectedRoute></PageTransition>} />
+        <Route path="/orders" element={<PageTransition><ProtectedRoute><Orders /></ProtectedRoute></PageTransition>} />
+        <Route path="/order-success/:id" element={<PageTransition><ProtectedRoute><OrderSuccess /></ProtectedRoute></PageTransition>} />
+        <Route path="/order/:id" element={<PageTransition><ProtectedRoute><OrderDetail /></ProtectedRoute></PageTransition>} />
+        <Route path="/addresses" element={<PageTransition><ProtectedRoute><Addresses /></ProtectedRoute></PageTransition>} />
+        <Route path="/profile" element={<PageTransition><ProtectedRoute><Profile /></ProtectedRoute></PageTransition>} />
         <Route path="*" element={<PageTransition><NotFound /></PageTransition>} />
       </Routes>
     </AnimatePresence>
