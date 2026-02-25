@@ -1,79 +1,77 @@
-# Adding Engagement & Conversion Features
 
-This plan covers 4 new features: a Spin-the-Wheel popup, a Loyalty Rewards banner, Wishlist sharing, and a Bundle Deals section.
 
----
+# Loopholes and Improvement Plan
 
-## 2. Loyalty / Rewards Program Banner
+## Current Loopholes Found
 
-A persistent, eye-catching banner on the homepage encouraging sign-ups to a loyalty program.
+### 1. No Route Protection (Critical)
+Pages like `/profile`, `/orders`, `/checkout`, `/addresses`, `/wishlist` are accessible even when the user is **not logged in**. Anyone can visit `/profile` and see a broken page, or go to `/checkout` without authentication.
 
-**How it works:**
+### 2. Logged-in Users Can Access `/login`
+If a user is already logged in, they can still visit the login page instead of being redirected to their profile.
 
-- A new section on the homepage between Testimonials and Footer
-- Shows "Earn Points on Every Purchase" with 3 benefit cards (Earn, Redeem, Exclusive Access)
-- A "Join Now" CTA button
-- Dismissible with a small close icon; dismissed state stored in localStorage
-- Fully responsive: stacked on mobile, side-by-side on desktop
+### 3. Order Link Bug in Profile
+In `Profile.tsx` line 63, the order link navigates to `/orders/${order.id}` but the actual route is `/order/${order.id}` (no "s"). This means clicking any order from the profile page leads to a 404.
 
-**Files created:**
+### 4. "Resend OTP" Does Nothing
+In `Login.tsx` line 269-274, the "Resend" button only clears the OTP fields but doesn't actually call the API to resend the OTP.
 
-- `src/components/LoyaltyBanner.tsx`
+### 5. Cart/Wishlist/Orders Not Tied to User
+All data is stored in localStorage globally. If User A logs out and User B logs in on the same browser, User B sees User A's cart, wishlist, orders, and addresses.
 
-**Files changed:**
+### 6. No Logout Confirmation
+Clicking logout immediately logs out without any confirmation dialog, which could lead to accidental logouts.
 
-- `src/pages/Index.tsx` -- Add LoyaltyBanner section before Footer
-
----
-
-## 3. Wishlist Sharing
-
-Allow users to share their wishlist via social media or copy a link.
-
-**How it works:**
-
-- Add a "Share Wishlist" button in the Navbar's wishlist area (visible when wishlist has items)
-- Clicking opens a small popover/dialog with share options: Copy Link, WhatsApp, Twitter/X, Facebook
-- The share link encodes wishlist product IDs as URL query params (e.g., `/purses?wishlist=1,3,5`)
-- When visiting a shared link, a banner shows "Viewing [Name]'s Wishlist" with the selected products highlighted
-- Uses the Web Share API on mobile when available, with fallback buttons
-
-**Files changed:**
-
-- `src/contexts/WishlistContext.tsx` -- Add `getShareUrl()` and `loadSharedWishlist()` helpers
-- `src/components/Navbar.tsx` -- Add share button next to wishlist icon with a popover containing share options
-
-**Files created:**
-
-- `src/components/WishlistShareDialog.tsx` -- Share dialog/popover component with social links and copy-to-clipboard
+### 7. Checkout Address Form Flow Issue
+In `Checkout.tsx`, the `AddressForm` `onSubmit` only saves the form data (`setNewFormData`) but doesn't trigger order placement. The user must then click a separate "Place Order" button. This two-step flow on the same form is confusing.
 
 ---
 
-## 4. Bundle Deals Section
+## Improvement Plan
 
-A homepage section showcasing "Buy 2 Save 20%" bundle offers.
+### Fix 1: Protected Routes
+Create a `ProtectedRoute` wrapper component that checks `isLoggedIn` from `AuthContext`. If not logged in, redirect to `/login` with a return URL. Wrap routes: `/profile`, `/orders`, `/order/:id`, `/checkout`, `/addresses`, `/order-success/:id`.
 
-**How it works:**
+**Files:**
+- Create `src/components/ProtectedRoute.tsx`
+- Update `src/App.tsx` -- wrap protected routes
 
-- New section on the homepage between New Arrivals and Testimonials
-- Shows a headline "Bundle & Save" with a tagline "Buy 2 Save 20%"
-- Displays 2-3 curated bundle cards, each showing 2 product images side by side with combined pricing
-- Each bundle card has an "Add Bundle to Cart" button that adds both products at the discounted price
-- Responsive: cards stack on mobile, grid on tablet/desktop
+### Fix 2: Redirect Logged-in Users from `/login`
+Add a check at the top of `Login.tsx`: if `isLoggedIn`, redirect to `/profile`.
 
-**Files created:**
+**File:** `src/pages/Login.tsx`
 
-- `src/components/BundleDealsSection.tsx` -- Bundle cards with product pairings, pricing logic (20% off when 2 selected), and add-to-cart integration
+### Fix 3: Fix Order Link in Profile
+Change `/orders/${order.id}` to `/order/${order.id}` on line 63 of `Profile.tsx`.
 
-**Files changed:**
+**File:** `src/pages/Profile.tsx`
 
-- `src/pages/Index.tsx` -- Add BundleDealsSection between NewArrivalsSection and TestimonialsSection
+### Fix 4: Resend OTP
+Wire the Resend button to call the `registerOrLogin` mutation again with the stored phone and name, and show a toast confirmation.
+
+**File:** `src/pages/Login.tsx`
+
+### Fix 5: User-scoped localStorage
+Prefix localStorage keys with the user's phone number (e.g., `cart_9876543210`) so each user has their own data. Clear in-memory state on logout and reload from the new user's keys on login.
+
+**Files:**
+- `src/contexts/CartContext.tsx`
+- `src/contexts/WishlistContext.tsx`
+- `src/contexts/OrderContext.tsx`
+- `src/contexts/AddressContext.tsx`
+
+### Fix 6: Logout Confirmation Dialog
+Add an `AlertDialog` before logout in both `Profile.tsx` and `Navbar.tsx` mobile menu. Uses the existing Radix AlertDialog component.
+
+**Files:**
+- `src/pages/Profile.tsx`
+- `src/components/Navbar.tsx`
 
 ---
 
-## Technical Details
+## Technical Notes
 
-- **Share functionality**: Uses `navigator.share` API with fallback to manual share buttons. URLs are encoded with `encodeURIComponent`.
-- **Bundle pricing**: Calculated client-side from existing product data. The 20% discount is applied to the lower-priced item in each pair.
-- **All new components** follow existing patterns: Framer Motion for entrance animations, Tailwind for styling, Lucide for icons, coral accent color, rounded-full buttons.
-- **Lazy loading**: All new homepage sections will be lazy-loaded like existing sections for performance.
+- **ProtectedRoute** will use `Navigate` from react-router-dom with `state={{ from: location }}` so after login, users return to their intended page.
+- **User-scoped storage** uses the auth token or phone as the namespace key. On login/logout, contexts re-read from the correct keys.
+- All fixes follow existing patterns: Radix UI components, Tailwind styling, toast notifications from `@/lib/toast`.
+
