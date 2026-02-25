@@ -241,7 +241,7 @@ const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
       {loading ? (
         <div className="flex justify-center py-12 text-muted-foreground">Loading testimonials…</div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6 sm:space-y-8">
           {displayRows
             .filter((row) => row.length > 0)
             .map((rowTestimonials, index) => (
