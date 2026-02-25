@@ -180,7 +180,7 @@ const ContactUs = () => {
       >
         <div className="absolute inset-0 bg-background/50" aria-hidden="true" />
         <div className="relative z-10">
-          <Navbar />
+          <Navbar className="bg-transparent" />
           <div className="py-12 sm:py-20 text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground mb-3">
               Get In Touch
