@@ -32,15 +32,22 @@ interface ApiResponse {
   data: ApiTestimonial[];
 }
 
+/** Use default image for any user_image issue; never skip a testimonial because of image. */
+function getAvatarUrl(userImage: unknown): string {
+  if (userImage == null) return DEFAULT_AVATAR;
+  if (typeof userImage !== "string") return DEFAULT_AVATAR;
+  const trimmed = userImage.trim();
+  if (trimmed === "") return DEFAULT_AVATAR;
+  return trimmed;
+}
+
 function mapApiToTestimonial(item: ApiTestimonial): Testimonial {
-  const avatarUrl =
-    item.user_image && item.user_image.trim() ? item.user_image : DEFAULT_AVATAR;
   return {
     id: item._id,
     quote: item.message || "",
     name: item.user_name || "",
     title: item.user_address || "",
-    avatar: avatarUrl,
+    avatar: getAvatarUrl(item.user_image),
     stars: Math.min(5, Math.max(0, Number(item.review) || 5)),
   };
 }
