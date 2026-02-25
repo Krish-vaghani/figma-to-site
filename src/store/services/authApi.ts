@@ -6,7 +6,7 @@ import type {
   LoginResponse,
 } from "@/types/auth";
 
-const AUTH_BASE_URL = "http://13.61.155.235:3000/api/v1";
+const AUTH_BASE_URL = "https://api.pursolina.com/api/v1";
 
 export const authApi = createApi({
   reducerPath: "authApi",

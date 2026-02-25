@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
+import { Button } from "@/components/ui/button";
 
 interface ShopProductCardProps {
   product: Product;
@@ -162,8 +163,21 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           </div>
         </div>
 
-        {/* Description */}
-        <p className="text-muted-foreground text-sm">{product.description}</p>
+        {/* Description + View details */}
+        <div className="space-y-2">
+          <p className="text-muted-foreground text-sm">{product.description}</p>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="px-0 h-7 text-xs text-coral hover:text-coral hover:bg-coral/5"
+            onClick={(e) => {
+              e.stopPropagation();
+              onClick();
+            }}
+          >
+            View details
+          </Button>
+        </div>
 
         {/* Divider */}
         <div className="border-t border-border my-2" />

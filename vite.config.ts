@@ -13,7 +13,7 @@ export default defineConfig(({ mode }) => ({
     },
     proxy: {
       "/api": {
-        target: "http://13.61.155.235:3000",
+        target: "https://api.pursolina.com",
         changeOrigin: true,
       },
     },
