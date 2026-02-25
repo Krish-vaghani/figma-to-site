@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { DeliveryAddress } from "@/contexts/OrderContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export interface SavedAddress extends DeliveryAddress {
   id: string;
-  label: string; // e.g. "Home", "Office", "Other"
+  label: string;
   isDefault: boolean;
 }
 
@@ -18,48 +19,46 @@ interface AddressContextType {
 
 const AddressContext = createContext<AddressContextType | undefined>(undefined);
 
-const STORAGE_KEY = "saved_addresses";
+const getStorageKey = (phone: string | undefined) => phone ? `saved_addresses_${phone}` : "saved_addresses";
 
 export const AddressProvider = ({ children }: { children: ReactNode }) => {
+  const { user } = useAuth();
+  const storageKey = getStorageKey(user?.phone);
+
   const [addresses, setAddresses] = useState<SavedAddress[]>(() => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const stored = localStorage.getItem(storageKey);
       return stored ? JSON.parse(stored) : [];
-    } catch {
-      return [];
-    }
+    } catch { return []; }
   });
+
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(storageKey);
+      setAddresses(stored ? JSON.parse(stored) : []);
+    } catch { setAddresses([]); }
+  }, [storageKey]);
 
   const persist = (updated: SavedAddress[]) => {
     setAddresses(updated);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+    localStorage.setItem(storageKey, JSON.stringify(updated));
   };
 
   const addAddress = (address: DeliveryAddress, label: string): SavedAddress => {
     const isFirst = addresses.length === 0;
-    const newAddr: SavedAddress = {
-      ...address,
-      id: `addr-${Date.now()}`,
-      label,
-      isDefault: isFirst,
-    };
+    const newAddr: SavedAddress = { ...address, id: `addr-${Date.now()}`, label, isDefault: isFirst };
     persist([...addresses, newAddr]);
     return newAddr;
   };
 
   const updateAddress = (id: string, address: DeliveryAddress, label: string) => {
-    persist(
-      addresses.map((a) => (a.id === id ? { ...a, ...address, label } : a))
-    );
+    persist(addresses.map((a) => (a.id === id ? { ...a, ...address, label } : a)));
   };
 
   const deleteAddress = (id: string) => {
     const remaining = addresses.filter((a) => a.id !== id);
-    // If we deleted the default, promote the first remaining
     const hadDefault = addresses.find((a) => a.id === id)?.isDefault;
-    if (hadDefault && remaining.length > 0) {
-      remaining[0].isDefault = true;
-    }
+    if (hadDefault && remaining.length > 0) remaining[0].isDefault = true;
     persist(remaining);
   };
 

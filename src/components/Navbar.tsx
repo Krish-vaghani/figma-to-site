@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { Search, ShoppingCart, Heart, Menu, X, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -26,6 +36,7 @@ const navLinks = [
 const Navbar = ({ className }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
   const { wishlistCount } = useWishlist();
   const { cartCount } = useCart();
   const { isLoggedIn, user, logout } = useAuth();
@@ -48,6 +59,7 @@ const Navbar = ({ className }: NavbarProps) => {
   const handleLogout = () => {
     logout();
     setIsMenuOpen(false);
+    setShowLogoutDialog(false);
     showToast.success({ title: "Logged out", description: "See you soon!" });
     navigate("/");
   };
@@ -259,7 +271,7 @@ const Navbar = ({ className }: NavbarProps) => {
                 <Button
                   className="sm:hidden flex-1 w-full rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 text-sm"
                   variant="ghost"
-                  onClick={handleLogout}
+                  onClick={() => setShowLogoutDialog(true)}
                 >
                   <LogOut className="h-4 w-4 mr-1" /> Logout
                 </Button>
@@ -277,6 +289,27 @@ const Navbar = ({ className }: NavbarProps) => {
 
       {/* Search Modal */}
       <SearchModal isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+      {/* Logout Confirmation */}
+      <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+        <AlertDialogContent className="rounded-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure you want to logout?</AlertDialogTitle>
+            <AlertDialogDescription>
+              You'll need to sign in again to access your orders and profile.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-full bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              onClick={handleLogout}
+            >
+              Logout
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </nav>
   );
 };
