@@ -1,11 +1,11 @@
 /**
  * Order API for Razorpay flow.
- * Base URL: VITE_ORDER_API_URL or http://localhost:4000/api/v1
+ * Base URL: same as auth/product API (api.pursolina.com). Override with VITE_ORDER_API_URL if needed.
  */
 
 const AUTH_TOKEN_KEY = "auth_token";
 const ORDER_BASE_URL =
-  import.meta.env.VITE_ORDER_API_URL ?? "http://localhost:4000/api/v1";
+  import.meta.env.VITE_ORDER_API_URL ?? "https://api.pursolina.com/api/v1";
 
 function getAuthHeaders(): HeadersInit {
   const token = typeof window !== "undefined" ? localStorage.getItem(AUTH_TOKEN_KEY) : null;
