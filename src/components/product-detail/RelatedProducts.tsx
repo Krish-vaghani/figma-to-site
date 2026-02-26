@@ -2,8 +2,11 @@ import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { products, type Product, type BadgeType } from "@/data/products";
 import ScrollReveal from "@/components/ScrollReveal";
+import { normalizeRating } from "@/lib/utils";
+import { useGetProductListQuery } from "@/store/services/productApi";
+import { mapApiProductToProduct } from "@/types/product";
+import type { Product, BadgeType } from "@/data/products";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -58,6 +61,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
+  const displayRating = normalizeRating(product.rating);
 
   return (
     <div
@@ -116,7 +120,7 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
           <div className="flex items-center gap-0.5">
             <Star className="h-3 w-3 fill-coral text-coral flex-shrink-0" />
             <span className="text-muted-foreground text-[10px] sm:text-xs">
-              {product.rating}({product.reviews})
+              {displayRating.toFixed(1)}({product.reviews})
             </span>
           </div>
         </div>
@@ -126,12 +130,29 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
 };
 
 interface RelatedProductsProps {
-  currentProductId: number;
+  /** Current product id (backend _id as string) to exclude from list */
+  currentProductId: string;
 }
 
 const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
   const navigate = useNavigate();
-  const relatedProducts = products.filter((p) => p.id !== currentProductId).slice(0, 4);
+
+  const { data, isLoading, isError } = useGetProductListQuery({
+    page: 1,
+    limit: 50,
+    category: "purse",
+  });
+
+  const relatedProducts: Product[] =
+    (data?.data ?? [])
+      // exclude current product
+      .filter((p) => p._id !== currentProductId)
+      // sort by highest view count (fallback 0)
+      .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+      // take top 4
+      .slice(0, 4)
+      // map into shared Product shape
+      .map(mapApiProductToProduct);
 
   return (
     <section className="py-10 sm:py-16">
@@ -146,15 +167,28 @@ const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
         </div>
       </ScrollReveal>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-        {relatedProducts.map((product) => (
-          <RelatedProductCard
-            key={product.id}
-            product={product}
-            onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
-          />
-        ))}
-      </div>
+      {isError && (
+        <p className="text-center text-sm text-muted-foreground">
+          Unable to load related products right now.
+        </p>
+      )}
+
+      {!isError && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {(isLoading && relatedProducts.length === 0) && (
+            <p className="col-span-2 lg:col-span-4 text-center text-sm text-muted-foreground">
+              Loading related products…
+            </p>
+          )}
+          {relatedProducts.map((product) => (
+            <RelatedProductCard
+              key={product.id}
+              product={product}
+              onClick={() => navigate(`/product/${product.id}`)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

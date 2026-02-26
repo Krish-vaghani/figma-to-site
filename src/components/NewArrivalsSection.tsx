@@ -181,7 +181,7 @@ const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
             <NewProductCard
               key={product.id}
               product={product}
-              onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
+              onClick={() => navigate(`/product/${product.id}`)}
             />
           ))}
         </ProductCarousel>

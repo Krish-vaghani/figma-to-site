@@ -129,7 +129,7 @@ const WishlistedProducts = ({
     <ul className="space-y-2">
       {items.map((p) => (
         <li key={p.id} className="flex items-center gap-4 px-3 py-3 rounded-2xl hover:bg-secondary transition-colors group">
-          <Link to={`/product/${p.slug ?? p.id}`} className="flex items-center gap-4 flex-1 min-w-0">
+          <Link to={`/product/${p.id}`} className="flex items-center gap-4 flex-1 min-w-0">
             <img
               src={p.image}
               alt={p.name}

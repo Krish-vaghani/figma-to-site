@@ -5,6 +5,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { normalizeRating } from "@/lib/utils";
 
 interface ShopProductCardProps {
   product: Product;
@@ -79,6 +80,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
+  const displayRating = normalizeRating(product.rating);
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -165,7 +167,17 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
         {/* Description + View details */}
         <div className="space-y-2">
-          <p className="text-muted-foreground text-sm">{product.description}</p>
+          <p
+            className="text-muted-foreground text-sm"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 3,
+              WebkitBoxOrient: "vertical",
+              overflow: "hidden",
+            }}
+          >
+            {product.description}
+          </p>
           <Button
             variant="ghost"
             size="sm"
@@ -200,7 +212,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-coral text-coral" />
             <span className="text-muted-foreground text-sm">
-              {product.rating}({product.reviews})
+              {displayRating.toFixed(1)}({product.reviews})
             </span>
           </div>
         </div>

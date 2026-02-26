@@ -18,6 +18,9 @@ export interface ApiProduct {
   tags: string[];
   colorVariants: ProductColorVariant[];
   numberOfReviews: number;
+  /** Optional: some list responses may include these fields */
+  averageRating?: number;
+  viewCount?: number;
   is_active: boolean;
   createdAt: string;
   updatedAt: string;
@@ -30,6 +33,69 @@ export interface ProductListResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+/** Single review entry returned by product detail API.
+ * The exact backend shape may vary slightly; this is a flexible representation that
+ * we safely map inside the UI.
+ */
+export interface ApiProductReview {
+  _id?: string;
+  id?: string | number;
+  user_name?: string;
+  userName?: string;
+  name?: string;
+  user_image?: string | null;
+  userImage?: string | null;
+  rating?: number | string;
+  review?: string;
+  comment?: string;
+  message?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/** Star breakdown map from product detail API (rating -> count). */
+export interface ProductStarBreakdown {
+  [star: string]: number;
+}
+
+/** Product detail API response (used for rating graph + reviews). */
+export interface ProductDetailData {
+  _id: string;
+  name: string;
+  slug: string;
+  shortDescription?: string;
+  description: string;
+  category: string;
+  price: number;
+  salePrice: number | null;
+  image: string;
+  tags: string[];
+  colorVariants: ProductColorVariant[];
+  dimensions?: {
+    heightCm: number;
+    widthCm: number;
+    depthCm: number;
+  };
+  averageRating: number;
+  numberOfReviews: number;
+  viewCount: number;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  currentPrice: number;
+  images?: string[];
+  starBreakdown?: ProductStarBreakdown;
+  reviews: ApiProductReview[];
+  reviewPage?: number;
+  reviewLimit?: number;
+  totalReviews?: number;
+}
+
+export interface ProductReviewsResponse {
+  message: string;
+  data: ProductDetailData;
 }
 
 /** Query params for product list */

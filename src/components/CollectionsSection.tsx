@@ -139,6 +139,7 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
           href={`/product/${product.id}`}
           className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto"
           onClick={(e) => {
+            // Let the browser handle normal navigation based on id
             e.stopPropagation();
           }}
         >
@@ -183,7 +184,7 @@ const CollectionsSection = ({ data }: CollectionsSectionProps) => {
             <ProductCard
               key={product.id}
               product={product}
-              onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
+              onClick={() => navigate(`/product/${product.id}`)}
             />
           ))}
         </ProductCarousel>

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import type { ProductListResponse, ProductListParams } from "@/types/product";
+import type { ProductListResponse, ProductListParams, ProductReviewsResponse } from "@/types/product";
 
 const PRODUCT_BASE_URL = "https://api.pursolina.com/api/v1";
 
@@ -17,7 +17,15 @@ export const productApi = createApi({
         return { url: `/product/list?${params.toString()}` };
       },
     }),
+
+    /**
+     * Product detail (rating graph + reviews).
+     * Backend expects the product id in the URL segment.
+     */
+    getProductReviews: builder.query<ProductReviewsResponse, string>({
+      query: (id) => `/product/detail/${id}`,
+    }),
   }),
 });
 
-export const { useGetProductListQuery } = productApi;
+export const { useGetProductListQuery, useGetProductReviewsQuery } = productApi;

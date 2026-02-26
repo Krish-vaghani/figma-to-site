@@ -1,13 +1,18 @@
 import { Star } from "lucide-react";
+import { normalizeRating } from "@/lib/utils";
+import type { ProductStarBreakdown } from "@/types/product";
 
 interface RatingBreakdownProps {
   rating: number;
   totalReviews: number;
+  starBreakdown?: ProductStarBreakdown;
 }
 
-const RatingBreakdown = ({ rating, totalReviews }: RatingBreakdownProps) => {
-  // Simulated rating distribution
-  const distribution = [
+const RatingBreakdown = ({ rating, totalReviews, starBreakdown }: RatingBreakdownProps) => {
+  const displayRating = normalizeRating(rating);
+
+  // If backend sends us a starBreakdown, compute real percentages; otherwise fall back.
+  const defaultDistribution = [
     { stars: 5, percentage: 70 },
     { stars: 4, percentage: 55 },
     { stars: 3, percentage: 35 },
@@ -15,17 +20,31 @@ const RatingBreakdown = ({ rating, totalReviews }: RatingBreakdownProps) => {
     { stars: 1, percentage: 10 },
   ];
 
+  let distribution = defaultDistribution;
+
+  if (starBreakdown) {
+    const totalCount = Object.values(starBreakdown).reduce((sum, value) => sum + (value ?? 0), 0) || totalReviews;
+
+    if (totalCount > 0) {
+      distribution = [5, 4, 3, 2, 1].map((stars) => {
+        const count = starBreakdown[String(stars)] ?? 0;
+        const percentage = (count / totalCount) * 100;
+        return { stars, percentage };
+      });
+    }
+  }
+
   return (
     <div className="flex flex-col sm:flex-row items-start gap-6 sm:gap-10 py-6 sm:py-8">
       {/* Left: Overall Rating */}
       <div className="flex-shrink-0">
-        <p className="text-4xl sm:text-5xl font-bold text-foreground">{rating.toFixed(1)}</p>
+        <p className="text-4xl sm:text-5xl font-bold text-foreground">{displayRating.toFixed(1)}</p>
         <div className="flex items-center gap-0.5 mt-1">
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
               className={`h-4 w-4 sm:h-5 sm:w-5 ${
-                i < Math.floor(rating)
+                i < Math.floor(displayRating)
                   ? "fill-coral text-coral"
                   : "text-muted-foreground/30"
               }`}
