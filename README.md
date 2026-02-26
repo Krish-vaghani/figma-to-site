@@ -60,6 +60,23 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
+## Razorpay payment (Pay Online)
+
+For **Pay Online** at checkout, a small order API server is included.
+
+1. **Start the order API** (from project root):
+   ```sh
+   cd server
+   cp .env.example .env
+   # Edit .env: set JWT_SECRET (same as your auth API), RAZORPAY_KEY_ID, RAZORPAY_KEY_SECRET
+   npm i && npm run dev
+   ```
+   Server runs at `http://localhost:4000` by default.
+
+2. **Frontend** uses `VITE_ORDER_API_URL` (default `http://localhost:4000/api/v1`). Set it in `.env` if your API is elsewhere.
+
+3. **Flow**: Checkout → Pay Online → create Razorpay order → user pays in Razorpay popup → verify payment → order confirmed and redirect to order success.
+
 ## How can I deploy this project?
 
 Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.

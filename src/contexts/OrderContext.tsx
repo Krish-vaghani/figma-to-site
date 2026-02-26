@@ -62,6 +62,10 @@ interface OrderContextType {
   orders: Order[];
   placeOrder: (items: CartItem[], address: DeliveryAddress, paymentMethod: "cod" | "online", total: number) => Order;
   getOrder: (id: string) => Order | undefined;
+  /** Add an order from API (e.g. after create-razorpay-order). */
+  addOrder: (order: Order) => void;
+  /** Update an existing order (e.g. after verify-razorpay-payment). */
+  updateOrder: (orderId: string, updates: Partial<Order>) => void;
 }
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
@@ -115,8 +119,25 @@ export const OrderProvider = ({ children }: { children: ReactNode }) => {
 
   const getOrder = (id: string) => orders.find((o) => o.id === id);
 
+  const addOrder = (order: Order) => {
+    const normalized = migrateOrder(order);
+    setOrders((prev) => {
+      const next = [normalized, ...prev.filter((o) => o.id !== normalized.id)];
+      localStorage.setItem(storageKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const updateOrder = (orderId: string, updates: Partial<Order>) => {
+    setOrders((prev) => {
+      const next = prev.map((o) => (o.id === orderId ? { ...o, ...updates } : o));
+      localStorage.setItem(storageKey, JSON.stringify(next));
+      return next;
+    });
+  };
+
   return (
-    <OrderContext.Provider value={{ orders, placeOrder, getOrder }}>
+    <OrderContext.Provider value={{ orders, placeOrder, getOrder, addOrder, updateOrder }}>
       {children}
     </OrderContext.Provider>
   );

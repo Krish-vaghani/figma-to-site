@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MapPin, CheckCircle2, ShoppingBag, Truck, Plus, Home, Briefcase, MoreHorizontal, Star, Pencil } from "lucide-react";
 import Navbar from "@/components/Navbar";
@@ -6,10 +6,40 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AddressForm, { AddressFormData } from "@/components/AddressForm";
 import { useCart } from "@/contexts/CartContext";
-import { useOrders, DeliveryAddress } from "@/contexts/OrderContext";
+import { useOrders, DeliveryAddress, buildTrackingTimeline } from "@/contexts/OrderContext";
 import { useAddresses, SavedAddress } from "@/contexts/AddressContext";
 import { shopBackground } from "@/lib/assetUrls";
 import { showToast } from "@/lib/toast";
+import { createRazorpayOrder, verifyRazorpayPayment } from "@/store/services/orderApi";
+
+const RAZORPAY_SCRIPT = "https://checkout.razorpay.com/v1/checkout.js";
+
+function loadRazorpay(): Promise<typeof window.Razorpay> {
+  if (typeof window !== "undefined" && window.Razorpay) return Promise.resolve(window.Razorpay);
+  return new Promise((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = RAZORPAY_SCRIPT;
+    script.async = true;
+    script.onload = () => resolve(window.Razorpay);
+    script.onerror = () => reject(new Error("Failed to load Razorpay"));
+    document.body.appendChild(script);
+  });
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: {
+      key: string;
+      order_id: string;
+      amount: number;
+      currency: string;
+      name?: string;
+      description?: string;
+      handler: (res: { razorpay_order_id: string; razorpay_payment_id: string; razorpay_signature: string }) => void;
+      modal?: { ondismiss?: () => void };
+    }) => { open: () => void };
+  }
+}
 
 const LABEL_ICONS: Record<string, React.ElementType> = {
   Home, Office: Briefcase, Other: MoreHorizontal,
@@ -20,10 +50,16 @@ const PAYMENT_METHODS = [
   { value: "online", label: "Pay Online (UPI / Card)", icon: CheckCircle2 },
 ] as const;
 
+const addDays = (iso: string, days: number): string => {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString();
+};
+
 const Checkout = () => {
   const navigate = useNavigate();
   const { cart, cartTotal, clearCart } = useCart();
-  const { placeOrder } = useOrders();
+  const { placeOrder, addOrder, updateOrder } = useOrders();
   const { addresses, addAddress, getDefault } = useAddresses();
 
   // Address selection: null = "enter new", string = saved address id
@@ -45,7 +81,19 @@ const Checkout = () => {
     return found ?? null;
   };
 
-  const handlePlaceOrder = async () => {
+  /** Resolve address and addressId for API. For "new" address, saves it and returns the new id. */
+  const resolveAddressId = useCallback((): string | null => {
+    if (selectedAddressId !== "new") return selectedAddressId;
+    if (!newFormData) return null;
+    if (saveNewAddress) {
+      const { label, ...rest } = newFormData;
+      const saved = addAddress(rest as DeliveryAddress, label ?? "Home");
+      return saved.id;
+    }
+    return null;
+  }, [selectedAddressId, newFormData, saveNewAddress, addAddress]);
+
+  const handlePlaceOrder = useCallback(async () => {
     if (cart.length === 0) {
       showToast.error({ title: "Cart is empty" });
       return;
@@ -55,17 +103,97 @@ const Checkout = () => {
       showToast.error({ title: "Please fill in a delivery address" });
       return;
     }
+    if (paymentMethod === "online") {
+      const addressId = resolveAddressId();
+      if (!addressId) {
+        showToast.error({ title: "For Pay Online, please save the address (check 'Save this address') or select a saved address." });
+        return;
+      }
+      setPlacing(true);
+      try {
+        const res = await createRazorpayOrder({
+          addressId,
+          items: cart.map((item) => ({ productId: String(item.id), quantity: item.quantity })),
+        });
+        const { data } = res;
+        const orderId = data.order.orderId;
+        const placedAt = new Date().toISOString();
+        addOrder({
+          id: orderId,
+          items: cart,
+          address,
+          total: data.order.total ?? grandTotal,
+          paymentMethod: "online",
+          status: "placed",
+          placedAt,
+          estimatedDelivery: addDays(placedAt, 5),
+          trackingEvents: buildTrackingTimeline(placedAt),
+        });
+        const Razorpay = await loadRazorpay();
+        const rzp = new Razorpay({
+          key: data.key_id,
+          order_id: data.razorpayOrderId,
+          amount: data.amount,
+          currency: data.currency ?? "INR",
+          name: "Pursolina",
+          description: `Order ${orderId}`,
+          handler: async (payload) => {
+            try {
+              await verifyRazorpayPayment({
+                orderId,
+                razorpay_order_id: payload.razorpay_order_id,
+                razorpay_payment_id: payload.razorpay_payment_id,
+                razorpay_signature: payload.razorpay_signature,
+              });
+              updateOrder(orderId, { status: "confirmed" });
+              clearCart();
+              navigate(`/order-success/${orderId}`);
+            } catch (err) {
+              showToast.error({ title: "Payment verification failed", description: err instanceof Error ? err.message : "Please contact support." });
+            } finally {
+              setPlacing(false);
+            }
+          },
+          modal: {
+            ondismiss: () => {
+              setPlacing(false);
+              showToast.error({ title: "Payment cancelled or failed" });
+            },
+          },
+        });
+        rzp.open();
+      } catch (err) {
+        setPlacing(false);
+        showToast.error({ title: "Could not start payment", description: err instanceof Error ? err.message : "Please try again." });
+      }
+      return;
+    }
     setPlacing(true);
     await new Promise((r) => setTimeout(r, 900));
     if (selectedAddressId === "new" && saveNewAddress && newFormData) {
       const { label, ...rest } = newFormData;
-      addAddress(rest as DeliveryAddress, label);
+      addAddress(rest as DeliveryAddress, label ?? "Home");
     }
     const order = placeOrder(cart, address, paymentMethod, grandTotal);
     clearCart();
     setPlacing(false);
     navigate(`/order-success/${order.id}`);
-  };
+  }, [
+    cart,
+    grandTotal,
+    paymentMethod,
+    getSelectedAddress,
+    resolveAddressId,
+    selectedAddressId,
+    saveNewAddress,
+    newFormData,
+    placeOrder,
+    addOrder,
+    updateOrder,
+    addAddress,
+    clearCart,
+    navigate,
+  ]);
 
   const handleNewFormSubmit = (data: AddressFormData) => {
     setNewFormData(data);
