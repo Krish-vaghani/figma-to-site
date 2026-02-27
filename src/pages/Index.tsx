@@ -38,8 +38,7 @@ const SectionLoader = () => (
 );
 
 const Index = () => {
-  const { data: response } = useGetLandingPageDataQuery();
-  const landingData = response?.data;
+  const { data: landingData } = useGetLandingPageDataQuery();
 
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-background">
@@ -68,7 +67,7 @@ const Index = () => {
       <main id="main-content">
         <Suspense fallback={<SectionSkeleton variant="carousel" count={4} />}>
           <ErrorBoundary section="Collections">
-            <CollectionsSection data={landingData?.best_collections} />
+            <CollectionsSection landingData={landingData} />
           </ErrorBoundary>
         </Suspense>
 
@@ -86,7 +85,7 @@ const Index = () => {
 
         <Suspense fallback={<SectionSkeleton variant="carousel" count={5} />}>
           <ErrorBoundary section="New Arrivals">
-            <NewArrivalsSection data={landingData?.fresh_styles} />
+            <NewArrivalsSection landingData={landingData} />
           </ErrorBoundary>
         </Suspense>
 

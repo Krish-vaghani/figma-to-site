@@ -6,6 +6,7 @@ import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
+import { useViewProductMutation } from "@/store/services/productApi";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -66,11 +67,19 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 const ProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
+  const [viewProduct] = useViewProductMutation();
+
+  const handleCardClick = () => {
+    if (typeof product.id === "string") {
+      viewProduct(product.id).catch(() => {});
+    }
+    onClick();
+  };
 
   return (
     <div
       className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col"
-      onClick={onClick}
+      onClick={handleCardClick}
     >
       {/* Image Container */}
       <div className="relative h-[200px] sm:h-[240px] overflow-hidden flex-shrink-0">
@@ -150,16 +159,28 @@ const ProductCard = ({ product, onClick }: { product: Product; onClick: () => vo
   );
 };
 
-import { LandingSection } from "@/types/landing";
+import { landingSectionToProduct, type LandingSectionKey, type LandingSection } from "@/types/landing";
+
+const COLLECTION_KEYS: LandingSectionKey[] = [
+  "best_collections",
+  "find_perfect_purse",
+  "elevate_look",
+  "fresh_styles",
+];
 
 interface CollectionsSectionProps {
+  /** Single section (legacy) or full landing data to derive multiple sections */
   data?: LandingSection;
+  landingData?: Partial<Record<LandingSectionKey, LandingSection>>;
 }
 
-const CollectionsSection = ({ data }: CollectionsSectionProps) => {
+const CollectionsSection = ({ data, landingData }: CollectionsSectionProps) => {
   const navigate = useNavigate();
-  // Only show first 4 products for collections
-  const collectionProducts = products.slice(0, 4);
+  const fromApi = landingData
+    ? COLLECTION_KEYS.map((k) => landingData[k]).filter(Boolean) as LandingSection[]
+    : data ? [data] : [];
+  const collectionProducts =
+    fromApi.length > 0 ? fromApi.map(landingSectionToProduct) : products.slice(0, 4);
 
   return (
     <section className="pt-6 pb-10 sm:pt-8 sm:pb-12 lg:pt-10 lg:pb-14 bg-background overflow-hidden">

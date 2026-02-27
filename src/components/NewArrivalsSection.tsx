@@ -6,6 +6,7 @@ import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
+import { useViewProductMutation } from "@/store/services/productApi";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -66,11 +67,19 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 const NewProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(String(product.id) + "_new");
+  const [viewProduct] = useViewProductMutation();
+
+  const handleCardClick = () => {
+    if (typeof product.id === "string") {
+      viewProduct(product.id).catch(() => {});
+    }
+    onClick();
+  };
 
   return (
     <div
       className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col"
-      onClick={onClick}
+      onClick={handleCardClick}
     >
       {/* Image Container */}
       <div className="relative h-[200px] sm:h-[240px] overflow-hidden flex-shrink-0">
@@ -148,16 +157,28 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
   );
 };
 
-import { LandingSection } from "@/types/landing";
+import { landingSectionToProduct, type LandingSectionKey, type LandingSection } from "@/types/landing";
+
+const NEW_ARRIVAL_KEYS: LandingSectionKey[] = [
+  "fresh_styles",
+  "testimonials",
+  "crafted_confidence",
+  "elevate_look",
+  "best_collections",
+];
 
 interface NewArrivalsSectionProps {
   data?: LandingSection;
+  landingData?: Partial<Record<LandingSectionKey, LandingSection>>;
 }
 
-const NewArrivalsSection = ({ data }: NewArrivalsSectionProps) => {
+const NewArrivalsSection = ({ data, landingData }: NewArrivalsSectionProps) => {
   const navigate = useNavigate();
-  // Show 5 products for new arrivals
-  const newArrivalProducts = products.slice(0, 5);
+  const fromApi = landingData
+    ? NEW_ARRIVAL_KEYS.map((k) => landingData[k]).filter(Boolean) as LandingSection[]
+    : data ? [data] : [];
+  const newArrivalProducts =
+    fromApi.length > 0 ? fromApi.map(landingSectionToProduct) : products.slice(0, 5);
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background overflow-hidden">

@@ -4,6 +4,7 @@ import { useInfiniteMarquee } from "@/hooks/use-infinite-marquee";
 import { avatar, avatarFemale, avatarMale } from "@/lib/assetUrls";
 import type { LandingSection } from "@/types/landing";
 import ScrollReveal from "./ScrollReveal";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const TESTIMONIAL_API_URL = "https://api.pursolina.com/api/v1/testimonial/list";
 const DEFAULT_AVATAR = avatar;
@@ -239,7 +240,22 @@ const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
       </ScrollReveal>
 
       {loading ? (
-        <div className="flex justify-center py-12 text-muted-foreground">Loading testimonials…</div>
+        <div className="space-y-4 px-4">
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-[320px] sm:w-[400px]">
+                <Skeleton className="h-48 rounded-3xl w-full" />
+              </div>
+            ))}
+          </div>
+          <div className="flex gap-4 overflow-hidden">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex-shrink-0 w-[320px] sm:w-[400px]">
+                <Skeleton className="h-48 rounded-3xl w-full" />
+              </div>
+            ))}
+          </div>
+        </div>
       ) : (
         <div className="space-y-6 sm:space-y-8">
           {displayRows

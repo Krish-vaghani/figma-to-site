@@ -13,6 +13,8 @@ import { showToast } from "@/lib/toast";
 import { createRazorpayOrder, verifyRazorpayPayment } from "@/store/services/orderApi";
 
 const RAZORPAY_SCRIPT = "https://checkout.razorpay.com/v1/checkout.js";
+/** Use test key when set (e.g. VITE_RAZORPAY_KEY_ID=rzp_test_xxx). Test key = test mode. */
+const RAZORPAY_KEY_OVERRIDE = import.meta.env.VITE_RAZORPAY_KEY_ID as string | undefined;
 
 function loadRazorpay(): Promise<typeof window.Razorpay> {
   if (typeof window !== "undefined" && window.Razorpay) return Promise.resolve(window.Razorpay);
@@ -82,13 +84,13 @@ const Checkout = () => {
   };
 
   /** Resolve address and addressId for API. For "new" address, saves it and returns the new id. */
-  const resolveAddressId = useCallback((): string | null => {
+  const resolveAddressId = useCallback(async (): Promise<string | null> => {
     if (selectedAddressId !== "new") return selectedAddressId;
     if (!newFormData) return null;
     if (saveNewAddress) {
       const { label, ...rest } = newFormData;
-      const saved = addAddress(rest as DeliveryAddress, label ?? "Home");
-      return saved.id;
+      const saved = await Promise.resolve(addAddress(rest as DeliveryAddress, label ?? "Home"));
+      return saved?.id ?? null;
     }
     return null;
   }, [selectedAddressId, newFormData, saveNewAddress, addAddress]);
@@ -104,7 +106,7 @@ const Checkout = () => {
       return;
     }
     if (paymentMethod === "online") {
-      const addressId = resolveAddressId();
+      const addressId = await resolveAddressId();
       if (!addressId) {
         showToast.error({ title: "For Pay Online, please save the address (check 'Save this address') or select a saved address." });
         return;
@@ -130,8 +132,9 @@ const Checkout = () => {
           trackingEvents: buildTrackingTimeline(placedAt),
         });
         const Razorpay = await loadRazorpay();
+        const keyToUse = RAZORPAY_KEY_OVERRIDE ?? data.key_id;
         const rzp = new Razorpay({
-          key: data.key_id,
+          key: keyToUse,
           order_id: data.razorpayOrderId,
           amount: data.amount,
           currency: data.currency ?? "INR",

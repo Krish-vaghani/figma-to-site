@@ -61,9 +61,9 @@ const App = () => (
           <AddressProvider>
             <TooltipProvider>
               <Toaster />
-              <CartDrawer />
               <BrowserRouter>
                 <ScrollRestoration />
+                <CartDrawer />
                 <AnimatedRoutes />
               </BrowserRouter>
             </TooltipProvider>

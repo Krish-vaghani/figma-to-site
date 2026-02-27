@@ -1,9 +1,12 @@
+import { useMemo } from "react";
 import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
 import ScrollReveal from "@/components/ScrollReveal";
+import { useGetProductListQuery } from "@/store/services/productApi";
+import { mapApiProductToProduct } from "@/types/product";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -126,12 +129,19 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
 };
 
 interface RelatedProductsProps {
-  currentProductId: number;
+  currentProductId: number | string;
 }
 
 const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
   const navigate = useNavigate();
-  const relatedProducts = products.filter((p) => p.id !== currentProductId).slice(0, 4);
+  const { data: listResponse } = useGetProductListQuery({ page: 1, limit: 24, category: "purse" });
+
+  const relatedProducts = useMemo(() => {
+    const fromApi = (listResponse?.data ?? []).map(mapApiProductToProduct);
+    const filtered = fromApi.filter((p) => String(p.id) !== String(currentProductId)).slice(0, 4);
+    if (filtered.length > 0) return filtered;
+    return products.filter((p) => String(p.id) !== String(currentProductId)).slice(0, 4);
+  }, [listResponse?.data, currentProductId]);
 
   return (
     <section className="py-10 sm:py-16">

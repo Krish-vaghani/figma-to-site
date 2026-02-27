@@ -1,14 +1,47 @@
-import { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { Star, ChevronDown } from "lucide-react";
 import { avatar, avatarMale, avatarFemale } from "@/lib/assetUrls";
+import type { ApiReview } from "@/types/product";
 
 interface Review {
-  id: number;
+  id: number | string;
   name: string;
   avatar: string;
   rating: number;
   time: string;
   text: string;
+}
+
+const defaultAvatars = [avatarFemale, avatarMale, avatar];
+
+function formatReviewTime(createdAt?: string): string {
+  if (!createdAt) return "Recently";
+  try {
+    const d = new Date(createdAt);
+    const now = new Date();
+    const diffMs = now.getTime() - d.getTime();
+    const diffMins = Math.floor(diffMs / 60000);
+    if (diffMins < 60) return `${diffMins} min${diffMins !== 1 ? "s" : ""} ago`;
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `${diffHours} hour${diffHours !== 1 ? "s" : ""} ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    return `${diffDays} day${diffDays !== 1 ? "s" : ""} ago`;
+  } catch {
+    return "Recently";
+  }
+}
+
+function apiReviewsToReviews(apiReviews: ApiReview[] | { list?: ApiReview[] } | undefined): Review[] | null {
+  const list = Array.isArray(apiReviews) ? apiReviews : apiReviews?.list;
+  if (!list?.length) return null;
+  return list.map((r, i) => ({
+    id: r._id ?? i,
+    name: r.user_name ?? r.name ?? "Customer",
+    avatar: r.avatar ?? defaultAvatars[i % defaultAvatars.length],
+    rating: typeof r.rating === "number" ? r.rating : 5,
+    time: formatReviewTime(r.createdAt),
+    text: r.comment ?? r.text ?? "",
+  }));
 }
 
 const mockReviews: Review[] = [
@@ -38,8 +71,13 @@ const mockReviews: Review[] = [
   },
 ];
 
-const ReviewsSection = () => {
+export interface ReviewsSectionProps {
+  apiReviews?: ApiReview[] | { list?: ApiReview[] };
+}
+
+const ReviewsSection: React.FC<ReviewsSectionProps> = ({ apiReviews }) => {
   const [sortBy, setSortBy] = useState("Newest");
+  const reviews = useMemo(() => apiReviewsToReviews(apiReviews) ?? mockReviews, [apiReviews]);
 
   return (
     <div className="py-6 sm:py-8">
@@ -57,7 +95,7 @@ const ReviewsSection = () => {
 
       {/* Review Cards */}
       <div className="space-y-6 sm:space-y-8">
-        {mockReviews.map((review) => (
+        {reviews.map((review) => (
           <div key={review.id} className="space-y-3">
             {/* Review Header */}
             <div className="flex items-start justify-between">
@@ -99,7 +137,7 @@ const ReviewsSection = () => {
             </p>
 
             {/* Divider (except for last) */}
-            {review.id !== mockReviews[mockReviews.length - 1].id && (
+            {review.id !== reviews[reviews.length - 1]?.id && (
               <div className="border-t border-border" />
             )}
           </div>
@@ -117,4 +155,5 @@ const ReviewsSection = () => {
   );
 };
 
+ReviewsSection.displayName = "ReviewsSection";
 export default ReviewsSection;

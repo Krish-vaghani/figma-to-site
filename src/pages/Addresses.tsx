@@ -111,11 +111,15 @@ const Addresses = () => {
   const [editAddress, setEditAddress] = useState<SavedAddress | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
 
-  const handleAdd = (data: AddressFormData) => {
+  const handleAdd = async (data: AddressFormData) => {
     const { label, ...rest } = data;
-    addAddress(rest as import("@/contexts/OrderContext").DeliveryAddress, label);
-    setAddOpen(false);
-    showToast.success({ title: "Address saved", description: `${label} address has been added.` });
+    try {
+      await Promise.resolve(addAddress(rest as import("@/contexts/OrderContext").DeliveryAddress, label));
+      setAddOpen(false);
+      showToast.success({ title: "Address saved", description: `${label} address has been added.` });
+    } catch {
+      showToast.error({ title: "Could not save address", description: "Please try again." });
+    }
   };
 
   const handleEdit = (data: AddressFormData) => {

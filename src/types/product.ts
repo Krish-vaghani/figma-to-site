@@ -5,7 +5,7 @@ export interface ProductColorVariant {
   _id?: string;
 }
 
-/** Single product from product list API */
+/** Single product from product list API (GET /product/list) */
 export interface ApiProduct {
   _id: string;
   name: string;
@@ -14,11 +14,16 @@ export interface ApiProduct {
   category: string;
   price: number;
   salePrice: number | null;
+  /** Primary image URL */
   image: string;
+  /** Optional array; when present, first item can be used as primary image */
+  images?: string[];
   tags: string[];
   colorVariants: ProductColorVariant[];
   numberOfReviews: number;
+  viewCount?: number;
   is_active: boolean;
+  __v?: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -30,6 +35,33 @@ export interface ProductListResponse {
   total: number;
   page: number;
   limit: number;
+}
+
+/** Product detail API (GET /product/detail/:id) */
+export interface ProductDetailParams {
+  id: string;
+  reviewPage?: number;
+  reviewLimit?: number;
+}
+
+/** Single review from product detail API (when returned) */
+export interface ApiReview {
+  _id?: string;
+  user_name?: string;
+  name?: string;
+  rating?: number;
+  comment?: string;
+  text?: string;
+  createdAt?: string;
+  avatar?: string;
+}
+
+/** Product detail API response */
+export interface ProductDetailResponse {
+  message?: string;
+  data: ApiProduct;
+  /** When reviewPage/reviewLimit are used; may be array or { list: ApiReview[] } */
+  reviews?: ApiReview[] | { list?: ApiReview[] };
 }
 
 /** Query params for product list */
@@ -62,6 +94,7 @@ export function mapApiProductToProduct(p: ApiProduct): import("@/data/products")
   const collections = p.tags
     .map((t) => TAG_TO_COLLECTION[t])
     .filter(Boolean);
+  const image = (p.images && p.images[0]) ?? p.image ?? "";
   return {
     id: p._id,
     name: p.name,
@@ -70,7 +103,7 @@ export function mapApiProductToProduct(p: ApiProduct): import("@/data/products")
     originalPrice: p.price,
     reviews: `${p.numberOfReviews} Reviews`,
     rating: 0,
-    image: p.image,
+    image,
     badge: VALID_BADGES.includes(badge as typeof VALID_BADGES[number])
       ? (badge as import("@/data/products").BadgeType)
       : undefined,

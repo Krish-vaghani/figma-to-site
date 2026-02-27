@@ -5,6 +5,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
+import { useViewProductMutation } from "@/store/services/productApi";
 
 interface ShopProductCardProps {
   product: Product;
@@ -79,6 +80,15 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
+  const [viewProduct] = useViewProductMutation();
+
+  const handleCardClick = () => {
+    if (typeof product.id === "string") {
+      // Fire and forget; ignore errors so UI is not blocked
+      viewProduct(product.id).catch(() => {});
+    }
+    onClick();
+  };
 
   const handleBuyNow = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -96,7 +106,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   return (
     <div
       className="group cursor-pointer rounded-2xl overflow-hidden transition-all duration-300 backdrop-blur-[30px] bg-white/[0.08] shadow-[0_8px_32px_0_rgba(0,0,0,0.12),0_4px_16px_0_rgba(0,0,0,0.08),inset_0_0_0_1px_rgba(255,255,255,0.1)]"
-      onClick={onClick}
+      onClick={handleCardClick}
     >
       {/* Image Container */}
       <div className="relative overflow-hidden bg-secondary/30 aspect-square rounded-t-2xl">
@@ -165,14 +175,16 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
         {/* Description + View details */}
         <div className="space-y-2">
-          <p className="text-muted-foreground text-sm">{product.description}</p>
+          <p className="text-muted-foreground text-sm line-clamp-2">
+            {product.description}
+          </p>
           <Button
             variant="ghost"
             size="sm"
             className="px-0 h-7 text-xs text-coral hover:text-coral hover:bg-coral/5"
             onClick={(e) => {
               e.stopPropagation();
-              onClick();
+              handleCardClick();
             }}
           >
             View details

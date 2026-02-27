@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { X, Minus, Plus, Star, Heart, SlidersHorizontal } from "lucide-react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
-import { products } from "@/data/products";
+import { products, type Product } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { shopBackground } from "@/lib/assetUrls";
 import { toast } from "@/lib/toast";
+import type { WishlistItem } from "@/types/wishlist";
 
 type SortOption = "newest" | "price-low" | "price-high";
 
@@ -17,19 +18,47 @@ const sortLabels: Record<SortOption, string> = {
   "price-high": "Price: High To Low",
 };
 
+function wishlistItemToProduct(item: WishlistItem): Product {
+  return {
+    id: item._id,
+    name: item.name,
+    description: "",
+    price: item.salePrice ?? item.price,
+    originalPrice: item.price,
+    reviews: "",
+    rating: 0,
+    image: item.image,
+    colors: [],
+    stock: 0,
+    slug: item.slug,
+  };
+}
+
 const Wishlist = () => {
-  const { wishlist, removeFromWishlist } = useWishlist();
+  const { wishlist, wishlistItemsFromApi, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [activeSort, setActiveSort] = useState<SortOption | null>(null);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
 
   const wishlistProducts = useMemo(() => {
-    let items = products.filter((p) => wishlist.includes(p.id) || wishlist.includes(String(p.id)));
+    const fromApi = wishlistItemsFromApi.length > 0;
+    let items: Product[];
+    if (fromApi) {
+      const apiProducts = wishlistItemsFromApi.map(wishlistItemToProduct);
+      const apiIds = new Set(apiProducts.map((p) => String(p.id)));
+      const missingIds = wishlist.filter((id) => !apiIds.has(String(id)));
+      const fromLocal = missingIds
+        .map((id) => products.find((p) => p.id === id || String(p.id) === id))
+        .filter((p): p is Product => p != null);
+      items = [...apiProducts, ...fromLocal];
+    } else {
+      items = products.filter((p) => wishlist.includes(p.id) || wishlist.includes(String(p.id)));
+    }
     if (activeSort === "price-low") items = [...items].sort((a, b) => a.price - b.price);
     if (activeSort === "price-high") items = [...items].sort((a, b) => b.price - a.price);
     return items;
-  }, [wishlist, activeSort]);
+  }, [wishlist, wishlistItemsFromApi, activeSort]);
 
   const getQty = (id: number | string) => quantities[String(id)] || 1;
   const setQty = (id: number | string, q: number) =>

@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { Search, X, SlidersHorizontal, Heart } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,113 +10,17 @@ import {
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
-import { product1, product2, product3, product4 } from "@/lib/assetUrls";
+import { useGetProductListQuery } from "@/store/services/productApi";
+import { mapApiProductToProduct } from "@/types/product";
+import type { Product } from "@/data/products";
+import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 
 interface SearchModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-interface Product {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  originalPrice: number;
-  image: string;
-  category: string;
-  colors: string[];
-  badge?: string;
-}
-
-const allProducts: Product[] = [
-  {
-    id: 1,
-    name: "Aurora Mini Purse",
-    description: "Structured Crossbody With Top Handle",
-    price: 500,
-    originalPrice: 800,
-    image: product1,
-    category: "Crossbody",
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "Bestseller",
-  },
-  {
-    id: 2,
-    name: "Velora Crossbody",
-    description: "Modern Structured Handheld Bag",
-    price: 3299,
-    originalPrice: 4025,
-    image: product2,
-    category: "Crossbody",
-    colors: ["#374151", "#F5D0C5", "#F3C677"],
-    badge: "Trending",
-  },
-  {
-    id: 3,
-    name: "Bloom Mini Tote",
-    description: "Compact Tote With Spacious Interior",
-    price: 2199,
-    originalPrice: 3250,
-    image: product3,
-    category: "Tote",
-    colors: ["#374151", "#E8B4B8", "#D4A574"],
-    badge: "New",
-  },
-  {
-    id: 4,
-    name: "Nova Chain Purse",
-    description: "Premium Quilted Evening Bag",
-    price: 2799,
-    originalPrice: 3500,
-    image: product4,
-    category: "Clutch",
-    colors: ["#D4A574", "#F3C677", "#E8B4B8"],
-    badge: "Hot",
-  },
-  {
-    id: 5,
-    name: "Luna Sling Bag",
-    description: "Elegant Everyday Sling",
-    price: 1599,
-    originalPrice: 2000,
-    image: product1,
-    category: "Sling",
-    colors: ["#374151", "#F5D0C5"],
-  },
-  {
-    id: 6,
-    name: "Stella Evening Clutch",
-    description: "Glamorous Party Essential",
-    price: 899,
-    originalPrice: 1200,
-    image: product2,
-    category: "Clutch",
-    colors: ["#F3C677", "#E8B4B8"],
-  },
-  {
-    id: 7,
-    name: "Aria Shoulder Bag",
-    description: "Classic Leather Shoulder Bag",
-    price: 2499,
-    originalPrice: 3000,
-    image: product3,
-    category: "Tote",
-    colors: ["#374151", "#D4A574"],
-  },
-  {
-    id: 8,
-    name: "Mira Mini Satchel",
-    description: "Compact Yet Stylish Satchel",
-    price: 1899,
-    originalPrice: 2400,
-    image: product4,
-    category: "Sling",
-    colors: ["#F5D0C5", "#374151", "#F3C677"],
-  },
-];
-
-const categories = ["All", "Crossbody", "Tote", "Clutch", "Sling"];
+const categories = ["All", "Handbags", "Crossbody", "Tote", "Clutch", "Sling"];
 const priceRanges = [
   { label: "All Prices", min: 0, max: Infinity },
   { label: "Under ₹1,000", min: 0, max: 1000 },
@@ -129,29 +34,38 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [selectedPriceRange, setSelectedPriceRange] = useState(0);
   const [showFilters, setShowFilters] = useState(false);
+  const navigate = useNavigate();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart, setIsCartOpen } = useCart();
 
+  const { data: listResponse, isLoading: isLoadingProducts } = useGetProductListQuery(
+    { page: 1, limit: 200, category: "purse" },
+    { skip: !isOpen }
+  );
+
+  const apiProducts = useMemo(
+    () => (listResponse?.data ?? []).map(mapApiProductToProduct),
+    [listResponse?.data]
+  );
+
   const filteredProducts = useMemo(() => {
-    return allProducts.filter((product) => {
-      // Search filter
+    return apiProducts.filter((product) => {
       const matchesSearch =
+        !searchQuery.trim() ||
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.category.toLowerCase().includes(searchQuery.toLowerCase());
+        (product.category ?? "").toLowerCase().includes(searchQuery.toLowerCase());
 
-      // Category filter
       const matchesCategory =
-        selectedCategory === "All" || product.category === selectedCategory;
+        selectedCategory === "All" || (product.category ?? "") === selectedCategory;
 
-      // Price filter
       const priceRange = priceRanges[selectedPriceRange];
       const matchesPrice =
         product.price >= priceRange.min && product.price < priceRange.max;
 
       return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [searchQuery, selectedCategory, selectedPriceRange]);
+  }, [apiProducts, searchQuery, selectedCategory, selectedPriceRange]);
 
   const handleAddToCart = (product: Product) => {
     addToCart({
@@ -160,7 +74,7 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
       price: product.price,
       originalPrice: product.originalPrice,
       image: product.image,
-      color: product.colors[0],
+      color: product.colors?.[0] ?? "#374151",
     });
     onClose();
     setIsCartOpen(true);
@@ -273,7 +187,13 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
 
           {/* Search Results */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-            {filteredProducts.length === 0 ? (
+            {isLoadingProducts ? (
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <ProductCardSkeleton key={i} variant="collection" />
+                ))}
+              </div>
+            ) : filteredProducts.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
                 <div className="w-16 h-16 rounded-full bg-secondary/50 flex items-center justify-center mb-4">
                   <Search className="h-8 w-8 text-muted-foreground" />
@@ -294,6 +214,10 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9 }}
                       className="group cursor-pointer"
+                      onClick={() => {
+                        onClose();
+                        navigate(`/product/${product.slug ?? product.id}`);
+                      }}
                     >
                       {/* Image */}
                       <div className="relative aspect-[4/5] rounded-2xl overflow-hidden bg-secondary/30 mb-3">

@@ -9,6 +9,7 @@ interface ElevateSectionProps {
 }
 
 const ElevateSection = ({ data }: ElevateSectionProps) => {
+  const mainImage = data?.images?.[0] || elevate1;
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -30,7 +31,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
               <img
-                src={elevate1}
+                src={mainImage}
                 alt="Brown shoulder bag with gold chain"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -117,7 +118,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeLeft" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-3xl row-span-2 h-full">
               <img
-                src={elevate1}
+                src={mainImage}
                 alt="Brown shoulder bag with gold chain"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />

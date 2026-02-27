@@ -105,6 +105,14 @@ export default {
             transform: "translateX(200%)",
           },
         },
+        "skeleton-shimmer": {
+          "0%": {
+            backgroundPosition: "200% 0",
+          },
+          "100%": {
+            backgroundPosition: "-200% 0",
+          },
+        },
         "page-enter": {
           "0%": {
             opacity: "0",
@@ -132,6 +140,7 @@ export default {
         "scroll-left": "scroll-left 30s linear infinite",
         "scroll-right": "scroll-right 30s linear infinite",
         shimmer: "shimmer 2.5s ease-in-out infinite",
+        "skeleton-shimmer": "skeleton-shimmer 1.8s ease-in-out infinite",
         "page-enter": "page-enter 0.3s ease-out",
         "page-exit": "page-exit 0.3s ease-out",
       },
