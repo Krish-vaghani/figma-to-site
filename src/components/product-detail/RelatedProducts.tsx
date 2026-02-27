@@ -3,10 +3,11 @@ import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
-import { products, type Product, type BadgeType } from "@/data/products";
 import ScrollReveal from "@/components/ScrollReveal";
+import { normalizeRating } from "@/lib/utils";
 import { useGetProductListQuery } from "@/store/services/productApi";
 import { mapApiProductToProduct } from "@/types/product";
+import { products, type Product, type BadgeType } from "@/data/products";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -61,6 +62,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
+  const displayRating = normalizeRating(product.rating);
 
   return (
     <div
@@ -119,7 +121,7 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
           <div className="flex items-center gap-0.5">
             <Star className="h-3 w-3 fill-coral text-coral flex-shrink-0" />
             <span className="text-muted-foreground text-[10px] sm:text-xs">
-              {product.rating}({product.reviews})
+              {displayRating.toFixed(1)}({product.reviews})
             </span>
           </div>
         </div>
@@ -129,18 +131,28 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
 };
 
 interface RelatedProductsProps {
+  /** Current product id (backend _id or number) to exclude from list */
   currentProductId: number | string;
 }
 
 const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
   const navigate = useNavigate();
-  const { data: listResponse } = useGetProductListQuery({ page: 1, limit: 24, category: "purse" });
+  const { data: listResponse, isLoading, isError } = useGetProductListQuery({
+    page: 1,
+    limit: 50,
+    category: "purse",
+  });
 
   const relatedProducts = useMemo(() => {
-    const fromApi = (listResponse?.data ?? []).map(mapApiProductToProduct);
-    const filtered = fromApi.filter((p) => String(p.id) !== String(currentProductId)).slice(0, 4);
-    if (filtered.length > 0) return filtered;
-    return products.filter((p) => String(p.id) !== String(currentProductId)).slice(0, 4);
+    const fromApi = (listResponse?.data ?? [])
+      .filter((p) => String(p._id) !== String(currentProductId))
+      .sort((a, b) => (b.viewCount ?? 0) - (a.viewCount ?? 0))
+      .slice(0, 4)
+      .map(mapApiProductToProduct);
+    if (fromApi.length > 0) return fromApi;
+    return products
+      .filter((p) => String(p.id) !== String(currentProductId))
+      .slice(0, 4);
   }, [listResponse?.data, currentProductId]);
 
   return (
@@ -156,15 +168,28 @@ const RelatedProducts = ({ currentProductId }: RelatedProductsProps) => {
         </div>
       </ScrollReveal>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
-        {relatedProducts.map((product) => (
-          <RelatedProductCard
-            key={product.id}
-            product={product}
-            onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
-          />
-        ))}
-      </div>
+      {isError && (
+        <p className="text-center text-sm text-muted-foreground">
+          Unable to load related products right now.
+        </p>
+      )}
+
+      {!isError && (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+          {(isLoading && relatedProducts.length === 0) && (
+            <p className="col-span-2 lg:col-span-4 text-center text-sm text-muted-foreground">
+              Loading related products…
+            </p>
+          )}
+          {relatedProducts.map((product) => (
+            <RelatedProductCard
+              key={product.id}
+              product={product}
+              onClick={() => navigate(`/product/${product.id}`)}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 };

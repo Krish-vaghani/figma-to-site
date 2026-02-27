@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useViewProductMutation } from "@/store/services/productApi";
+import { normalizeRating } from "@/lib/utils";
 
 interface ShopProductCardProps {
   product: Product;
@@ -81,10 +82,10 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
   const [viewProduct] = useViewProductMutation();
+  const displayRating = normalizeRating(product.rating);
 
   const handleCardClick = () => {
     if (typeof product.id === "string") {
-      // Fire and forget; ignore errors so UI is not blocked
       viewProduct(product.id).catch(() => {});
     }
     onClick();
@@ -212,7 +213,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           <div className="flex items-center gap-1">
             <Star className="h-4 w-4 fill-coral text-coral" />
             <span className="text-muted-foreground text-sm">
-              {product.rating}({product.reviews})
+              {displayRating.toFixed(1)}({product.reviews})
             </span>
           </div>
         </div>

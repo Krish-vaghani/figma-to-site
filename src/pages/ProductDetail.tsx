@@ -126,6 +126,11 @@ const ProductDetail = () => {
     return null;
   }
 
+  const galleryImages =
+    detailResponse?.data?.images && detailResponse.data.images.length > 0
+      ? detailResponse.data.images
+      : [product.image];
+
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
@@ -138,7 +143,7 @@ const ProductDetail = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             {/* Left: Image Gallery */}
             <ProductImageGallery
-              images={[product.image]}
+              images={galleryImages}
               productName={product.name}
             />
 
@@ -147,11 +152,12 @@ const ProductDetail = () => {
           </div>
         </section>
 
-        {/* Rating Breakdown */}
+        {/* Rating Breakdown (real data from product detail API when available) */}
         <div className="border-t border-border">
           <RatingBreakdown
             rating={product.rating}
             totalReviews={detailResponse?.data?.numberOfReviews ?? 78}
+            starBreakdown={detailResponse?.data?.starBreakdown}
           />
         </div>
 

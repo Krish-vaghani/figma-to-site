@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { shopBackground } from "@/lib/assetUrls";
 import { toast } from "@/lib/toast";
 import type { WishlistItem } from "@/types/wishlist";
+import { normalizeRating } from "@/lib/utils";
 
 type SortOption = "newest" | "price-low" | "price-high";
 
@@ -181,6 +182,7 @@ const Wishlist = () => {
             <div className="divide-y divide-border">
               {wishlistProducts.map((product) => {
                 const qty = getQty(product.id);
+                const displayRating = normalizeRating(product.rating);
                 return (
                   <div key={product.id}>
                     {/* Desktop Row */}
@@ -204,7 +206,7 @@ const Wishlist = () => {
                           <div className="flex items-center gap-1">
                             <span className="text-xs text-muted-foreground">Review :</span>
                             <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                            <span className="text-xs text-muted-foreground">{product.rating}({product.reviews})</span>
+                            <span className="text-xs text-muted-foreground">{displayRating.toFixed(1)}({product.reviews})</span>
                           </div>
                         </div>
                       </div>
@@ -250,7 +252,7 @@ const Wishlist = () => {
                             ))}
                           </span>
                           <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
-                            Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
+                            Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {displayRating.toFixed(1)}
                           </span>
                         </div>
                         <div className="flex items-center justify-between mt-0.5">

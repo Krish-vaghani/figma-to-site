@@ -26,19 +26,18 @@ export const productApi = createApi({
         return { url: `/product/list?${params.toString()}` };
       },
     }),
-    /** Single product detail (GET /product/detail/:id?reviewPage=1&reviewLimit=10) */
     getProductDetail: builder.query<ProductDetailResponse, ProductDetailParams>({
-      query: ({ id, reviewPage = 1, reviewLimit = 10 }) => {
+      query: ({ id, reviewPage, reviewLimit }) => {
         const params = new URLSearchParams();
-        params.set("reviewPage", String(reviewPage));
-        params.set("reviewLimit", String(reviewLimit));
-        return { url: `/product/detail/${encodeURIComponent(id)}?${params.toString()}` };
+        if (reviewPage != null) params.set("reviewPage", String(reviewPage));
+        if (reviewLimit != null) params.set("reviewLimit", String(reviewLimit));
+        const qs = params.toString();
+        return { url: `/product/detail/${id}${qs ? `?${qs}` : ""}` };
       },
     }),
-    /** Increment product view count in background when a product is clicked */
-    viewProduct: builder.mutation<void, string>({
-      query: (productId) => ({
-        url: `/product/${productId}/view`,
+    viewProduct: builder.mutation<unknown, string>({
+      query: (id) => ({
+        url: `/product/${id}/view`,
         method: "POST",
       }),
     }),
