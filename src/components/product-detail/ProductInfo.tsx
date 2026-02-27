@@ -11,7 +11,7 @@ interface ProductInfoProps {
 }
 
 const ProductInfo = ({ product }: ProductInfoProps) => {
-  const [quantity, setQuantity] = useState(5);
+  const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(0);
   const navigate = useNavigate();
   const { addToCart, setIsCartOpen } = useCart();

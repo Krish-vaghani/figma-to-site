@@ -64,29 +64,71 @@ function splitIntoRows(items: Testimonial[]): Testimonial[][] {
 const fallbackRow1: Testimonial[] = [
   {
     id: "1",
-    quote: "The Quality Of The Purse Exceeded My Expectations. It Feels Premium And Is Perfect For Special Occasions.",
-    name: "Sarah Williamson",
-    title: "Fashion Blogger, USA",
+    quote: "Dummy text",
+    name: "Dummy User 1",
+    title: "Dummy Title",
     avatar: avatarFemale,
     stars: 5,
   },
   {
     id: "2",
-    quote:
-      "I Love How Lightweight Yet Spacious The Bag Is. The Design Is Elegant, And I've Received So Many Compliments Already.",
-    name: "Ahmad Korsgaard",
-    title: "Ecom Business Owner",
+    quote: "Dummy text",
+    name: "Dummy User 2",
+    title: "Dummy Title",
     avatar: avatarMale,
     stars: 5,
   },
-  { id: "3", quote: "From Ordering To Delivery, Everything Was Smooth.", name: "Cameron Williamson", title: "Agency Owner, USA", avatar: avatarFemale, stars: 5 },
-  { id: "4", quote: "Beautiful Craftsmanship And Excellent Finish.", name: "Ahmad Korsgaard", title: "Ecom Business Owner", avatar: avatarMale, stars: 5 },
+  {
+    id: "3",
+    quote: "Dummy text",
+    name: "Dummy User 3",
+    title: "Dummy Title",
+    avatar: avatarFemale,
+    stars: 5,
+  },
+  {
+    id: "4",
+    quote: "Dummy text",
+    name: "Dummy User 4",
+    title: "Dummy Title",
+    avatar: avatarMale,
+    stars: 5,
+  },
 ];
+
 const fallbackRow2: Testimonial[] = [
-  { id: "5", quote: "Beautiful Detailing And Premium Material.", name: "Ahmad Korsgaard", title: "Ecom Business Owner", avatar: avatarMale, stars: 5 },
-  { id: "6", quote: "I'm Really Impressed With The Craftsmanship.", name: "Cameron Williamson", title: "Agency Owner, USA", avatar: avatarFemale, stars: 5 },
-  { id: "7", quote: "The Purse Has A Premium Look And Feel.", name: "Ahmad Korsgaard", title: "Ecom Business Owner", avatar: avatarMale, stars: 5 },
-  { id: "8", quote: "The Detailing Is Exquisite.", name: "Sarah Williamson", title: "Fashion Blogger, USA", avatar: avatarFemale, stars: 5 },
+  {
+    id: "5",
+    quote: "Dummy text",
+    name: "Dummy User 5",
+    title: "Dummy Title",
+    avatar: avatarMale,
+    stars: 5,
+  },
+  {
+    id: "6",
+    quote: "Dummy text",
+    name: "Dummy User 6",
+    title: "Dummy Title",
+    avatar: avatarFemale,
+    stars: 5,
+  },
+  {
+    id: "7",
+    quote: "Dummy text",
+    name: "Dummy User 7",
+    title: "Dummy Title",
+    avatar: avatarMale,
+    stars: 5,
+  },
+  {
+    id: "8",
+    quote: "Dummy text",
+    name: "Dummy User 8",
+    title: "Dummy Title",
+    avatar: avatarFemale,
+    stars: 5,
+  },
 ];
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {

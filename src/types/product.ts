@@ -21,6 +21,8 @@ export interface ApiProduct {
   tags: string[];
   colorVariants: ProductColorVariant[];
   numberOfReviews: number;
+  /** Optional: some list responses may include these fields */
+  averageRating?: number;
   viewCount?: number;
   is_active: boolean;
   __v?: number;
@@ -37,31 +39,81 @@ export interface ProductListResponse {
   limit: number;
 }
 
-/** Product detail API (GET /product/detail/:id) */
+/** Single review entry returned by product detail API.
+ * The exact backend shape may vary slightly; this is a flexible representation that
+ * we safely map inside the UI.
+ */
+export interface ApiProductReview {
+  _id?: string;
+  id?: string | number;
+  user_name?: string;
+  userName?: string;
+  name?: string;
+  user_image?: string | null;
+  userImage?: string | null;
+  rating?: number | string;
+  review?: string;
+  comment?: string;
+  message?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+/** Star breakdown map from product detail API (rating -> count). */
+export interface ProductStarBreakdown {
+  [star: string]: number;
+}
+
+/** Product detail API response (used for rating graph + reviews). */
+export interface ProductDetailData {
+  _id: string;
+  name: string;
+  slug: string;
+  shortDescription?: string;
+  description: string;
+  category: string;
+  price: number;
+  salePrice: number | null;
+  image: string;
+  tags: string[];
+  colorVariants: ProductColorVariant[];
+  dimensions?: {
+    heightCm: number;
+    widthCm: number;
+    depthCm: number;
+  };
+  averageRating: number;
+  numberOfReviews: number;
+  viewCount: number;
+  is_active: boolean;
+  createdAt: string;
+  updatedAt: string;
+  currentPrice: number;
+  images?: string[];
+  starBreakdown?: ProductStarBreakdown;
+  reviews: ApiProductReview[];
+  reviewPage?: number;
+  reviewLimit?: number;
+  totalReviews?: number;
+}
+
+export interface ProductReviewsResponse {
+  message: string;
+  data: ProductDetailData;
+}
+
+/** Params for product detail API (GET /product/detail/:id) */
 export interface ProductDetailParams {
   id: string;
   reviewPage?: number;
   reviewLimit?: number;
 }
 
-/** Single review from product detail API (when returned) */
-export interface ApiReview {
-  _id?: string;
-  user_name?: string;
-  name?: string;
-  rating?: number;
-  comment?: string;
-  text?: string;
-  createdAt?: string;
-  avatar?: string;
-}
-
-/** Product detail API response */
+/** Response from product detail API */
 export interface ProductDetailResponse {
   message?: string;
-  data: ApiProduct;
-  /** When reviewPage/reviewLimit are used; may be array or { list: ApiReview[] } */
-  reviews?: ApiReview[] | { list?: ApiReview[] };
+  data: ProductDetailData;
+  reviews?: ApiProductReview[];
 }
 
 /** Query params for product list */
@@ -88,21 +140,32 @@ const TAG_TO_COLLECTION: Record<string, string> = {
   new: "New Arrivals",
 };
 
-/** Map API product to the Product shape used by ShopProductCard etc. */
-export function mapApiProductToProduct(p: ApiProduct): import("@/data/products").Product {
-  const badge = p.tags[0];
-  const collections = p.tags
+/** Map list or detail API product to the Product shape used by ShopProductCard etc. */
+export function mapApiProductToProduct(
+  p: ApiProduct | ProductDetailData
+): import("@/data/products").Product {
+  const badge = p.tags?.[0];
+  const collections = (p.tags ?? [])
     .map((t) => TAG_TO_COLLECTION[t])
     .filter(Boolean);
   const image = (p.images && p.images[0]) ?? p.image ?? "";
+  const price: number =
+    "currentPrice" in p ? (p.currentPrice ?? p.salePrice ?? p.price) : (p.salePrice ?? p.price);
+  const originalPrice: number = "originalPrice" in p && typeof (p as { originalPrice?: number }).originalPrice === "number"
+    ? (p as { originalPrice: number }).originalPrice
+    : p.price;
+  const description: string =
+    "shortDescription" in p && (p as ProductDetailData).shortDescription
+      ? (p as ProductDetailData).shortDescription
+      : (p.description ?? "");
   return {
     id: p._id,
     name: p.name,
-    description: p.description,
-    price: p.salePrice ?? p.price,
-    originalPrice: p.price,
-    reviews: `${p.numberOfReviews} Reviews`,
-    rating: 0,
+    description,
+    price,
+    originalPrice,
+    reviews: `${p.numberOfReviews ?? 0} Reviews`,
+    rating: Number(p.averageRating ?? 0),
     image,
     badge: VALID_BADGES.includes(badge as typeof VALID_BADGES[number])
       ? (badge as import("@/data/products").BadgeType)

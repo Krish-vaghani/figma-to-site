@@ -5,6 +5,7 @@ import { products } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { shopBackground } from "@/lib/assetUrls";
+import { normalizeRating } from "@/lib/utils";
 
 const Cart = () => {
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
@@ -68,6 +69,7 @@ const Cart = () => {
             <div className="divide-y divide-border">
               {cart.map((item) => {
                 const product = getProduct(item.id);
+                const displayRating = product ? normalizeRating(product.rating) : null;
                 return (
                   <div key={`${item.id}-${item.color}`}>
                     {/* Desktop Row */}
@@ -87,7 +89,10 @@ const Cart = () => {
                             <div className="flex items-center gap-1">
                               <span className="text-xs text-muted-foreground">Review :</span>
                               <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                              <span className="text-xs text-muted-foreground">{product.rating}({product.reviews})</span>
+                              <span className="text-xs text-muted-foreground">
+                                {displayRating != null ? displayRating.toFixed(1) : product.rating}
+                                ({product.reviews})
+                              </span>
                             </div>
                           )}
                         </div>
@@ -130,7 +135,8 @@ const Cart = () => {
                           </span>
                           {product && (
                             <span className="text-[11px] text-muted-foreground flex items-center gap-0.5">
-                              Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" /> {product.rating}
+                              Review : <Star className="h-2.5 w-2.5 text-yellow-400 fill-yellow-400" />{" "}
+                              {displayRating != null ? displayRating.toFixed(1) : product.rating}
                             </span>
                           )}
                         </div>

@@ -10,6 +10,7 @@ import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import type { Product } from "@/data/products";
+import { normalizeRating } from "@/lib/utils";
 
 interface ProductQuickViewProps {
   product: Product;
@@ -23,6 +24,7 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
   const isWishlisted = isInWishlist(product.id);
   const [quantity, setQuantity] = useState(1);
   const [selectedColor, setSelectedColor] = useState(0);
+  const displayRating = normalizeRating(product.rating);
 
   const discount = Math.round(
     ((product.originalPrice - product.price) / product.originalPrice) * 100
@@ -101,7 +103,7 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
                       <Star
                         key={i}
                         className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                          i < Math.floor(product.rating!)
+                          i < Math.floor(displayRating)
                             ? "fill-coral text-coral"
                             : "text-muted-foreground/30"
                         }`}
@@ -109,7 +111,7 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
                     ))}
                   </div>
                   <span className="text-[10px] sm:text-sm text-muted-foreground">
-                    {product.rating} ({product.reviews || "0 Reviews"})
+                    {displayRating.toFixed(1)} ({product.reviews || "0 Reviews"})
                   </span>
                 </div>
               )}

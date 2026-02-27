@@ -2,6 +2,7 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { heroProduct, avatar } from "@/lib/assetUrls";
+import { normalizeRating } from "@/lib/utils";
 
 import { LandingSection } from "@/types/landing";
 
@@ -10,6 +11,9 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ data }: HeroSectionProps) => {
+  const heroRating = normalizeRating(data?.rating ?? 4);
+  const heroRatingLabel = heroRating.toFixed(1);
+
   return (
     <section className="relative overflow-hidden" aria-label="Hero">
       {/* ===== MOBILE LAYOUT ===== */}
@@ -75,20 +79,21 @@ const HeroSection = ({ data }: HeroSectionProps) => {
           </motion.div>
 
           {/* Mobile Product Image */}
-          <motion.div
-            className="mt-6 relative pb-16"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.7 }}
-          >
-            <div className="relative rounded-3xl overflow-visible shadow-xl">
-              <img
-                src={data?.images?.[0] || heroProduct}
-                alt="Aurora Mini Purse - Premium leather crossbody bag"
-                className="w-full aspect-[4/5] object-cover rounded-3xl"
-                loading="eager"
-                fetchPriority="high"
-              />
+          {data?.images?.[0] && (
+            <motion.div
+              className="mt-6 relative pb-16"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6, duration: 0.7 }}
+            >
+              <div className="relative rounded-3xl overflow-visible shadow-xl">
+                <img
+                  src={data.images[0]}
+                  alt="Aurora Mini Purse - Premium leather crossbody bag"
+                  className="w-full aspect-[4/5] object-cover rounded-3xl"
+                  loading="eager"
+                  fetchPriority="high"
+                />
 
               {/* Mobile Product Info Card - Centered half on image, half below */}
               {/* Note: Tailwind translate classes must not be on a motion.div because Framer Motion controls transform */}
@@ -116,7 +121,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span className="text-sm text-foreground font-medium">{data?.rating || "4.0"}</span>
+                      <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
                       <span className="text-xs text-muted-foreground">({data?.numberOfReviews || "125k"} Reviews)</span>
                     </div>
                   </div>
@@ -124,6 +129,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
               </div>
             </div>
           </motion.div>
+          )}
         </div>
       </div>
 
@@ -284,7 +290,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     ))}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-foreground font-semibold text-sm">4.9/5</span>
+                    <span className="text-foreground font-semibold text-sm">4.5/5</span>
                     <span className="text-muted-foreground text-xs">Based on 1.2k reviews</span>
                   </div>
                 </div>
@@ -353,33 +359,37 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                 <div className="absolute -inset-1 bg-gradient-to-br from-coral/30 via-transparent to-coral/20 rounded-[2rem] blur-sm" />
 
                 {/* Image container */}
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
-                  <div className="rounded-[1.4rem] overflow-hidden">
-                    <motion.img
-                      src={data?.images?.[0] || heroProduct}
-                      alt="Elegant silver clutch purse - Premium designer handbag"
-                      className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
-                      loading="eager"
-                      fetchPriority="high"
-                      decoding="async"
-                      whileHover={{ scale: 1.03 }}
-                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    />
+                {data?.images?.[0] && (
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
+                    <div className="rounded-[1.4rem] overflow-hidden">
+                      <motion.img
+                        src={data.images[0]}
+                        alt="Elegant silver clutch purse - Premium designer handbag"
+                        className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="async"
+                        whileHover={{ scale: 1.03 }}
+                        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      />
 
-                    {/* Premium overlay gradient */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      {/* Premium overlay gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                    {/* Corner accent */}
-                    <motion.div
-                      className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 1, duration: 0.5 }}
-                    >
-                      <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Bestseller</span>
-                    </motion.div>
+                      {/* Corner accent */}
+                      <motion.div
+                        className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 1, duration: 0.5 }}
+                      >
+                        <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                          Bestseller
+                        </span>
+                      </motion.div>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Product Info Card - Floating below image */}
                 <motion.div
@@ -405,7 +415,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span className="text-sm text-foreground font-medium">{data?.rating || "4.0"}</span>
+                      <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
                       <span className="text-xs text-muted-foreground">({data?.numberOfReviews || "125k"} Reviews)</span>
                     </div>
                   </div>

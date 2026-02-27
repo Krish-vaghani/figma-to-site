@@ -21,10 +21,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { shopBackground } from "@/lib/assetUrls";
 import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 
-const PRODUCTS_PER_PAGE = 12;
+const PRODUCTS_PER_PAGE = 10;
 const PURSE_CATEGORY = "purse";
-/** Fetch enough for frontend filtering (all filters applied client-side) */
-const FETCH_LIMIT = 500;
 
 const Purses = () => {
   useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over ₹1,000.");
@@ -43,8 +41,8 @@ const Purses = () => {
   });
 
   const { data: listResponse, isLoading, isError } = useGetProductListQuery({
-    page: 1,
-    limit: FETCH_LIMIT,
+    page: currentPage,
+    limit: PRODUCTS_PER_PAGE,
     category: PURSE_CATEGORY,
   });
 
@@ -93,16 +91,12 @@ const Purses = () => {
     }
   }, [allMappedProducts, filters, sortBy]);
 
-  const totalFiltered = filteredProducts.length;
+  // Use API total for overall count; fall back to current page length if missing.
+  const totalFiltered = listResponse?.total ?? filteredProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalFiltered / PRODUCTS_PER_PAGE));
-  const paginatedProducts = useMemo(
-    () =>
-      filteredProducts.slice(
-        (currentPage - 1) * PRODUCTS_PER_PAGE,
-        currentPage * PRODUCTS_PER_PAGE
-      ),
-    [filteredProducts, currentPage]
-  );
+
+  // Backend already paginates by page/limit, so we just use the filtered list on this page.
+  const paginatedProducts = filteredProducts;
 
   useEffect(() => {
     setCurrentPage(1);
@@ -329,7 +323,7 @@ const Purses = () => {
                   <ShopProductCard
                     key={product.id}
                     product={product}
-                    onClick={() => navigate(`/product/${product.slug ?? product.id}`)}
+                    onClick={() => navigate(`/product/${product.id}`)}
                   />
                 ))
               )}

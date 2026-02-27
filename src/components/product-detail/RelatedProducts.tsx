@@ -99,7 +99,7 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
         <div className="flex items-center justify-between gap-1">
           <h3 className="font-semibold text-foreground text-xs sm:text-sm truncate">{product.name}</h3>
           <div className="flex gap-1 flex-shrink-0">
-            {product.colors.slice(0, 2).map((color, index) => (
+            {(product.colors ?? []).slice(0, 2).map((color, index) => (
               <span
                 key={index}
                 className="w-3 h-3 sm:w-4 sm:h-4 rounded-full border border-border"

@@ -99,7 +99,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
       price: product.price,
       originalPrice: product.originalPrice,
       image: product.image,
-      color: product.colors[0],
+      color: product.colors?.[0] ?? "#374151",
     });
     navigate("/checkout");
   };
@@ -164,7 +164,7 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
           </h3>
           {/* Color Options */}
           <div className="flex gap-1.5 flex-shrink-0">
-            {product.colors.map((color, index) => (
+            {(product.colors ?? []).map((color, index) => (
               <span
                 key={index}
                 className="w-5 h-5 rounded-full border border-border"
