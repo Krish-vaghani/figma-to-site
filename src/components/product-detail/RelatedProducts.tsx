@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Heart, Star, Award, TrendingUp, Sparkles, Flame } from "lucide-react";
+import { Heart, Star, Award, TrendingUp, Sparkles, Flame, Tag } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useWishlist } from "@/contexts/WishlistContext";
@@ -9,41 +9,48 @@ import { useGetProductListQuery } from "@/store/services/productApi";
 import { mapApiProductToProduct } from "@/types/product";
 import { products, type Product, type BadgeType } from "@/data/products";
 
-const BadgeComponent = ({ type }: { type: BadgeType }) => {
-  const badgeStyles = {
-    bestseller: {
-      bg: "bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600",
-      icon: Award,
-      text: "Best Seller",
-      iconColor: "text-amber-100",
-    },
-    trending: {
-      bg: "bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600",
-      icon: TrendingUp,
-      text: "Trending",
-      iconColor: "text-emerald-100",
-    },
-    new: {
-      bg: "bg-gradient-to-br from-coral via-rose-500 to-pink-600",
-      icon: Sparkles,
-      text: "New",
-      iconColor: "text-rose-100",
-    },
-    hot: {
-      bg: "bg-gradient-to-br from-red-400 via-red-500 to-rose-600",
-      icon: Flame,
-      text: "Hot",
-      iconColor: "text-red-100",
-    },
-    limited: {
-      bg: "bg-gradient-to-br from-violet-400 via-purple-500 to-indigo-600",
-      icon: Sparkles,
-      text: "Limited",
-      iconColor: "text-violet-100",
-    },
-  };
+const BADGE_STYLES: Record<BadgeType, { bg: string; icon: typeof Award; text: string; iconColor: string }> = {
+  bestseller: {
+    bg: "bg-gradient-to-br from-amber-400 via-amber-500 to-orange-600",
+    icon: Award,
+    text: "Best Seller",
+    iconColor: "text-amber-100",
+  },
+  trending: {
+    bg: "bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600",
+    icon: TrendingUp,
+    text: "Trending",
+    iconColor: "text-emerald-100",
+  },
+  new: {
+    bg: "bg-gradient-to-br from-coral via-rose-500 to-pink-600",
+    icon: Sparkles,
+    text: "New",
+    iconColor: "text-rose-100",
+  },
+  hot: {
+    bg: "bg-gradient-to-br from-red-400 via-red-500 to-rose-600",
+    icon: Flame,
+    text: "Hot",
+    iconColor: "text-red-100",
+  },
+  limited: {
+    bg: "bg-gradient-to-br from-violet-400 via-purple-500 to-indigo-600",
+    icon: Sparkles,
+    text: "Limited",
+    iconColor: "text-violet-100",
+  },
+  sale: {
+    bg: "bg-gradient-to-br from-green-400 via-green-500 to-emerald-600",
+    icon: Tag,
+    text: "Sale",
+    iconColor: "text-green-100",
+  },
+};
 
-  const style = badgeStyles[type];
+const BadgeComponent = ({ type }: { type: BadgeType }) => {
+  const style = BADGE_STYLES[type];
+  if (!style) return null;
   const Icon = style.icon;
 
   return (
