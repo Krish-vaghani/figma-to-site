@@ -32,35 +32,7 @@ const Login = () => {
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-
-  // Web OTP API: listen for SMS OTP when on OTP step (Chrome on Android, etc.)
-  useEffect(() => {
-    if (step !== "otp") return;
-    if (!("OTPCredential" in window)) return;
-
-    const ab = new AbortController();
-    const timeout = window.setTimeout(() => ab.abort(), 5 * 60 * 1000); // 5 min
-
-    navigator.credentials
-      .get({
-        otp: { transport: ["sms"] },
-        signal: ab.signal,
-      } as CredentialRequestOptions)
-      .then((cred) => {
-        if (cred && "code" in cred && typeof (cred as { code: string }).code === "string") {
-          const code = (cred as { code: string }).code.replace(/\D/g, "").slice(0, OTP_LENGTH);
-          if (code.length >= OTP_LENGTH) {
-            setOtp(code.split(""));
-          }
-        }
-      })
-      .catch(() => {});
-
-    return () => {
-      clearTimeout(timeout);
-      ab.abort();
-    };
-  }, [step]);
+  const otpAutofillInputRef = useRef<HTMLInputElement | null>(null);
 
   // Redirect if already logged in
   if (auth.isLoggedIn) {
@@ -78,6 +50,28 @@ const Login = () => {
       }).unwrap();
       toast.auth.otpSent();
       setStep("otp");
+      // Start Web OTP listener in next tick so it runs soon after user gesture (Chrome requirement)
+      setTimeout(() => {
+        if (!("OTPCredential" in window)) return;
+        const ab = new AbortController();
+        const timeout = window.setTimeout(() => ab.abort(), 5 * 60 * 1000);
+        navigator.credentials
+          .get({
+            otp: { transport: ["sms"] },
+            signal: ab.signal,
+          } as CredentialRequestOptions)
+          .then((cred) => {
+            if (cred && "code" in cred && typeof (cred as { code: string }).code === "string") {
+              const code = (cred as { code: string }).code.replace(/\D/g, "").slice(0, OTP_LENGTH);
+              if (code.length >= OTP_LENGTH) {
+                const digits = code.split("");
+                setOtp(digits);
+                doVerify(digits);
+              }
+            }
+          })
+          .catch(() => {});
+      }, 100);
     } catch (err: unknown) {
       const msg = (err as { data?: { message?: string } })?.data?.message;
       toast.auth.otpError(msg);
@@ -95,6 +89,7 @@ const Login = () => {
       setOtp(newOtp);
       const nextIndex = Math.min(index + digits.length, OTP_LENGTH - 1);
       otpRefs.current[nextIndex]?.focus();
+      if (newOtp.every(Boolean)) doVerify(newOtp);
       return;
     }
 
@@ -104,6 +99,8 @@ const Login = () => {
     setOtp(newOtp);
     if (value && index < OTP_LENGTH - 1) {
       otpRefs.current[index + 1]?.focus();
+    } else if (value && index === OTP_LENGTH - 1 && newOtp.every(Boolean)) {
+      doVerify(newOtp);
     }
   };
 
@@ -113,10 +110,9 @@ const Login = () => {
     }
   };
 
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (otp.some((d) => !d)) return;
-    const otpString = otp.join("");
+  const doVerify = async (otpDigits: string[]) => {
+    if (otpDigits.some((d) => !d)) return;
+    const otpString = otpDigits.join("");
     try {
       const result = await login({ phone: mobile, otp: otpString }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
@@ -127,6 +123,11 @@ const Login = () => {
       const msg = (err as { data?: { message?: string } })?.data?.message;
       toast.auth.verifyError(msg);
     }
+  };
+
+  const handleVerify = (e: React.FormEvent) => {
+    e.preventDefault();
+    doVerify(otp);
   };
 
   return (
@@ -265,8 +266,28 @@ const Login = () => {
                       </p>
                     </div>
 
+                    {/* Hidden input: sole target for autocomplete="one-time-code" (iOS/Safari and some Android) */}
+                    <input
+                      ref={otpAutofillInputRef}
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={OTP_LENGTH}
+                      aria-label="One-time code"
+                      className="absolute opacity-0 w-0 h-0 pointer-events-none"
+                      tabIndex={-1}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, "").slice(0, OTP_LENGTH);
+                        if (raw.length >= OTP_LENGTH) {
+                          const digits = raw.split("");
+                          setOtp(digits);
+                          e.target.value = "";
+                          doVerify(digits);
+                        }
+                      }}
+                    />
                     {/* OTP Inputs */}
-                    <div className="flex gap-2 sm:gap-3">
+                    <div className="flex gap-2 sm:gap-3 relative">
                       {otp.map((digit, i) => (
                         <input
                           key={i}
@@ -282,7 +303,7 @@ const Login = () => {
                             const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
                             handleOtpChange(i, pasted);
                           }}
-                          autoComplete={i === 0 ? "one-time-code" : "off"}
+                          autoComplete="off"
                           className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-lg font-semibold rounded-xl border transition-all duration-200 bg-background/80 focus:outline-none focus:ring-2 focus:ring-coral/50 ${
                             digit ? "border-foreground" : "border-border"
                           }`}
