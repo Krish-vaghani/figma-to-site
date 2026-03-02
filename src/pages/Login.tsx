@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
@@ -32,6 +32,35 @@ const Login = () => {
   const [mobile, setMobile] = useState("");
   const [otp, setOtp] = useState<string[]>(Array(OTP_LENGTH).fill(""));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+  // Web OTP API: listen for SMS OTP when on OTP step (Chrome on Android, etc.)
+  useEffect(() => {
+    if (step !== "otp") return;
+    if (!("OTPCredential" in window)) return;
+
+    const ab = new AbortController();
+    const timeout = window.setTimeout(() => ab.abort(), 5 * 60 * 1000); // 5 min
+
+    navigator.credentials
+      .get({
+        otp: { transport: ["sms"] },
+        signal: ab.signal,
+      } as CredentialRequestOptions)
+      .then((cred) => {
+        if (cred && "code" in cred && typeof (cred as { code: string }).code === "string") {
+          const code = (cred as { code: string }).code.replace(/\D/g, "").slice(0, OTP_LENGTH);
+          if (code.length >= OTP_LENGTH) {
+            setOtp(code.split(""));
+          }
+        }
+      })
+      .catch(() => {});
+
+    return () => {
+      clearTimeout(timeout);
+      ab.abort();
+    };
+  }, [step]);
 
   // Redirect if already logged in
   if (auth.isLoggedIn) {
@@ -244,7 +273,7 @@ const Login = () => {
                           ref={(el) => { otpRefs.current[i] = el; }}
                           type="text"
                           inputMode="numeric"
-                          maxLength={1}
+                          maxLength={i === 0 ? OTP_LENGTH : 1}
                           value={digit}
                           onChange={(e) => handleOtpChange(i, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(i, e)}
@@ -253,6 +282,7 @@ const Login = () => {
                             const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
                             handleOtpChange(i, pasted);
                           }}
+                          autoComplete={i === 0 ? "one-time-code" : "off"}
                           className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-lg font-semibold rounded-xl border transition-all duration-200 bg-background/80 focus:outline-none focus:ring-2 focus:ring-coral/50 ${
                             digit ? "border-foreground" : "border-border"
                           }`}
