@@ -4,7 +4,8 @@
  * Mutations run in background; never block UI.
  */
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createAuthBaseQuery } from "@/store/baseQueryWithAuthLogout";
 import type {
   CartListResponse,
   CartAddRequest,
@@ -26,7 +27,7 @@ function getAuthToken(): string | null {
 
 export const cartApi = createApi({
   reducerPath: "cartApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: createAuthBaseQuery({
     baseUrl: CART_BASE_URL,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");

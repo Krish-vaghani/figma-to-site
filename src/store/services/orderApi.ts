@@ -3,6 +3,8 @@
  * Base URL: same as auth/product API (api.pursolina.com). Override with VITE_ORDER_API_URL if needed.
  */
 
+import { clearAuthAndRedirect } from "@/store/baseQueryWithAuthLogout";
+
 const AUTH_TOKEN_KEY = "auth_token";
 const ORDER_BASE_URL =
   import.meta.env.VITE_ORDER_API_URL ?? "https://api.pursolina.com/api/v1";
@@ -62,6 +64,7 @@ export async function createRazorpayOrder(
   });
   const data = await res.json();
   if (!res.ok) {
+    if (res.status === 401) clearAuthAndRedirect();
     throw new Error(data?.message ?? "Failed to create order");
   }
   return data;
@@ -77,6 +80,7 @@ export async function verifyRazorpayPayment(
   });
   const data = await res.json();
   if (!res.ok) {
+    if (res.status === 401) clearAuthAndRedirect();
     throw new Error(data?.message ?? "Payment verification failed");
   }
   return data;

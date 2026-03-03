@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation, Navigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Navbar from "@/components/Navbar";
@@ -17,6 +18,24 @@ import otpIllustration from "@/assets/otp-illustration.png";
 import loginCardBg from "@/assets/login-card-bg.png";
 
 const OTP_LENGTH = 6;
+
+const registerOrLoginSchema = z.object({
+  name: z.string().trim().min(1, "Name is required").max(100),
+  phone: z.string().trim().min(1, "Phone is required").max(15),
+});
+
+const loginSchema = z.object({
+  phone: z.string().trim().min(1, "Phone is required"),
+  otp: z.string().length(OTP_LENGTH, "Enter 6-digit OTP").regex(/^\d+$/, "OTP must be digits only"),
+});
+
+/** Allow only same-origin path (starts with /, not //) to prevent open redirect. */
+function getSafeRedirectPath(path: string | undefined, fallback: string): string {
+  if (typeof path !== "string" || !path.trim()) return fallback;
+  const trimmed = path.trim();
+  if (trimmed.startsWith("/") && !trimmed.startsWith("//")) return trimmed;
+  return fallback;
+}
 
 const Login = () => {
   useSeo("Login", "Sign in to manage your orders, wishlist, and account details.");
@@ -36,18 +55,24 @@ const Login = () => {
 
   // Redirect if already logged in
   if (auth.isLoggedIn) {
-    const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/profile";
-    return <Navigate to={from} replace />;
+    const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
+    const safePath = getSafeRedirectPath(from, "/profile");
+    return <Navigate to={safePath} replace />;
   }
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName.trim() || !mobile.trim()) return;
+    const parsed = registerOrLoginSchema.safeParse({
+      name: fullName.trim(),
+      phone: mobile.trim(),
+    });
+    if (!parsed.success) {
+      const msg = parsed.error.errors[0]?.message ?? "Invalid input";
+      toast.auth.otpError(msg);
+      return;
+    }
     try {
-      await registerOrLogin({
-        name: fullName.trim(),
-        phone: mobile.trim(),
-      }).unwrap();
+      await registerOrLogin({ name: parsed.data.name, phone: parsed.data.phone }).unwrap();
       toast.auth.otpSent();
       setStep("otp");
       // Start Web OTP listener in next tick so it runs soon after user gesture (Chrome requirement)
@@ -113,12 +138,19 @@ const Login = () => {
   const doVerify = async (otpDigits: string[]) => {
     if (otpDigits.some((d) => !d)) return;
     const otpString = otpDigits.join("");
+    const parsed = loginSchema.safeParse({ phone: mobile, otp: otpString });
+    if (!parsed.success) {
+      const msg = parsed.error.errors[0]?.message ?? "Invalid OTP";
+      toast.auth.verifyError(msg);
+      return;
+    }
     try {
-      const result = await login({ phone: mobile, otp: otpString }).unwrap();
+      const result = await login({ phone: parsed.data.phone, otp: parsed.data.otp }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
       toast.auth.loginSuccess();
-      const from = (location.state as { from?: { pathname: string } })?.from?.pathname || "/";
-      navigate(from, { replace: true });
+      const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
+      const safePath = getSafeRedirectPath(from, "/");
+      navigate(safePath, { replace: true });
     } catch (err: unknown) {
       const msg = (err as { data?: { message?: string } })?.data?.message;
       toast.auth.verifyError(msg);

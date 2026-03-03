@@ -4,7 +4,8 @@
  * Add/remove run in background; never block UI.
  */
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createAuthBaseQuery } from "@/store/baseQueryWithAuthLogout";
 import type {
   WishlistListResponse,
   WishlistAddRequest,
@@ -24,7 +25,7 @@ function getAuthToken(): string | null {
 
 export const wishlistApi = createApi({
   reducerPath: "wishlistApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: createAuthBaseQuery({
     baseUrl: WISHLIST_BASE_URL,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");

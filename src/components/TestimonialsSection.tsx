@@ -244,7 +244,12 @@ const TestimonialsSection = ({ data }: TestimonialsSectionProps) => {
     setLoading(true);
     setError(null);
     fetch(TESTIMONIAL_API_URL)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.statusText || `HTTP ${res.status}`);
+        }
+        return res.json();
+      })
       .then((body: ApiResponse) => {
         if (cancelled) return;
         const list = Array.isArray(body?.data) ? body.data : [];

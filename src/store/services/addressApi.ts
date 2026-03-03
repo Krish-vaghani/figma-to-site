@@ -4,7 +4,8 @@
  * All endpoints require Authorization: Bearer <token>.
  */
 
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi } from "@reduxjs/toolkit/query/react";
+import { createAuthBaseQuery } from "@/store/baseQueryWithAuthLogout";
 import type {
   AddressListResponse,
   AddAddressRequest,
@@ -24,7 +25,7 @@ function getAuthToken(): string | null {
 
 export const addressApi = createApi({
   reducerPath: "addressApi",
-  baseQuery: fetchBaseQuery({
+  baseQuery: createAuthBaseQuery({
     baseUrl: ADDRESS_BASE_URL,
     prepareHeaders: (headers) => {
       headers.set("Content-Type", "application/json");
