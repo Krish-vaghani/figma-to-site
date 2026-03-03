@@ -1,6 +1,6 @@
 import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Zap } from "lucide-react";
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import ScrollReveal from "./ScrollReveal";
 import ProductCarousel from "./ProductCarousel";
 import StockBadge from "./StockBadge";
@@ -45,9 +45,17 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
       text: "Limited",
       iconColor: "text-violet-100",
     },
+    sale: {
+      bg: "bg-gradient-to-br from-green-500 via-emerald-500 to-teal-600",
+      glow: "before:bg-emerald-500/30",
+      icon: Zap,
+      text: "Sale",
+      iconColor: "text-emerald-100",
+    },
   };
 
   const style = badgeStyles[type];
+  if (!style) return null;
   const Icon = style.icon;
 
   return (
@@ -64,7 +72,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
   );
 };
 
-const NewProductCard = ({ product, onClick }: { product: Product; onClick: () => void }) => {
+const NewProductCard = ({ product }: { product: Product }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(String(product.id) + "_new");
   const [viewProduct] = useViewProductMutation();
@@ -73,12 +81,12 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
     if (typeof product.id === "string") {
       viewProduct(product.id).catch(() => {});
     }
-    onClick();
   };
 
   return (
-    <div
-      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col"
+    <Link
+      to={`/product/${product.id}`}
+      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col block"
       onClick={handleCardClick}
     >
       {/* Image Container */}
@@ -143,42 +151,28 @@ const NewProductCard = ({ product, onClick }: { product: Product; onClick: () =>
           <StockBadge stock={product.stock} variant="text" showIcon={false} />
         </div>
 
-        {/* CTA Link */}
-        <a
-          href="#"
-          className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto"
-          onClick={(e) => e.stopPropagation()}
-        >
+        {/* CTA - card is already a link to detail page */}
+        <span className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto">
           Let's Check It Out
           <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
-        </a>
+        </span>
       </div>
-    </div>
+    </Link>
   );
 };
 
-import { landingSectionToProduct, type LandingSectionKey, type LandingSection } from "@/types/landing";
-
-const NEW_ARRIVAL_KEYS: LandingSectionKey[] = [
-  "fresh_styles",
-  "testimonials",
-  "crafted_confidence",
-  "elevate_look",
-  "best_collections",
-];
+import { landingItemToProduct, type LandingPageData } from "@/types/landing";
 
 interface NewArrivalsSectionProps {
-  data?: LandingSection;
-  landingData?: Partial<Record<LandingSectionKey, LandingSection>>;
+  landingData?: LandingPageData | null;
 }
 
-const NewArrivalsSection = ({ data, landingData }: NewArrivalsSectionProps) => {
-  const navigate = useNavigate();
-  const fromApi = landingData
-    ? NEW_ARRIVAL_KEYS.map((k) => landingData[k]).filter(Boolean) as LandingSection[]
-    : data ? [data] : [];
+const NewArrivalsSection = ({ landingData }: NewArrivalsSectionProps) => {
+  const items = landingData?.fresh_styles ?? [];
   const newArrivalProducts =
-    fromApi.length > 0 ? fromApi.map(landingSectionToProduct) : products.slice(0, 5);
+    items.length > 0
+      ? items.map((item) => landingItemToProduct(item, "Fresh Styles"))
+      : products.slice(0, 5);
 
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background overflow-hidden">
@@ -199,11 +193,7 @@ const NewArrivalsSection = ({ data, landingData }: NewArrivalsSectionProps) => {
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto">
         <ProductCarousel autoplayDelay={3500}>
           {newArrivalProducts.map((product) => (
-            <NewProductCard
-              key={product.id}
-              product={product}
-              onClick={() => navigate(`/product/${product.id}`)}
-            />
+            <NewProductCard key={product.id} product={product} />
           ))}
         </ProductCarousel>
       </div>

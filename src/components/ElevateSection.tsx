@@ -2,14 +2,18 @@ import { ArrowRight } from "lucide-react";
 import { elevate1, elevate2, elevate3, elevate4 } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 
-import { LandingSection } from "@/types/landing";
+import type { LandingPageData } from "@/types/landing";
 
 interface ElevateSectionProps {
-  data?: LandingSection;
+  data?: LandingPageData["elevate_look"];
 }
 
 const ElevateSection = ({ data }: ElevateSectionProps) => {
-  const mainImage = data?.images?.[0] || elevate1;
+  const items = data ?? [];
+  const mainImage = items[0]?.images?.[0] || elevate1;
+  const image2 = items[1]?.images?.[0] ?? elevate2;
+  const image3 = items[2]?.images?.[0] ?? elevate3;
+  const image4 = items[3]?.images?.[0] ?? elevate4;
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -60,7 +64,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="fadeRight" delay={0.2}>
               <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square">
                 <img
-                  src={elevate3}
+                  src={image3}
                   alt="Straw tote bag with white trim"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -74,7 +78,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="fadeLeft" delay={0.1}>
               <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square">
                 <img
-                  src={elevate2}
+                  src={image2}
                   alt="Green structured handbag"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -103,7 +107,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/3]">
               <img
-                src={elevate4}
+                src={image4}
                 alt="Pink bucket bag with tassels"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -132,7 +136,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="scale" delay={0.2}>
               <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-square">
                 <img
-                  src={elevate2}
+                  src={image2}
                   alt="Green structured handbag"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -183,7 +187,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="scale" delay={0.3}>
               <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-square">
                 <img
-                  src={elevate3}
+                  src={image3}
                   alt="Straw tote bag with white trim"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -196,7 +200,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-[16/10]">
               <img
-                src={elevate4}
+                src={image4}
                 alt="Pink bucket bag with tassels"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
