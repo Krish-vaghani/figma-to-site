@@ -8,11 +8,21 @@ import type { Product } from "@/data/products";
 
 interface ProductInfoProps {
   product: Product;
+  selectedColorIndex?: number;
+  onSelectedColorIndexChange?: (nextIndex: number) => void;
+  /** Optional: use variant-specific image (e.g. selected color image) for cart */
+  selectedImageUrl?: string;
 }
 
-const ProductInfo = ({ product }: ProductInfoProps) => {
+const ProductInfo = ({
+  product,
+  selectedColorIndex,
+  onSelectedColorIndexChange,
+  selectedImageUrl,
+}: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(0);
+  const [internalSelectedColor, setInternalSelectedColor] = useState(0);
+  const resolvedSelectedColor = selectedColorIndex ?? internalSelectedColor;
   const navigate = useNavigate();
   const { addToCart, setIsCartOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
@@ -29,8 +39,8 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
     name: product.name,
     price: product.price,
     originalPrice: product.originalPrice,
-    image: product.image,
-    color: product.colors[selectedColor],
+    image: selectedImageUrl ?? product.image,
+    color: product.colors[resolvedSelectedColor],
   });
 
   const handleAddToCart = () => {
@@ -48,7 +58,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
       {/* Product Title */}
       <div className="space-y-1">
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight font-serif">
-          Ladies Hand Bag Classic Leather
+          {product.name}
         </h1>
         <p className="text-muted-foreground text-sm sm:text-base">{product.description}</p>
       </div>
@@ -67,7 +77,7 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             />
           ))}
         </div>
-        <span className="text-sm text-muted-foreground">48 Reviews</span>
+        <span className="text-sm text-muted-foreground">{product.reviews}</span>
       </div>
 
       {/* Price */}
@@ -116,9 +126,12 @@ const ProductInfo = ({ product }: ProductInfoProps) => {
             {product.colors.map((color, index) => (
               <button
                 key={index}
-                onClick={() => setSelectedColor(index)}
+                onClick={() => {
+                  if (onSelectedColorIndexChange) onSelectedColorIndexChange(index);
+                  else setInternalSelectedColor(index);
+                }}
                 className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full border-2 transition-all duration-200 ${
-                  selectedColor === index
+                  resolvedSelectedColor === index
                     ? "border-coral scale-110 shadow-md"
                     : "border-border hover:scale-105"
                 }`}

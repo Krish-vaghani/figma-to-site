@@ -21,7 +21,11 @@ export interface CartItem {
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
+  addToCart: (
+    item: Omit<CartItem, "quantity">,
+    quantity?: number,
+    options?: { silent?: boolean }
+  ) => void;
   removeFromCart: (id: number | string, color: string) => void;
   updateQuantity: (id: number | string, color: string, quantity: number) => void;
   clearCart: () => void;
@@ -83,7 +87,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   }, [user, localCart, storageKey]);
 
   const addToCart = useCallback(
-    (item: Omit<CartItem, "quantity">, quantity = 1) => {
+    (item: Omit<CartItem, "quantity">, quantity = 1, options?: { silent?: boolean }) => {
+      const silent = options?.silent ?? false;
       const sid = normalizeId(item.id);
       if (user) {
         setApiSyncedCart((prev) => {
@@ -93,10 +98,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           if (existingIndex > -1) {
             const updated = [...prev];
             updated[existingIndex].quantity += quantity;
-            toast.cart.updated(item.name, updated[existingIndex].quantity);
+            if (!silent) {
+              toast.cart.updated(item.name, updated[existingIndex].quantity);
+            }
             return updated;
           }
-          toast.cart.added(item.name, quantity);
+          if (!silent) {
+            toast.cart.added(item.name, quantity);
+          }
           return [...prev, { ...item, quantity }];
         });
         addMutation({ productId: sid, quantity }).catch(() => {});
@@ -108,10 +117,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
           if (existingIndex > -1) {
             const updated = [...prev];
             updated[existingIndex].quantity += quantity;
-            toast.cart.updated(item.name, updated[existingIndex].quantity);
+            if (!silent) {
+              toast.cart.updated(item.name, updated[existingIndex].quantity);
+            }
             return updated;
           }
-          toast.cart.added(item.name, quantity);
+          if (!silent) {
+            toast.cart.added(item.name, quantity);
+          }
           return [...prev, { ...item, quantity }];
         });
       }

@@ -33,7 +33,10 @@ export interface LandingSection {
 
 /** Product-shaped item from landing API arrays (best_collections, elevate_look, fresh_styles) */
 export interface LandingProductItem {
+    /** Relation id for this landing entry */
     _id: string;
+    /** Actual product id to use for detail page, cart, etc. */
+    product: string;
     images: string[];
     price: number;
     originalPrice: number;
@@ -99,7 +102,8 @@ export function landingItemToProduct(
     displayName?: string
 ): import("@/data/products").Product {
     return {
-        id: item._id,
+        // Use backend product id for detail page routes
+        id: item.product ?? item._id,
         name: displayName ?? "Curated collection",
         description: "Curated collection",
         price: item.price ?? 0,

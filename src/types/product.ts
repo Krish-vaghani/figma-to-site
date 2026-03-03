@@ -3,6 +3,8 @@ export interface ProductColorVariant {
   colorCode: string;
   images: string[];
   _id?: string;
+  /** Optional: mark which variant is the default selection */
+  default?: boolean;
 }
 
 /** Single product from product list API (GET /product/list) */

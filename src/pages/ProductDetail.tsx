@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -98,6 +98,21 @@ const ProductDetail = () => {
     }
   }, [id, fromLocal, slugResolvedButNotFound, isSlug, isLoadingList, isLoadingDetail, isDetailSuccess, detailResponse, isDetailError, navigate]);
 
+  // Selected color index is always defined so hooks order stays stable.
+  const [selectedColorIndex, setSelectedColorIndex] = useState(0);
+
+  // Reset selected color when product identity changes.
+  // Prefer the variant that has default: true, else index 0.
+  useEffect(() => {
+    const variants = detailResponse?.data?.colorVariants ?? [];
+    if (variants.length === 0) {
+      setSelectedColorIndex(0);
+      return;
+    }
+    const defaultIndex = variants.findIndex((v: any) => v?.default === true);
+    setSelectedColorIndex(defaultIndex >= 0 ? defaultIndex : 0);
+  }, [resolvedProductId, detailResponse?.data?.colorVariants]);
+
   const isLoading = (isSlug && isLoadingList) || isLoadingDetail;
 
   if (!product) {
@@ -126,10 +141,22 @@ const ProductDetail = () => {
     return null;
   }
 
+  const variants = detailResponse?.data?.colorVariants ?? [];
+  const currentVariant =
+    variants.length > 0
+      ? variants[selectedColorIndex] ?? variants[0]
+      : undefined;
+
+  // Show only the current color's images when variants exist.
+  // Fallback: product-level images or product.image.
   const galleryImages =
-    detailResponse?.data?.images && detailResponse.data.images.length > 0
-      ? detailResponse.data.images
-      : [product.image];
+    (currentVariant?.images && currentVariant.images.length > 0
+      ? currentVariant.images
+      : detailResponse?.data?.images && detailResponse.data.images.length > 0
+        ? detailResponse.data.images
+        : [product.image]);
+
+  const selectedImageUrl = galleryImages[0] ?? product.image;
 
   return (
     <div className="min-h-screen bg-background">
@@ -142,13 +169,15 @@ const ProductDetail = () => {
         <section className="py-6 sm:py-10 lg:py-14">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
             {/* Left: Image Gallery */}
-            <ProductImageGallery
-              images={galleryImages}
-              productName={product.name}
-            />
+            <ProductImageGallery images={galleryImages} productName={product.name} />
 
             {/* Right: Product Info */}
-            <ProductInfo product={product} />
+            <ProductInfo
+              product={product}
+              selectedColorIndex={selectedColorIndex}
+              onSelectedColorIndexChange={setSelectedColorIndex}
+              selectedImageUrl={selectedImageUrl}
+            />
           </div>
         </section>
 

@@ -72,7 +72,10 @@ const Wishlist = () => {
     setSortDropdownOpen(false);
   };
 
-  const handleAddToCart = (product: (typeof products)[0]) => {
+  const handleAddToCart = (
+    product: (typeof products)[0],
+    options?: { silent?: boolean }
+  ) => {
     addToCart(
       {
         id: product.id,
@@ -82,7 +85,8 @@ const Wishlist = () => {
         image: product.image,
         color: product.colors[0] || "#000",
       },
-      getQty(product.id)
+      getQty(product.id),
+      options
     );
   };
 
@@ -288,7 +292,10 @@ const Wishlist = () => {
                 </Link>
                 <button
                   onClick={() => {
-                    wishlistProducts.forEach((p) => handleAddToCart(p));
+                    wishlistProducts.forEach((p) =>
+                      handleAddToCart(p, { silent: true })
+                    );
+                    // Single toast without leading \"2x\" style quantity
                     toast.cart.added("All wishlist items");
                   }}
                   className="flex-1 sm:flex-initial min-w-0 w-full sm:w-auto bg-coral text-white font-medium text-sm sm:text-base px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-coral/90 transition-colors"

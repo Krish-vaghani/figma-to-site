@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface ProductImageGalleryProps {
@@ -9,8 +9,11 @@ interface ProductImageGalleryProps {
 const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  // Use the same image repeated if only one provided
-  const galleryImages = images.length >= 4 ? images : Array(4).fill(images[0]);
+  useEffect(() => {
+    // When images array changes (e.g., user selects a different color),
+    // reset to the first image so UI always shows the correct variant.
+    setSelectedIndex(0);
+  }, [images]);
 
   return (
     <div className="space-y-3 sm:space-y-4">
@@ -19,7 +22,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
         <AnimatePresence mode="wait">
           <motion.img
             key={selectedIndex}
-            src={galleryImages[selectedIndex]}
+            src={images[selectedIndex]}
             alt={`${productName} - View ${selectedIndex + 1}`}
             className="w-full h-full object-cover"
             initial={{ opacity: 0 }}
@@ -30,9 +33,9 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
         </AnimatePresence>
       </div>
 
-      {/* Thumbnail Row */}
+      {/* Thumbnail Row (exactly as many as API provides) */}
       <div className="grid grid-cols-4 gap-2 sm:gap-3">
-        {galleryImages.slice(0, 4).map((image, index) => (
+        {images.map((image, index) => (
           <button
             key={index}
             onClick={() => setSelectedIndex(index)}
