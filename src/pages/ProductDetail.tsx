@@ -177,23 +177,26 @@ const ProductDetail = () => {
               selectedColorIndex={selectedColorIndex}
               onSelectedColorIndexChange={setSelectedColorIndex}
               selectedImageUrl={selectedImageUrl}
+              fullDescription={detailResponse?.data?.description}
             />
           </div>
         </section>
 
-        {/* Rating Breakdown (real data from product detail API when available) */}
-        <div className="border-t border-border">
-          <RatingBreakdown
-            rating={product.rating}
-            totalReviews={detailResponse?.data?.numberOfReviews ?? 78}
-            starBreakdown={detailResponse?.data?.starBreakdown}
-          />
-        </div>
-
-        {/* Reviews */}
-        <div className="border-t border-border">
-          <ReviewsSection apiReviews={(detailResponse?.reviews ?? undefined) as ReviewsSectionProps["apiReviews"]} />
-        </div>
+        {/* Rating & Reviews: only show when there are real reviews */}
+        {(detailResponse?.data?.numberOfReviews ?? 0) > 0 && (
+          <>
+            <div className="border-t border-border">
+              <RatingBreakdown
+                rating={product.rating}
+                totalReviews={detailResponse?.data?.numberOfReviews ?? 0}
+                starBreakdown={detailResponse?.data?.starBreakdown}
+              />
+            </div>
+            <div className="border-t border-border">
+              <ReviewsSection apiReviews={(detailResponse?.reviews ?? undefined) as ReviewsSectionProps["apiReviews"]} />
+            </div>
+          </>
+        )}
 
         {/* Related Products */}
         <div className="border-t border-border">

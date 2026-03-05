@@ -8,12 +8,21 @@ interface ElevateSectionProps {
   data?: LandingPageData["elevate_look"];
 }
 
+const getLandingItemImage = (item: LandingPageData["elevate_look"] extends (infer T)[] ? T : never): string | undefined => {
+  if (!item) return undefined;
+  // New landing API: full product objects
+  if ("image" in item && typeof (item as any).image === "string") return (item as any).image;
+  // Legacy landing API: items[] with images[]
+  if ("images" in item && Array.isArray((item as any).images)) return (item as any).images?.[0];
+  return undefined;
+};
+
 const ElevateSection = ({ data }: ElevateSectionProps) => {
   const items = data ?? [];
-  const mainImage = items[0]?.images?.[0] || elevate1;
-  const image2 = items[1]?.images?.[0] ?? elevate2;
-  const image3 = items[2]?.images?.[0] ?? elevate3;
-  const image4 = items[3]?.images?.[0] ?? elevate4;
+  const mainImage = getLandingItemImage(items[0]) || elevate1;
+  const image2 = getLandingItemImage(items[1]) ?? elevate2;
+  const image3 = getLandingItemImage(items[2]) ?? elevate3;
+  const image4 = getLandingItemImage(items[3]) ?? elevate4;
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">

@@ -1,3 +1,6 @@
+import type { ApiProduct } from "./product";
+import { mapApiProductToProduct } from "./product";
+
 export type LandingSectionKey =
     | "hero"
     | "best_collections"
@@ -9,9 +12,12 @@ export type LandingSectionKey =
 
 export type TagType = "bestseller" | "hot" | "trending" | "sale";
 
+/** Color option from API; images can be single URL (e.g. elevate_look) or array (e.g. best_collections) */
 export interface ColorOption {
+    _id?: string;
     colorCode: string;
-    images: string | null;
+    images: string | string[] | null;
+    default?: boolean;
 }
 
 /** Hero section from API (single object with sectionKey, order, etc.) */
@@ -27,24 +33,32 @@ export interface LandingSection {
     numberOfReviews: number;
     tags: TagType[];
     colors: ColorOption[];
+    products?: unknown[];
+    __v?: number;
     createdAt?: string;
     updatedAt?: string;
 }
 
-/** Product-shaped item from landing API arrays (best_collections, elevate_look, fresh_styles) */
-export interface LandingProductItem {
+/** Legacy product-shaped item from landing API arrays (best_collections, elevate_look, fresh_styles) */
+export interface LandingProductItemLegacy {
     /** Relation id for this landing entry */
     _id: string;
-    /** Actual product id to use for detail page, cart, etc. */
-    product: string;
+    /** Actual product id for detail page, cart, etc.; can be null for non-product entries */
+    product: string | null;
     images: string[];
     price: number;
-    originalPrice: number;
+    originalPrice: number | null;
     rating: number;
     numberOfReviews: number;
     tags: TagType[];
     colors: ColorOption[];
 }
+
+/**
+ * Landing API now returns full product objects in section arrays
+ * (same shape as product list API), but we keep legacy support too.
+ */
+export type LandingProductItem = LandingProductItemLegacy | ApiProduct;
 
 /** API response shape: message + data */
 export interface LandingPageResponse {
@@ -101,6 +115,17 @@ export function landingItemToProduct(
     item: LandingProductItem,
     displayName?: string
 ): import("@/data/products").Product {
+    // New API shape: section arrays contain full products (same as product list API)
+    if (!("product" in item)) {
+        const p = mapApiProductToProduct(item);
+        return {
+            ...p,
+            // Preserve real product name; only fall back to displayName when missing.
+            name: p.name || displayName || "Curated collection",
+        };
+    }
+
+    // Legacy landing item shape
     return {
         // Use backend product id for detail page routes
         id: item.product ?? item._id,

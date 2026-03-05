@@ -12,6 +12,8 @@ interface ProductInfoProps {
   onSelectedColorIndexChange?: (nextIndex: number) => void;
   /** Optional: use variant-specific image (e.g. selected color image) for cart */
   selectedImageUrl?: string;
+  /** Optional: full long-form description for detail section */
+  fullDescription?: string;
 }
 
 const ProductInfo = ({
@@ -19,6 +21,7 @@ const ProductInfo = ({
   selectedColorIndex,
   onSelectedColorIndexChange,
   selectedImageUrl,
+  fullDescription,
 }: ProductInfoProps) => {
   const [quantity, setQuantity] = useState(1);
   const [internalSelectedColor, setInternalSelectedColor] = useState(0);
@@ -29,6 +32,8 @@ const ProductInfo = ({
   const isWishlisted = isInWishlist(product.id);
 
   const savings = product.originalPrice - product.price;
+  const resolvedFullDescription = (fullDescription ?? product.description ?? "").trim();
+  const shortDescription = (product.description ?? "").trim();
 
   const handleQuantityChange = (delta: number) => {
     setQuantity((prev) => Math.max(1, prev + delta));
@@ -60,7 +65,11 @@ const ProductInfo = ({
         <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground leading-tight font-serif">
           {product.name}
         </h1>
-        <p className="text-muted-foreground text-sm sm:text-base">{product.description}</p>
+        {shortDescription && (
+          <p className="text-muted-foreground text-sm sm:text-base">
+            {shortDescription}
+          </p>
+        )}
       </div>
 
       {/* Rating */}
@@ -155,17 +164,14 @@ const ProductInfo = ({
       </div>
 
       {/* Description */}
-      <div className="space-y-2">
-        <h3 className="text-base sm:text-lg font-semibold text-foreground">
-          Designed For Everyday Elegance :
-        </h3>
-        <p className="text-muted-foreground text-sm sm:text-base leading-relaxed">
-          The Bloom Mini Tote Is Crafted For Women Who Love Minimal Style With Maximum Utility.
-          Compact From Outside Yet Thoughtfully Spacious Inside, It's Perfect For Daily Outings,
-          Brunches, Shopping, Or Casual Workdays. Soft Textures, Subtle Detailing, And A Timeless
-          Silhouette Make This Tote An Effortless Style Upgrade.
-        </p>
-      </div>
+      {resolvedFullDescription && (
+        <div className="space-y-2">
+          <h3 className="text-base sm:text-lg font-semibold text-foreground">Description</h3>
+          <p className="text-muted-foreground text-sm sm:text-base leading-relaxed whitespace-pre-line">
+            {resolvedFullDescription}
+          </p>
+        </div>
+      )}
 
       {/* Action Buttons */}
       <div className="flex flex-col gap-2 sm:gap-3 pt-2">
