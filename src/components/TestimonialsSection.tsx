@@ -64,7 +64,7 @@ function splitIntoRows(items: Testimonial[]): Testimonial[][] {
 const fallbackRow1: Testimonial[] = [
   {
     id: "1",
-    quote: "Dummy text",
+    quote: "Dummy textt",
     name: "Dummy User 1",
     title: "Dummy Title",
     avatar: avatarFemale,
