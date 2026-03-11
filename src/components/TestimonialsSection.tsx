@@ -153,7 +153,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 
   return (
     <div
-      className="flex-shrink-0 w-[260px] sm:w-[360px] rounded-2xl border border-border/40 shadow-lg select-none flex flex-col overflow-hidden transition-all hover:shadow-xl bg-card"
+      className="flex-shrink-0 w-[260px] sm:w-[360px] rounded-2xl border border-border/40 select-none flex flex-col overflow-hidden bg-card"
     >
       <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
@@ -234,7 +234,7 @@ const MarqueeRow = ({
       style={{ scrollBehavior: "auto" }}
       {...handlers}
     >
-      <div className="flex gap-4 w-max">
+      <div className="flex gap-4 px-8 sm:px-12 lg:px-16">
         {items.map((testimonial, index) => (
           <TestimonialCard key={`${direction}-${testimonial.id}-${index}`} testimonial={testimonial} />
         ))}
