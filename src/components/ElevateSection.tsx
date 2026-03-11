@@ -3,6 +3,7 @@ import { elevate1, elevate2, elevate3, elevate4 } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
 
 import type { LandingPageData } from "@/types/landing";
+import { Link } from "react-router-dom";
 
 interface ElevateSectionProps {
   data?: LandingPageData["elevate_look"];
@@ -65,8 +66,10 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Refined Silhouettes Crafted To Complement Your Everyday Look, From Casual Moments To Special Outings.
                 </p>
                 <button className="mt-3 bg-foreground text-background px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 w-fit hover:bg-coral transition-all duration-300 group/btn">
-                  Shop Now
-                  <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  <Link to="/purses" className="inline-flex items-center gap-1.5">
+                    Shop Now
+                    <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
                 </button>
               </div>
             </ScrollReveal>
@@ -105,8 +108,10 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Elegant Purses Designed For Comfort And Durability, Blending Modern Style With Timeless Appeal For Daily Use.
                 </p>
                 <button className="mt-3 bg-foreground text-background px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 w-fit hover:bg-coral transition-all duration-300 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
                   <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
                 </button>
               </div>
             </ScrollReveal>
@@ -165,7 +170,9 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Elegant Purses Designed For Comfort And Durability, Blending Modern Style With Timeless Appeal For Daily Use.
                 </p>
                 <button className="mt-6 bg-foreground text-background px-6 py-3 rounded-full text-sm font-medium inline-flex items-center gap-2 w-fit hover:bg-coral transition-all duration-300 hover:scale-105 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
+                  </Link>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </button>
               </div>
@@ -186,7 +193,9 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Refined Silhouettes Crafted To Complement Your Everyday Look, From Casual Moments To Special Outings.
                 </p>
                 <button className="mt-6 bg-foreground text-background px-6 py-3 rounded-full text-sm font-medium inline-flex items-center gap-2 w-fit hover:bg-coral transition-all duration-300 hover:scale-105 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
+                  </Link>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </button>
               </div>

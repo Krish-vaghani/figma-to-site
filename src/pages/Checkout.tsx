@@ -212,7 +212,7 @@ const Checkout = () => {
           <p className="text-muted-foreground text-lg">Your cart is empty.</p>
           <Link to="/purses">
             <button className="bg-foreground text-background px-6 py-3 rounded-full font-medium hover:bg-coral transition-colors">
-              Shop Now
+                Shop Now
             </button>
           </Link>
         </div>

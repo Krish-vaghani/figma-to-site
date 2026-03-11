@@ -1,6 +1,7 @@
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { heroProduct, avatar } from "@/lib/assetUrls";
 import { normalizeRating } from "@/lib/utils";
 
@@ -64,9 +65,11 @@ const HeroSection = ({ data }: HeroSectionProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              <Button className="bg-foreground text-background hover:bg-coral rounded-full px-5 py-2.5 text-sm font-medium gap-2 group">
-                Shop Now
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <Button asChild className="bg-foreground text-background hover:bg-coral rounded-full px-5 py-2.5 text-sm font-medium gap-2 group">
+                <Link to="/purses" className="inline-flex items-center gap-2">
+                  Shop Now
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </Button>
               <Button
                 variant="outline"
@@ -225,9 +228,11 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   whileHover={{ scale: 1.03 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  <Button className="bg-foreground text-background hover:bg-coral rounded-full px-10 py-7 text-base font-medium gap-3 group transition-all duration-300 shadow-xl hover:shadow-2xl">
-                    Shop Collection
-                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  <Button asChild className="bg-foreground text-background hover:bg-coral rounded-full px-10 py-7 text-base font-medium gap-3 group transition-all duration-300 shadow-xl hover:shadow-2xl">
+                    <Link to="/purses" className="inline-flex items-center gap-3">
+                      Shop Collection
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </Button>
                 </motion.div>
                 <motion.div
@@ -238,8 +243,10 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     variant="outline"
                     className="rounded-full px-10 py-7 text-base font-medium gap-3 group border-2 border-foreground/20 hover:border-coral hover:bg-coral hover:text-background transition-all duration-300 backdrop-blur-sm"
                   >
-                    Explore More
-                    <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <Link to="/purses" className="inline-flex items-center gap-3">
+                      Explore More
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    </Link>
                   </Button>
                 </motion.div>
               </motion.div>

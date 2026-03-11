@@ -53,12 +53,25 @@ function mapApiToTestimonial(item: ApiTestimonial): Testimonial {
   };
 }
 
-/** Always 2 rows; distribute evenly (e.g. 3 → [2,1], 4 → [2,2], 5 → [3,2]). */
+/** Always 2 rows; distribute as evenly as possible by alternating items (0,2,4 → row 1; 1,3,5 → row 2). */
 function splitIntoRows(items: Testimonial[]): Testimonial[][] {
-  const n = items.length;
-  if (n === 0) return [];
-  const firstRowSize = Math.ceil(n / 2);
-  return [items.slice(0, firstRowSize), items.slice(firstRowSize)];
+  if (!items.length) return [];
+
+  const row1: Testimonial[] = [];
+  const row2: Testimonial[] = [];
+
+  items.forEach((item, index) => {
+    if (index % 2 === 0) row1.push(item);
+    else row2.push(item);
+  });
+
+  // If we somehow only have one row filled (e.g. single testimonial),
+  // duplicate into the second row so both marquees still run.
+  if (row2.length === 0) {
+    row2.push(...row1);
+  }
+
+  return [row1, row2];
 }
 
 const fallbackRow1: Testimonial[] = [
