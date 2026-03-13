@@ -73,7 +73,7 @@ const Checkout = () => {
   const [saveNewAddress, setSaveNewAddress] = useState(true);
   const [newFormData, setNewFormData] = useState<AddressFormData | null>(null);
 
-  const shippingFee = cartTotal >= 999 ? 0 : 79;
+  const shippingFee = cartTotal >= 1000 ? 0 : 79;
   const grandTotal = cartTotal + shippingFee;
 
   const getSelectedAddress = (): DeliveryAddress | null => {

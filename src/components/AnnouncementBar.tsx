@@ -1,25 +1,37 @@
 import { useState, useEffect } from "react";
-import { X, Truck, Percent, Gift } from "lucide-react";
+import { X, Truck, Percent, Gift, ShieldCheck, Headphones, ArrowLeftRight, RefreshCw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const promos = [
   {
     id: 1,
-    text: "Free Shipping on Orders Over ₹500",
+    text: "Free Shipping on Orders Over ₹1000",
     icon: Truck,
-    highlight: "₹500",
+    highlight: "₹1000",
   },
   {
     id: 2,
-    text: "20% Off Your First Order - Use Code: WELCOME20",
-    icon: Percent,
-    highlight: "WELCOME20",
+    text: "Easy 7-Day Returns & Exchanges",
+    icon: RefreshCw,
+    highlight: "7-Day",
   },
   {
     id: 3,
     text: "Free Gift Wrapping on All Orders",
     icon: Gift,
     highlight: "Free Gift",
+  },
+  {
+    id: 4,
+    text: "Secure Payments with 256-bit Encryption",
+    icon: ShieldCheck,
+    highlight: "Secure",
+  },
+  {
+    id: 5,
+    text: "24/7 Customer Support",
+    icon: Headphones,
+    highlight: "24/7",
   },
 ];
 

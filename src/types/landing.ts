@@ -20,7 +20,7 @@ export interface ColorOption {
     default?: boolean;
 }
 
-/** Hero section from API (single object with sectionKey, order, etc.) */
+/** Hero section from API (single object with sectionKey, order, products, etc.) */
 export interface LandingSection {
     _id: string;
     sectionKey: LandingSectionKey;
@@ -33,10 +33,44 @@ export interface LandingSection {
     numberOfReviews: number;
     tags: TagType[];
     colors: ColorOption[];
-    products?: unknown[];
+    /** Full product objects for hero; first product is the featured hero product */
+    products?: ApiProduct[];
     __v?: number;
     createdAt?: string;
     updatedAt?: string;
+}
+
+/** Get display info for the hero section: from first hero product or section fallbacks */
+export function getHeroDisplay(section: LandingSection | undefined): {
+    id: string;
+    name: string;
+    shortDescription: string;
+    price: number;
+    originalPrice: number;
+    image: string;
+    rating: number;
+    numberOfReviews: number;
+    tag: TagType | undefined;
+} | null {
+    if (!section) return null;
+    const product = section.products?.[0];
+    const variantImg =
+        product?.colorVariants?.find((v) => v.default)?.images?.[0] ?? product?.colorVariants?.[0]?.images?.[0];
+    const firstImage =
+        (product?.image && String(product.image).trim()) || variantImg || section.images?.[0] || "";
+    const price = product ? (product.salePrice ?? product.price) : (section.price ?? 0);
+    const originalPrice = product ? product.price : (section.originalPrice ?? section.price ?? price);
+    return {
+        id: product?._id ?? section._id,
+        name: product?.name ?? SECTION_DISPLAY_NAMES[section.sectionKey] ?? "Featured",
+        shortDescription: product?.shortDescription ?? "Structured Crossbody With Top Handle",
+        price,
+        originalPrice,
+        image: firstImage,
+        rating: product?.averageRating ?? section.rating ?? 4,
+        numberOfReviews: product?.numberOfReviews ?? section.numberOfReviews ?? 0,
+        tag: (section.tags?.[0] ?? product?.tags?.[0]) as TagType | undefined,
+    };
 }
 
 /** Legacy product-shaped item from landing API arrays (best_collections, elevate_look, fresh_styles) */

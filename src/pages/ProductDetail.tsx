@@ -113,6 +113,20 @@ const ProductDetail = () => {
     setSelectedColorIndex(defaultIndex >= 0 ? defaultIndex : 0);
   }, [resolvedProductId, detailResponse?.data?.colorVariants]);
 
+  // When a product has multiple colors, preload other color images in the background
+  // so switching colors feels instant (images are already cached).
+  useEffect(() => {
+    const variants = detailResponse?.data?.colorVariants ?? [];
+    if (variants.length <= 1) return;
+    variants.forEach((variant) => {
+      (variant.images ?? []).forEach((src) => {
+        if (!src) return;
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  }, [detailResponse?.data?.colorVariants]);
+
   const isLoading = (isSlug && isLoadingList) || isLoadingDetail;
 
   if (!product) {

@@ -94,7 +94,7 @@ const Index = () => {
 
             <Suspense fallback={<SectionLoader />}>
               <ErrorBoundary section="Elevate">
-                <ElevateSection data={landingData?.elevate_look ?? undefined} />
+                <ElevateSection />
               </ErrorBoundary>
             </Suspense>
 

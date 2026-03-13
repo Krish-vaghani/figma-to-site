@@ -3,6 +3,10 @@
  * Re-run that script to refresh after adding/changing assets.
  */
 import urls from "@/generated-asset-urls.json";
+import elevate1Img from "@/assets/fb8abdd29d2eb50998e3e14d0b4cb177.png";
+import elevate2Img from "@/assets/Gemini_Generated_Image_cakdzwcakdzwcakd (1).png";
+import elevate3Img from "@/assets/b23cc0b73a932575150516eb5970aa43.jpg";
+import elevate4Img from "@/assets/1304f8f05413ab5869849921d089709c.png";
 
 const byKey = (urls as { byKey: Record<string, string> }).byKey;
 
@@ -21,10 +25,13 @@ export const product1 = byKey.product1;
 export const product2 = byKey.product2;
 export const product3 = byKey.product3;
 export const product4 = byKey.product4;
-export const elevate1 = byKey.elevate1;
-export const elevate2 = byKey.elevate2;
-export const elevate3 = byKey.elevate3;
-export const elevate4 = byKey.elevate4;
+
+// Elevate section: use the four static local assets provided
+export const elevate2 = elevate1Img;
+export const elevate4 = elevate2Img;
+export const elevate1 = elevate3Img;
+export const elevate3 = elevate4Img;
+
 export const categoryTote = byKey.categoryTote;
 export const categorySling = byKey.categorySling;
 export const categoryClutches = byKey.categoryClutches;

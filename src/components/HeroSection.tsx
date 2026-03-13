@@ -2,18 +2,20 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { heroProduct, avatar } from "@/lib/assetUrls";
+import { avatar } from "@/lib/assetUrls";
 import { normalizeRating } from "@/lib/utils";
 
-import { LandingSection } from "@/types/landing";
+import { getHeroDisplay, type LandingSection } from "@/types/landing";
 
 interface HeroSectionProps {
   data?: LandingSection;
 }
 
 const HeroSection = ({ data }: HeroSectionProps) => {
-  const heroRating = normalizeRating(data?.rating ?? 4);
+  const hero = getHeroDisplay(data);
+  const heroRating = normalizeRating(hero?.rating ?? data?.rating ?? 4);
   const heroRatingLabel = heroRating.toFixed(1);
+  const productDetailUrl = hero ? `/product/${hero.id}` : "/purses";
 
   return (
     <section className="relative overflow-hidden" aria-label="Hero">
@@ -81,57 +83,56 @@ const HeroSection = ({ data }: HeroSectionProps) => {
             </motion.div>
           </motion.div>
 
-          {/* Mobile Product Image */}
-          {data?.images?.[0] && (
+          {/* Mobile Product Image - from hero section API, links to product detail */}
+          {hero?.image && (
             <motion.div
               className="mt-6 relative pb-16"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
             >
-              <div className="relative rounded-3xl overflow-visible shadow-xl">
+              <Link to={productDetailUrl} className="block relative rounded-3xl overflow-visible shadow-xl">
                 <img
-                  src={data.images[0]}
-                  alt="Aurora Mini Purse - Premium leather crossbody bag"
+                  src={hero.image}
+                  alt={`${hero.name} - Premium handbag`}
                   className="w-full aspect-[4/5] object-cover rounded-3xl"
                   loading="eager"
                   fetchPriority="high"
                 />
 
-              {/* Mobile Product Info Card - Centered half on image, half below */}
-              {/* Note: Tailwind translate classes must not be on a motion.div because Framer Motion controls transform */}
-              <div className="absolute bottom-0 left-0 right-0 translate-y-1/2 z-10 px-4">
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.8, duration: 0.5 }}
-                  className="bg-background rounded-2xl shadow-lg p-4"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-foreground">Aurora Mini Purse</h3>
-                    <button className="flex items-center gap-1 text-coral text-sm font-medium group">
-                      View More
-                      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">Structured Crossbody With Top Handle</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-foreground">₹{data?.price ?? "500"}</span>
-                      {data?.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">₹{data?.originalPrice}</span>
-                      )}
+                {/* Mobile Product Info Card - Centered half on image, half below */}
+                <div className="absolute bottom-0 left-0 right-0 translate-y-1/2 z-10 px-4">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="bg-background rounded-2xl shadow-lg p-4"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
+                      <span className="flex items-center gap-1 text-coral text-sm font-medium group">
+                        View More
+                        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                      </span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
-                      <span className="text-xs text-muted-foreground">({data?.numberOfReviews || "125k"} Reviews)</span>
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-bold text-foreground">₹{hero.price.toLocaleString()}</span>
+                        {hero.originalPrice > hero.price && (
+                          <span className="text-sm text-muted-foreground line-through">₹{hero.originalPrice.toLocaleString()}</span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                        <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
+                        <span className="text-xs text-muted-foreground">({hero.numberOfReviews} Reviews)</span>
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </motion.div>
+                  </motion.div>
+                </div>
+              </Link>
+            </motion.div>
           )}
         </div>
       </div>
@@ -365,13 +366,13 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                 {/* Outer glow frame */}
                 <div className="absolute -inset-1 bg-gradient-to-br from-coral/30 via-transparent to-coral/20 rounded-[2rem] blur-sm" />
 
-                {/* Image container */}
-                {data?.images?.[0] && (
-                  <div className="relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
+                {/* Image container - from hero API, links to product detail */}
+                {hero?.image && (
+                  <Link to={productDetailUrl} className="block relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
                     <div className="rounded-[1.4rem] overflow-hidden">
                       <motion.img
-                        src={data.images[0]}
-                        alt="Elegant silver clutch purse - Premium designer handbag"
+                        src={hero.image}
+                        alt={`${hero.name} - Premium designer handbag`}
                         className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
                         loading="eager"
                         fetchPriority="high"
@@ -383,50 +384,56 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                       {/* Premium overlay gradient */}
                       <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                      {/* Corner accent */}
-                      <motion.div
-                        className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 1, duration: 0.5 }}
-                      >
-                        <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-                          Bestseller
-                        </span>
-                      </motion.div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Product Info Card - Floating below image */}
-                <motion.div
-                  className="absolute -bottom-16 left-4 right-4 bg-background rounded-2xl shadow-xl p-5"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 1.2, duration: 0.5 }}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="text-lg font-semibold text-foreground">Aurora Mini Purse</h3>
-                    <button className="flex items-center gap-1 text-coral text-sm font-medium group">
-                      View More
-                      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                    </button>
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-3">Structured Crossbody With Top Handle</p>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <span className="text-lg font-bold text-foreground">₹{data?.price ?? "500"}</span>
-                      {data?.originalPrice && (
-                        <span className="text-sm text-muted-foreground line-through">₹{data?.originalPrice}</span>
+                      {/* Corner accent - use hero tag when available */}
+                      {hero.tag && (
+                        <motion.div
+                          className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 1, duration: 0.5 }}
+                        >
+                          <span className="text-xs font-semibold text-foreground uppercase tracking-wider">
+                            {hero.tag}
+                          </span>
+                        </motion.div>
                       )}
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                      <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
-                      <span className="text-xs text-muted-foreground">({data?.numberOfReviews || "125k"} Reviews)</span>
-                    </div>
-                  </div>
-                </motion.div>
+                  </Link>
+                )}
+
+                {/* Product Info Card - Floating below image, links to product detail */}
+                {hero && (
+                  <Link to={productDetailUrl}>
+                    <motion.div
+                      className="absolute -bottom-16 left-4 right-4 bg-background rounded-2xl shadow-xl p-5 cursor-pointer hover:ring-2 hover:ring-coral/30 transition-shadow"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 1.2, duration: 0.5 }}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
+                        <span className="flex items-center gap-1 text-coral text-sm font-medium group">
+                          View More
+                          <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg font-bold text-foreground">₹{hero.price.toLocaleString()}</span>
+                          {hero.originalPrice > hero.price && (
+                            <span className="text-sm text-muted-foreground line-through">₹{hero.originalPrice.toLocaleString()}</span>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                          <span className="text-sm text-foreground font-medium">{heroRatingLabel}</span>
+                          <span className="text-xs text-muted-foreground">({hero.numberOfReviews} Reviews)</span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </Link>
+                )}
               </motion.div>
             </motion.div>
           </div>
