@@ -126,6 +126,8 @@ export interface ProductListParams {
   tag?: string;
 }
 
+import { cacheProductImage } from "@/lib/productImageCache";
+
 /** BadgeType supported by UI (from @/data/products) */
 const VALID_BADGES = ["bestseller", "trending", "new", "hot", "limited", "sale"] as const;
 
@@ -166,6 +168,13 @@ export function mapApiProductToProduct(
     "shortDescription" in p && (p as ProductDetailData).shortDescription
       ? (p as ProductDetailData).shortDescription
       : (p.description ?? "");
+
+  // Cache image by backend _id so cart API (which may not send image) can still show
+  // the correct thumbnail in checkout and cart views.
+  if (image) {
+    cacheProductImage(p._id, image);
+  }
+
   return {
     user_image: "",
     id: p._id,
