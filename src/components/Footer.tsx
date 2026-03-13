@@ -162,13 +162,13 @@ const Footer = () => {
                 {/* Stacked layout: Email on top, Phone below */}
                 <div className="flex flex-col gap-3 lg:gap-2">
                   <a
-                    href="mailto:shashankp02004@gmail.com"
+                    href="mailto:help.pursolina@gmail.com"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
                   >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span className="break-all">shashankp02004@gmail.com</span>
+                    <span className="break-all">help.pursolina@gmail.com</span>
                   </a>
                   <a
                     href="tel:+918320574887"
@@ -199,7 +199,7 @@ const Footer = () => {
                 <span className="font-medium">Privacy & Compliance :</span>
                 <span>Secure Payments</span>
                 <span>•</span>
-                <span>Easy Returns</span>
+                <span>Secure Checkout</span>
                 <span>•</span>
                 <span>Customer-First Support</span>
               </div>
@@ -209,15 +209,15 @@ const Footer = () => {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 lg:gap-6 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
               <span>© {new Date().getFullYear()} Pursolina. All rights reserved.</span>
               <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                <a href="#" className="hover:text-coral transition-colors">
+                <Link to="/privacy" className="hover:text-coral transition-colors">
                   Privacy Policy
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
+                </Link>
+                <Link to="/terms" className="hover:text-coral transition-colors">
                   Terms & Conditions
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
+                </Link>
+                <Link to="/return-policy" className="hover:text-coral transition-colors">
                   Return Policy
-                </a>
+                </Link>
               </div>
             </div>
           </div>

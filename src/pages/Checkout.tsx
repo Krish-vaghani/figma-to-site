@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, CheckCircle2, ShoppingBag, Truck, Plus, Home, Briefcase, MoreHorizontal, Star, Pencil } from "lucide-react";
+import { MapPin, CheckCircle2, ShoppingBag, Plus, Home, Briefcase, MoreHorizontal, Star, Pencil } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -48,7 +48,6 @@ const LABEL_ICONS: Record<string, React.ElementType> = {
 };
 
 const PAYMENT_METHODS = [
-  { value: "cod", label: "Cash on Delivery", icon: Truck },
   { value: "online", label: "Pay Online (UPI / Card)", icon: CheckCircle2 },
 ] as const;
 
@@ -69,7 +68,7 @@ const Checkout = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | "new">(
     defaultAddr ? defaultAddr.id : addresses.length > 0 ? addresses[0].id : "new"
   );
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("online");
   const [placing, setPlacing] = useState(false);
   const [saveNewAddress, setSaveNewAddress] = useState(true);
   const [newFormData, setNewFormData] = useState<AddressFormData | null>(null);
@@ -473,6 +472,9 @@ const Checkout = () => {
 
               <p className="text-xs text-muted-foreground text-center mt-3">
                 By placing this order you agree to our Terms & Conditions.
+              </p>
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                7 days <Link to="/return-policy" className="text-coral hover:underline">return policy</Link>*
               </p>
             </div>
           </div>

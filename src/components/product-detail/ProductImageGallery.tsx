@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface ProductImageGalleryProps {
   images: string[];
@@ -36,9 +35,14 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     <div className="space-y-3 sm:space-y-4">
       {/* Main Image */}
       <div className="relative overflow-hidden rounded-2xl bg-secondary/30 aspect-square">
-        {/* Skeleton only when this color has one image, so user sees feedback while it loads */}
+        {/* Left-to-right shimmer only when this color has one image (no box, just shimmer) */}
         {singleImageVariant && mainImageLoading && (
-          <Skeleton className="absolute inset-0 rounded-2xl z-10" />
+          <span
+            className="absolute inset-0 z-10 overflow-hidden rounded-2xl pointer-events-none"
+            aria-hidden
+          >
+            <span className="absolute top-0 -left-full w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent animate-shimmer" />
+          </span>
         )}
         <AnimatePresence mode="wait">
           <motion.img

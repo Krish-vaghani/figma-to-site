@@ -26,6 +26,9 @@ import OrderDetail from "./pages/OrderDetail";
 import Addresses from "./pages/Addresses";
 import Profile from "./pages/Profile";
 import ContactUs from "./pages/ContactUs";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import ReturnPolicy from "./pages/ReturnPolicy";
 
 const AnimatedRoutes = () => {
   const location = useLocation();
@@ -37,6 +40,9 @@ const AnimatedRoutes = () => {
         <Route path="/purses" element={<PageTransition><Purses /></PageTransition>} />
         <Route path="/about" element={<PageTransition><AboutUs /></PageTransition>} />
         <Route path="/contact" element={<PageTransition><ContactUs /></PageTransition>} />
+        <Route path="/privacy" element={<PageTransition><PrivacyPolicy /></PageTransition>} />
+        <Route path="/terms" element={<PageTransition><TermsAndConditions /></PageTransition>} />
+        <Route path="/return-policy" element={<PageTransition><ReturnPolicy /></PageTransition>} />
         <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
         <Route path="/login" element={<PageTransition><Login /></PageTransition>} />
         <Route path="/wishlist" element={<PageTransition><Wishlist /></PageTransition>} />
