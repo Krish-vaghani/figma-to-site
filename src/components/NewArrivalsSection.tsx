@@ -127,7 +127,7 @@ const NewProductCard = ({ product }: { product: Product }) => {
           <h3 className="font-semibold text-foreground text-sm sm:text-base">
             {product.name}
           </h3>
-          <div className="flex gap-1">
+          <div className="grid grid-cols-3 gap-1">
             {product.colors.map((color, index) => (
               <span
                 key={index}
