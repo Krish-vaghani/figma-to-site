@@ -117,9 +117,12 @@ const Login = () => {
           } as CredentialRequestOptions)
           .then((cred) => {
             if (cred && "code" in cred && typeof (cred as { code: string }).code === "string") {
-              const code = (cred as { code: string }).code.replace(/\D/g, "").slice(0, OTP_LENGTH);
-              if (code.length >= OTP_LENGTH) {
-                const digits = code.split("");
+              const raw = (cred as { code: string }).code;
+              // Extract first 6-digit sequence (handles "#123456", "123456 is your...", etc.)
+              const digitsOnly = raw.replace(/\D/g, "");
+              const sixDigits = digitsOnly.match(/\d{6}/)?.[0] ?? digitsOnly.slice(0, OTP_LENGTH);
+              if (sixDigits.length >= OTP_LENGTH) {
+                const digits = sixDigits.slice(0, OTP_LENGTH).split("");
                 setOtp(digits);
                 doVerify(digits);
               }
@@ -356,7 +359,7 @@ const Login = () => {
                         }
                       }}
                     />
-                    {/* OTP Inputs */}
+                    {/* OTP Inputs - first has one-time-code so browser/SMS can autofill into it */}
                     <div className="flex gap-2 sm:gap-3 relative">
                       {otp.map((digit, i) => (
                         <input
@@ -373,7 +376,7 @@ const Login = () => {
                             const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
                             handleOtpChange(i, pasted);
                           }}
-                          autoComplete="off"
+                          autoComplete={i === 0 ? "one-time-code" : "off"}
                           className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-lg font-semibold rounded-xl border transition-all duration-200 bg-background/80 focus:outline-none focus:ring-2 focus:ring-coral/50 ${
                             digit ? "border-foreground" : "border-border"
                           }`}
