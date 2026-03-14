@@ -119,12 +119,14 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
         {/* Wishlist Button */}
         <motion.button
+          type="button"
           className={`absolute top-3 right-3 z-10 rounded-full p-2.5 transition-all duration-300 ${
             isWishlisted
               ? "bg-coral text-white"
               : "bg-foreground/40 text-white hover:bg-foreground/60"
           }`}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleWishlist(product.id, product.name);
           }}

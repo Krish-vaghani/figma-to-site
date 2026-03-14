@@ -18,10 +18,19 @@ export interface RegisterOrLoginResponse {
   data: RegisterOrLoginData;
 }
 
-/** Request body for login (verify OTP) */
+/** Cart item shape sent to login API for merging guest cart */
+export interface LoginCartItem {
+  productId: string;
+  quantity: number;
+}
+
+/** Request body for login (verify OTP). Backend may accept wishlist and cartItems to merge guest data. */
 export interface LoginRequest {
   phone: string;
   otp: string;
+  name?: string;
+  cartItems?: LoginCartItem[];
+  wishlist?: string[];
 }
 
 /** Response data from login */

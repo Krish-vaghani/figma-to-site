@@ -194,13 +194,18 @@ const ProductInfo = ({
             Add To Cart
           </motion.button>
           <motion.button
+            type="button"
             className={`flex-1 border-2 font-medium px-3 py-2.5 sm:px-6 sm:py-3 rounded-full text-xs sm:text-base transition-colors duration-300 flex items-center justify-center gap-1.5 sm:gap-2 ${
               isWishlisted
                 ? "border-coral bg-coral/10 text-coral"
                 : "border-foreground text-foreground hover:bg-foreground hover:text-background"
             }`}
             whileTap={{ scale: 0.98 }}
-            onClick={() => toggleWishlist(product.id, product.name)}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleWishlist(product.id, product.name);
+            }}
           >
             <Heart className={`h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0 ${isWishlisted ? "fill-current" : ""}`} />
             Add To Wishlist

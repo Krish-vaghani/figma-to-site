@@ -5,7 +5,7 @@
 import urls from "@/generated-asset-urls.json";
 import elevate1Img from "@/assets/fb8abdd29d2eb50998e3e14d0b4cb177.png";
 import elevate2Img from "@/assets/Gemini_Generated_Image_cakdzwcakdzwcakd (1).png";
-import elevate3Img from "@/assets/b23cc0b73a932575150516eb5970aa43.jpg";
+import elevate3Img from "@/assets/a9a5cce2d97005cea8a7b06346aa88db.png";
 import elevate4Img from "@/assets/1304f8f05413ab5869849921d089709c.png";
 
 const byKey = (urls as { byKey: Record<string, string> }).byKey;

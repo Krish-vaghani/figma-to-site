@@ -12,12 +12,42 @@ import { toast } from "@/lib/toast";
 import { useSeo } from "@/hooks/useSeo";
 import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
 import { useAuth } from "@/contexts/AuthContext";
+import type { LoginCartItem } from "@/types/auth";
 import { shopBackground } from "@/lib/assetUrls";
 import loginIllustration from "@/assets/login-illustration.png";
 import otpIllustration from "@/assets/otp-illustration.png";
 import loginCardBg from "@/assets/login-card-bg.png";
 
 const OTP_LENGTH = 6;
+
+const GUEST_WISHLIST_KEY = "wishlist";
+const GUEST_CART_KEY = "cart";
+
+function getGuestWishlist(): string[] {
+  try {
+    const raw = localStorage.getItem(GUEST_WISHLIST_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.map((id: unknown) => String(id)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function getGuestCartItems(): LoginCartItem[] {
+  try {
+    const raw = localStorage.getItem(GUEST_CART_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item: { id?: unknown; quantity?: unknown }) => ({
+      productId: String(item.id ?? ""),
+      quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
+    })).filter((c: LoginCartItem) => c.productId);
+  } catch {
+    return [];
+  }
+}
 
 const registerOrLoginSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -145,7 +175,15 @@ const Login = () => {
       return;
     }
     try {
-      const result = await login({ phone: parsed.data.phone, otp: parsed.data.otp }).unwrap();
+      const wishlist = getGuestWishlist();
+      const cartItems = getGuestCartItems();
+      const result = await login({
+        phone: parsed.data.phone,
+        otp: parsed.data.otp,
+        name: fullName.trim(),
+        cartItems,
+        wishlist,
+      }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
       toast.auth.loginSuccess();
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
