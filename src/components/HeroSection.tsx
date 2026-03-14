@@ -73,12 +73,11 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </Button>
-              <Button
-                variant="outline"
-                className="rounded-full px-5 py-2.5 text-sm font-medium gap-2 group border border-foreground/20"
-              >
-                View More
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <Button asChild variant="outline" className="rounded-full px-5 py-2.5 text-sm font-medium gap-2 group border border-foreground/20">
+                <Link to="/purses" className="inline-flex items-center gap-2">
+                  View More
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -110,10 +109,10 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   >
                     <div className="flex items-start justify-right mb-2">
                       <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
-                      <span className="flex items-center gap-2 text-coral text-sm font-medium group text-right">
-                        View More  
+                      <Link to="/purses" onClick={(e) => e.stopPropagation()} className="flex items-center gap-2 text-coral text-sm font-medium group text-right hover:underline">
+                        View More
                         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </span>
+                      </Link>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
                     <div className="flex items-center justify-between">
@@ -412,10 +411,10 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     >
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
-                        <span className="flex items-center gap-1 text-coral text-sm font-medium group">
+                        <Link to="/purses" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 text-coral text-sm font-medium group hover:underline">
                           View More
                           <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </span>
+                        </Link>
                       </div>
                       <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
                       <div className="flex items-center justify-between">

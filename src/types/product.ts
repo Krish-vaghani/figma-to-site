@@ -136,11 +136,13 @@ const CATEGORY_TO_LABEL: Record<string, string> = {
   purse: "Handbags",
 };
 
-/** Tag -> collection label (By Collection in ShopFilters) */
+/** Tag -> collection label (By Collection in ShopFilters: Best Collection, Hot, Sale) */
 const TAG_TO_COLLECTION: Record<string, string> = {
-  bestseller: "Best Sellers",
+  bestseller: "Best Collection",
+  best_collection: "Best Collection",
+  hot: "Hot",
+  sale: "Sale",
   trending: "Trending",
-  sale: "On Sale",
   new: "New Arrivals",
 };
 

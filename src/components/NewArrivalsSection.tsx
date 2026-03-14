@@ -211,13 +211,13 @@ const NewArrivalsSection = ({ landingData }: NewArrivalsSectionProps) => {
       </div>
 
 
-      {/* Explore Button */}
+      {/* Explore Button - navigates to shop */}
       <ScrollReveal delay={0.3}>
         <div className="flex justify-center mt-6 sm:mt-8 px-4">
-          <button className="bg-foreground text-background font-medium px-8 py-4 rounded-full flex items-center gap-2 hover:bg-coral transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
+          <Link to="/purses" className="bg-foreground text-background font-medium px-8 py-4 rounded-full inline-flex items-center gap-2 hover:bg-coral transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl">
             Explore All New Arrivals
             <ArrowRight className="h-5 w-5" />
-          </button>
+          </Link>
         </div>
       </ScrollReveal>
     </section>
