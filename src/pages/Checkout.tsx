@@ -49,6 +49,7 @@ const LABEL_ICONS: Record<string, React.ElementType> = {
 
 const PAYMENT_METHODS = [
   { value: "online", label: "Pay Online (UPI / Card)", icon: CheckCircle2 },
+  // { value: "cod", label: "Cash on Delivery", icon: Banknote }, // Temporarily disabled
 ] as const;
 
 const addDays = (iso: string, days: number): string => {
@@ -170,16 +171,18 @@ const Checkout = () => {
       }
       return;
     }
-    setPlacing(true);
-    await new Promise((r) => setTimeout(r, 900));
-    if (selectedAddressId === "new" && saveNewAddress && newFormData) {
-      const { label, ...rest } = newFormData;
-      addAddress(rest as DeliveryAddress, label ?? "Home");
-    }
-    const order = placeOrder(cart, address, paymentMethod, grandTotal);
-    clearCart();
-    setPlacing(false);
-    navigate(`/order-success/${order.id}`);
+    // COD branch — temporarily commented out
+    // setPlacing(true);
+    // await new Promise((r) => setTimeout(r, 900));
+    // if (selectedAddressId === "new" && saveNewAddress && newFormData) {
+    //   const { label, ...rest } = newFormData;
+    //   addAddress(rest as DeliveryAddress, label ?? "Home");
+    // }
+    // const order = placeOrder(cart, address, paymentMethod, grandTotal);
+    // clearCart();
+    // setPlacing(false);
+    // navigate(`/order-success/${order.id}`);
+    showToast.error({ title: "Cash on Delivery is temporarily unavailable. Please use Pay Online." });
   }, [
     cart,
     grandTotal,

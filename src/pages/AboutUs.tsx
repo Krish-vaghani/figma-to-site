@@ -20,7 +20,7 @@ const aboutUsHeaderBackground =
   "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770368952749_Frame_2147225911.png";
 // Image block immediately after first section (no padding)
 const aboutUsSectionImage =
-  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770369040229_Group_1376156683.png";
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773468672194_Group_1376156683.png";
 
 const AboutUs = () => {
   useSeo("About Us", "Learn about Purse — our story, craftsmanship, and commitment to timeless designer handbags and accessories.");
@@ -103,7 +103,7 @@ const AboutUs = () => {
 
       {/* About Content Section - padding on lg to match reference */}
       <section
-        className="relative py-12 sm:py-16 lg:py-24 overflow-hidden bg-no-repeat min-h-[320px] sm:min-h-0 bg-cover bg-center lg:bg-right"
+        className="relative py-0 sm:py-16 lg:py-24 overflow-hidden bg-no-repeat min-h-[320px] sm:min-h-0 bg-cover bg-center lg:bg-right"
         style={{
           backgroundImage: `url(${aboutUsBackground})`,
           backgroundColor: "hsl(var(--secondary))",
@@ -114,7 +114,7 @@ const AboutUs = () => {
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-start">
             {/* Text Content */}
             <ScrollReveal variant="fadeLeft">
-              <div className="space-y-6">
+              <div className="space-y-3">
                 <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold">
                   About <span className="text-coral">Us</span>
                 </h2>

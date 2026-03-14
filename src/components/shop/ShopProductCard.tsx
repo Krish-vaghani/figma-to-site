@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useViewProductMutation } from "@/store/services/productApi";
+import { useViewedToday } from "@/contexts/ViewedTodayContext";
 import { normalizeRating } from "@/lib/utils";
 
 interface ShopProductCardProps {
@@ -82,9 +83,11 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
   const [viewProduct] = useViewProductMutation();
+  const { incrementViewedToday } = useViewedToday();
   const displayRating = normalizeRating(product.rating);
 
   const handleCardClick = () => {
+    incrementViewedToday(product.id);
     if (typeof product.id === "string") {
       viewProduct(product.id).catch(() => {});
     }

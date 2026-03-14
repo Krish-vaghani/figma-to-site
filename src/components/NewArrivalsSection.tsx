@@ -3,10 +3,11 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import ScrollReveal from "./ScrollReveal";
 import ProductCarousel from "./ProductCarousel";
-import StockBadge from "./StockBadge";
+import TodayViewedBadge from "./TodayViewedBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
 import { useViewProductMutation } from "@/store/services/productApi";
+import { useViewedToday } from "@/contexts/ViewedTodayContext";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -76,8 +77,10 @@ const NewProductCard = ({ product }: { product: Product }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(String(product.id) + "_new");
   const [viewProduct] = useViewProductMutation();
+  const { incrementViewedToday } = useViewedToday();
 
   const handleCardClick = () => {
+    incrementViewedToday(product.id);
     if (typeof product.id === "string") {
       viewProduct(product.id).catch(() => {});
     }
@@ -138,9 +141,9 @@ const NewProductCard = ({ product }: { product: Product }) => {
           </div>
         </div>
 
-        {/* Price & Stock Badge together */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-baseline gap-2">
+        {/* Price & Viewed badge */}
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <div className="flex items-baseline gap-2 min-w-0">
             <span className="text-lg sm:text-xl font-bold text-foreground">
               ₹{product.price.toLocaleString()}
             </span>
@@ -148,7 +151,7 @@ const NewProductCard = ({ product }: { product: Product }) => {
               ₹{product.originalPrice.toLocaleString()}
             </span>
           </div>
-          <StockBadge stock={product.stock} variant="text" showIcon={false} />
+          <TodayViewedBadge productId={product.id} />
         </div>
 
         {/* CTA - card is already a link to detail page */}

@@ -2,6 +2,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { ViewedTodayProvider } from "@/contexts/ViewedTodayContext";
 import { CartProvider } from "@/contexts/CartContext";
 import { OrderProvider } from "@/contexts/OrderContext";
 import { AddressProvider } from "@/contexts/AddressContext";
@@ -62,7 +63,8 @@ const AnimatedRoutes = () => {
 const App = () => (
   <AuthProvider>
     <WishlistProvider>
-      <CartProvider>
+      <ViewedTodayProvider>
+        <CartProvider>
         <OrderProvider>
           <AddressProvider>
             <TooltipProvider>
@@ -75,7 +77,8 @@ const App = () => (
             </TooltipProvider>
           </AddressProvider>
         </OrderProvider>
-      </CartProvider>
+        </CartProvider>
+      </ViewedTodayProvider>
     </WishlistProvider>
   </AuthProvider>
 );

@@ -108,10 +108,10 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     transition={{ delay: 0.8, duration: 0.5 }}
                     className="bg-background rounded-2xl shadow-lg p-4"
                   >
-                    <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-start justify-right mb-2">
                       <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
-                      <span className="flex items-center gap-1 text-coral text-sm font-medium group">
-                        View More
+                      <span className="flex items-center gap-2 text-coral text-sm font-medium group text-right">
+                        View More  
                         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
                       </span>
                     </div>
