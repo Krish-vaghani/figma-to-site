@@ -14,9 +14,14 @@ import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/a
 import { useAuth } from "@/contexts/AuthContext";
 import type { LoginCartItem } from "@/types/auth";
 import { shopBackground } from "@/lib/assetUrls";
-import loginIllustration from "@/assets/login-illustration.png";
-import otpIllustration from "@/assets/otp-illustration.png";
-import loginCardBg from "@/assets/login-card-bg.png";
+
+// CDN image URLs (no local static assets)
+const LOGIN_ILLUSTRATION_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644772525_login-illustration.png";
+const OTP_ILLUSTRATION_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644781018_otp-illustration.png";
+const LOGIN_CARD_BG_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644761338_login-card-bg.png";
 
 const OTP_LENGTH = 6;
 
@@ -241,7 +246,7 @@ const Login = () => {
         >
           {/* Subtle background image */}
           <img
-            src={loginCardBg}
+            src={LOGIN_CARD_BG_URL}
             alt=""
             className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none"
             aria-hidden="true"
@@ -422,7 +427,7 @@ const Login = () => {
               <AnimatePresence mode="wait">
                 <motion.img
                   key={step}
-                  src={step === "phone" ? loginIllustration : otpIllustration}
+                  src={step === "phone" ? LOGIN_ILLUSTRATION_URL : OTP_ILLUSTRATION_URL}
                   alt="Login illustration"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -436,7 +441,7 @@ const Login = () => {
             {/* Mobile: illustration first (left/top), left-aligned */}
             <div className="md:hidden flex order-1 justify-start px-6 pt-6 pb-2">
               <img
-                src={step === "phone" ? loginIllustration : otpIllustration}
+                src={step === "phone" ? LOGIN_ILLUSTRATION_URL : OTP_ILLUSTRATION_URL}
                 alt="Login illustration"
                 className="max-h-[250px] w-auto object-contain"
               />
