@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback, ReactNode } from "react";
-import { toast } from "@/lib/toast";
+import { toast, showToast } from "@/lib/toast";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   useGetWishlistQuery,
@@ -93,7 +93,16 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
           next.delete(sid);
           return next;
         });
-        addMutation({ productId: sid }).catch(() => {});
+        addMutation({ productId: sid })
+          .unwrap()
+          .catch(() => {
+            setOptimisticAdd((prev) => {
+              const next = new Set(prev);
+              next.delete(sid);
+              return next;
+            });
+            showToast.error({ title: "Wishlist", description: "Could not add to wishlist. Please try again." });
+          });
       } else {
         setLocalWishlist((prev) => (prev.includes(id) ? prev : [...prev, id]));
       }
@@ -111,7 +120,16 @@ export const WishlistProvider = ({ children }: { children: ReactNode }) => {
           next.delete(sid);
           return next;
         });
-        removeMutation({ productId: sid }).catch(() => {});
+        removeMutation({ productId: sid })
+          .unwrap()
+          .catch(() => {
+            setOptimisticRemove((prev) => {
+              const next = new Set(prev);
+              next.delete(sid);
+              return next;
+            });
+            showToast.error({ title: "Wishlist", description: "Could not remove from wishlist. Please try again." });
+          });
       } else {
         setLocalWishlist((prev) => prev.filter((item) => normalizeId(item) !== sid));
       }

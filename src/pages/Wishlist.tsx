@@ -8,7 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { shopBackground } from "@/lib/assetUrls";
 import { toast } from "@/lib/toast";
-import type { WishlistItem } from "@/types/wishlist";
+import { getWishlistItemImage, type WishlistItem } from "@/types/wishlist";
 import { normalizeRating } from "@/lib/utils";
 
 type SortOption = "newest" | "price-low" | "price-high";
@@ -20,16 +20,18 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 function wishlistItemToProduct(item: WishlistItem): Product {
+  const image = getWishlistItemImage(item);
   return {
+    user_image: image,
     id: item._id,
     name: item.name,
-    description: "",
+    description: item.shortDescription ?? "",
     price: item.salePrice ?? item.price,
     originalPrice: item.price,
-    reviews: "",
-    rating: 0,
-    image: item.image,
-    colors: [],
+    reviews: item.numberOfReviews != null ? `${item.numberOfReviews} Reviews` : "",
+    rating: item.averageRating ?? 0,
+    image,
+    colors: item.colorVariants?.map((v) => v.colorCode ?? "#000").filter(Boolean) ?? [],
     stock: 0,
     slug: item.slug,
   };

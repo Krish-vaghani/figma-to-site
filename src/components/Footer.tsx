@@ -89,7 +89,7 @@ const Footer = () => {
 
       {/* Links Section */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pb-8 sm:pb-10 lg:pb-12 relative z-10">
-        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-3 lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-2 lg:gap-12">
           {/* Explore Column */}
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div>
@@ -116,7 +116,7 @@ const Footer = () => {
             </div>
           </ScrollReveal>
 
-          {/* Categories Column */}
+          {/* Categories / Collections — commented out
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div>
               <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">
@@ -135,6 +135,7 @@ const Footer = () => {
               </div>
             </div>
           </ScrollReveal>
+          */}
 
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>

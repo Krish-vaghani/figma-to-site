@@ -21,21 +21,22 @@ const Orders = () => {
   return (
     <div className="min-h-screen bg-background">
       <ScrollToTop />
-      <Navbar />
-
-      {/* Header */}
+      {/* Header area with background from top (same as Shop) */}
       <div
-        className="relative w-full py-8 md:py-10 flex flex-col items-center justify-center text-center"
-        style={{ backgroundImage: `url(${shopBackground})`, backgroundSize: "cover", backgroundPosition: "top left" }}
+        className="relative w-full overflow-hidden bg-cover bg-right sm:bg-top"
+        style={{ backgroundImage: `url(${shopBackground})` }}
       >
-        <div className="absolute inset-0 bg-background/60" />
+        <div className="absolute inset-0 bg-background/50" aria-hidden="true" />
         <div className="relative z-10">
-          <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Orders</h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            <Link to="/" className="hover:text-coral transition-colors">Home</Link>
-            {" / "}
-            <span className="text-foreground">Orders</span>
-          </p>
+          <Navbar className="bg-transparent" />
+          <div className="py-8 md:py-10 flex flex-col items-center justify-center text-center">
+            <h1 className="text-3xl md:text-4xl font-bold font-playfair text-foreground">My Orders</h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              <Link to="/" className="hover:text-coral transition-colors">Home</Link>
+              {" / "}
+              <span className="text-foreground">Orders</span>
+            </p>
+          </div>
         </div>
       </div>
 

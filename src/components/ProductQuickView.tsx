@@ -77,12 +77,17 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
 
             {/* Wishlist Button */}
             <motion.button
+              type="button"
               className={`absolute top-2 right-2 sm:top-4 sm:right-4 rounded-full p-1.5 sm:p-2.5 transition-all duration-300 shadow-lg ${
                 isWishlisted
                   ? "bg-coral text-white"
                   : "bg-white/90 hover:bg-coral text-muted-foreground hover:text-white"
               }`}
-              onClick={() => toggleWishlist(product.id, product.name)}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleWishlist(product.id, product.name);
+              }}
               whileTap={{ scale: 0.9 }}
             >
               <Heart className={`h-3.5 w-3.5 sm:h-5 sm:w-5 ${isWishlisted ? "fill-current" : ""}`} />

@@ -1,12 +1,13 @@
-import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles } from "lucide-react";
+import { Heart, ArrowRight, Flame, TrendingUp, Award, Sparkles, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ScrollReveal from "./ScrollReveal";
 import ProductCarousel from "./ProductCarousel";
-import StockBadge from "./StockBadge";
+import TodayViewedBadge from "./TodayViewedBadge";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { products, type Product, type BadgeType } from "@/data/products";
 import { useViewProductMutation } from "@/store/services/productApi";
+import { useViewedToday } from "@/contexts/ViewedTodayContext";
 
 const BadgeComponent = ({ type }: { type: BadgeType }) => {
   const badgeStyles = {
@@ -76,8 +77,10 @@ const ProductCard = ({ product }: { product: Product }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);
   const [viewProduct] = useViewProductMutation();
+  const { incrementViewedToday } = useViewedToday();
 
   const handleCardClick = () => {
+    incrementViewedToday(product.id);
     if (typeof product.id === "string") {
       viewProduct(product.id).catch(() => {});
     }
@@ -86,21 +89,23 @@ const ProductCard = ({ product }: { product: Product }) => {
   return (
     <Link
       to={`/product/${product.id}`}
-      className="w-[240px] sm:w-[280px] h-full group cursor-pointer bg-card rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_20px_-4px_hsl(var(--foreground)/0.08)] transition-all duration-300 flex flex-col block"
+      className="w-[280px] sm:w-[320px] h-full group cursor-pointer bg-white rounded-2xl sm:rounded-3xl overflow-hidden shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_2px_8px_rgba(0,0,0,0.04)] transition-all duration-300 flex flex-col block"
       onClick={handleCardClick}
     >
-      {/* Image Container */}
-      <div className="relative h-[200px] sm:h-[240px] overflow-hidden flex-shrink-0">
+      {/* Image Container - rounded top to match card */}
+      <div className="relative aspect-square overflow-hidden flex-shrink-0 rounded-t-2xl sm:rounded-t-3xl">
         {/* Dynamic Badge */}
         {product.badge && <BadgeComponent type={product.badge} />}
 
-        {/* Wishlist Button - Transparent with blue tint */}
+        {/* Wishlist Button - circular overlay like reference */}
         <motion.button
-          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 backdrop-blur-sm ${isWishlisted
+          type="button"
+          className={`absolute top-3 sm:top-4 right-3 sm:right-4 z-10 rounded-full p-2 sm:p-2.5 transition-all duration-300 ${isWishlisted
               ? "bg-coral text-white"
-              : "bg-blue-500/20 text-white border border-white/30"
+              : "bg-stone-500/60 text-white hover:bg-stone-500/80"
             }`}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleWishlist(product.id, product.name);
           }}
@@ -120,42 +125,49 @@ const ProductCard = ({ product }: { product: Product }) => {
         />
       </div>
 
-      {/* Product Info */}
-      <div className="p-4 sm:p-5 space-y-3 flex-grow flex flex-col">
-        {/* Name & Colors */}
+      {/* Product Info - white card content */}
+      <div className="p-4 sm:p-5 space-y-3 flex-grow flex flex-col bg-white">
+        {/* Name & Colors - like reference: name left, swatches right */}
         <div className="flex items-center justify-between gap-2">
-          <h3 className="font-semibold text-foreground text-sm sm:text-base">
+          <h3 className="font-semibold text-neutral-900 text-sm sm:text-base">
             {product.name}
           </h3>
-          <div className="flex gap-1">
+          <div className="flex gap-1.5 flex-shrink-0">
             {product.colors.map((color, index) => (
               <span
                 key={index}
-                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-border cursor-pointer"
+                className="w-4 h-4 sm:w-5 sm:h-5 rounded-full border border-neutral-200"
                 style={{ backgroundColor: color }}
               />
             ))}
           </div>
         </div>
 
-        {/* Price & Stock Badge together */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-lg sm:text-xl font-bold text-foreground">
+        {/* Price & Review */}
+        <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+          <div className="flex items-baseline gap-2 min-w-0">
+            <span className="text-lg sm:text-xl font-bold text-neutral-900">
               ₹{product.price.toLocaleString()}
             </span>
-            <span className="text-muted-foreground line-through text-xs">
+            <span className="text-neutral-500 line-through text-xs">
               ₹{product.originalPrice.toLocaleString()}
             </span>
           </div>
-          <StockBadge stock={product.stock} variant="text" showIcon={false} />
+          <div className="flex items-center gap-1 text-neutral-600 text-xs sm:text-sm shrink-0">
+            <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+            <span>{product.rating.toFixed(1)}</span>
+            <span>({product.reviews})</span>
+          </div>
         </div>
 
-        {/* CTA - card is already a link to detail page */}
-        <span className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300 mt-auto">
-          Let's Check It Out
-          <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
-        </span>
+        {/* Today's view (left) & Let's Check It Out (right) */}
+        <div className="flex items-center justify-between gap-2 mt-auto">
+          <TodayViewedBadge productId={product.id} />
+          <span className="inline-flex items-center gap-1.5 text-coral font-medium text-sm group/link hover:gap-3 transition-all duration-300">
+          View Details
+            <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/link:translate-x-1" />
+          </span>
+        </div>
       </div>
     </Link>
   );

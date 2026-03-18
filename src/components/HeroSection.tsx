@@ -1,7 +1,7 @@
 import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { avatar } from "@/lib/assetUrls";
 import { normalizeRating } from "@/lib/utils";
 
@@ -12,6 +12,7 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ data }: HeroSectionProps) => {
+  const navigate = useNavigate();
   const hero = getHeroDisplay(data);
   const heroRating = normalizeRating(hero?.rating ?? data?.rating ?? 4);
   const heroRatingLabel = heroRating.toFixed(1);
@@ -73,12 +74,11 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </Button>
-              <Button
-                variant="outline"
-                className="rounded-full px-5 py-2.5 text-sm font-medium gap-2 group border border-foreground/20"
-              >
-                View More
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+              <Button asChild variant="outline" className="rounded-full px-5 py-2.5 text-sm font-medium gap-2 group border border-foreground/20">
+                <Link to="/purses" className="inline-flex items-center gap-2">
+                  View More
+                  <ArrowRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
               </Button>
             </motion.div>
           </motion.div>
@@ -91,13 +91,23 @@ const HeroSection = ({ data }: HeroSectionProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.7 }}
             >
-              <Link to={productDetailUrl} className="block relative rounded-3xl overflow-visible shadow-xl">
+              <div
+                role="button"
+                tabIndex={0}
+                onClick={() => navigate(productDetailUrl)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    navigate(productDetailUrl);
+                  }
+                }}
+                className="block relative rounded-3xl overflow-visible shadow-xl cursor-pointer"
+              >
                 <img
                   src={hero.image}
                   alt={`${hero.name} - Premium handbag`}
                   className="w-full aspect-[4/5] object-cover rounded-3xl"
                   loading="eager"
-                  fetchPriority="high"
                 />
 
                 {/* Mobile Product Info Card - Centered half on image, half below */}
@@ -108,12 +118,12 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     transition={{ delay: 0.8, duration: 0.5 }}
                     className="bg-background rounded-2xl shadow-lg p-4"
                   >
-                    <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-start justify-right mb-2">
                       <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
-                      <span className="flex items-center gap-1 text-coral text-sm font-medium group">
+                      <Link to="/purses" onClick={(e) => e.stopPropagation()} className="flex items-center gap-2 text-coral text-sm font-medium group text-right hover:underline">
                         View More
                         <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                      </span>
+                      </Link>
                     </div>
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
                     <div className="flex items-center justify-between">
@@ -131,7 +141,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     </div>
                   </motion.div>
                 </div>
-              </Link>
+              </div>
             </motion.div>
           )}
         </div>
@@ -368,14 +378,24 @@ const HeroSection = ({ data }: HeroSectionProps) => {
 
                 {/* Image container - from hero API, links to product detail */}
                 {hero?.image && (
-                  <Link to={productDetailUrl} className="block relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1">
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(productDetailUrl)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(productDetailUrl);
+                      }
+                    }}
+                    className="block relative rounded-3xl overflow-hidden shadow-2xl group bg-gradient-to-br from-coral/5 to-transparent p-1 cursor-pointer"
+                  >
                     <div className="rounded-[1.4rem] overflow-hidden">
                       <motion.img
                         src={hero.image}
                         alt={`${hero.name} - Premium designer handbag`}
                         className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
                         loading="eager"
-                        fetchPriority="high"
                         decoding="async"
                         whileHover={{ scale: 1.03 }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
@@ -398,12 +418,22 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                         </motion.div>
                       )}
                     </div>
-                  </Link>
+                  </div>
                 )}
 
                 {/* Product Info Card - Floating below image, links to product detail */}
                 {hero && (
-                  <Link to={productDetailUrl}>
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => navigate(productDetailUrl)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        navigate(productDetailUrl);
+                      }
+                    }}
+                  >
                     <motion.div
                       className="absolute -bottom-16 left-4 right-4 bg-background rounded-2xl shadow-xl p-5 cursor-pointer hover:ring-2 hover:ring-coral/30 transition-shadow"
                       initial={{ opacity: 0, y: 20 }}
@@ -412,10 +442,10 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     >
                       <div className="flex items-start justify-between mb-2">
                         <h3 className="text-lg font-semibold text-foreground">{hero.name}</h3>
-                        <span className="flex items-center gap-1 text-coral text-sm font-medium group">
+                        <Link to="/purses" onClick={(e) => e.stopPropagation()} className="flex items-center gap-1 text-coral text-sm font-medium group hover:underline">
                           View More
                           <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform" />
-                        </span>
+                        </Link>
                       </div>
                       <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{hero.shortDescription}</p>
                       <div className="flex items-center justify-between">
@@ -432,7 +462,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                         </div>
                       </div>
                     </motion.div>
-                  </Link>
+                  </div>
                 )}
               </motion.div>
             </motion.div>

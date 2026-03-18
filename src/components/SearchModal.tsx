@@ -227,12 +227,14 @@ const SearchModal = ({ isOpen, onClose }: SearchModalProps) => {
                           </span>
                         )}
                         <motion.button
+                          type="button"
                           className={`absolute top-2 right-2 z-10 rounded-full p-1.5 transition-all ${
                             isInWishlist(product.id)
                               ? "bg-coral text-white"
                               : "bg-white/80 text-muted-foreground hover:bg-coral hover:text-white"
                           }`}
                           onClick={(e) => {
+                            e.preventDefault();
                             e.stopPropagation();
                             toggleWishlist(product.id, product.name);
                           }}

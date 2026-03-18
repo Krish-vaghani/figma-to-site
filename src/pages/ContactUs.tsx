@@ -18,8 +18,11 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { useSeo } from "@/hooks/useSeo";
 import { shopBackground } from "@/lib/assetUrls";
 import { showToast } from "@/lib/toast";
-import contactIllustration from "@/assets/contact-illustration.png";
 import { z } from "zod";
+
+// CDN image URLs (no local static assets)
+const CONTACT_ILLUSTRATION_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644656017_contact-illustration.png";
 
 // ── Validation ──────────────────────────────────────────────────────────────
 const contactSchema = z.object({
@@ -237,7 +240,7 @@ const ContactUs = () => {
               {/* Left: illustration + text */}
               <div className="flex flex-col items-start">
                 <img
-                  src={contactIllustration}
+                  src={CONTACT_ILLUSTRATION_URL}
                   alt="Contact illustration"
                   className="w-40 sm:w-52 mb-6 opacity-80"
                   loading="lazy"
