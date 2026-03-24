@@ -63,7 +63,7 @@ export function getHeroDisplay(section: LandingSection | undefined): {
     return {
         id: product?._id ?? section._id,
         name: product?.name ?? SECTION_DISPLAY_NAMES[section.sectionKey] ?? "Featured",
-        shortDescription: product?.shortDescription ?? "Structured Crossbody With Top Handle",
+        shortDescription: (product as any)?.shortDescription ?? "Structured Crossbody With Top Handle",
         price,
         originalPrice,
         image: firstImage,
