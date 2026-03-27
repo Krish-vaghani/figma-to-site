@@ -96,6 +96,17 @@ const WishlistShareDialog = () => {
             Twitter / X
           </a>
 
+          {/* Instagram */}
+          <a
+            href="https://www.instagram.com/pursolina?igsh=MXFrdzNodDN3ejQyeg=="
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm hover:bg-secondary transition-colors"
+          >
+            <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16.5 7.5H16.5001M12 9.5a2.5 2.5 0 1 0 5 0 2.5 2.5 0 0 0-5 0z" fill="white"/><circle cx="12" cy="12" r="3.5" fill="none" stroke="white" strokeWidth="1.5"/></svg>
+            Instagram
+          </a>
+
           {/* Facebook */}
           <a
             href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}

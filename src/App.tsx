@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { Suspense, lazy, type ReactNode } from "react";
+import { Suspense, lazy, type ReactNode, useEffect } from "react";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ViewedTodayProvider } from "@/contexts/ViewedTodayContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -13,6 +13,22 @@ import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import { initMetaPixel, trackPageView } from "@/lib/metaPixel";
+
+const MetaPixelTracker = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    initMetaPixel();
+    trackPageView();
+  }, []);
+
+  useEffect(() => {
+    trackPageView();
+  }, [location.pathname, location.search]);
+
+  return null;
+};
 
 // Route-level code splitting: keep initial bundle small for first-time visits
 const Index = lazy(() => import("./pages/Index"));
@@ -127,6 +143,7 @@ const App = () => (
             <TooltipProvider>
               <Toaster />
               <BrowserRouter>
+                <MetaPixelTracker />
                 <ScrollRestoration />
                 <CartDrawer />
                 <AnimatedRoutes />
