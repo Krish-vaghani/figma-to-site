@@ -226,9 +226,10 @@ const AboutUs = () => {
                 <h3 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-bold text-foreground mb-2">
                   Follow Our <span className="text-coral">Instagram</span>
                 </h3>
-                <p className="text-muted-foreground mb-4">@Welcom.My</p>
+                <p className="text-muted-foreground mb-4">@Pursolina.com</p>
                 <Button 
                   className="rounded-full px-6 py-5 bg-foreground text-background hover:bg-coral transition-all duration-300 gap-2 group"
+                  onClick={() => window.open('https://www.instagram.com/pursolina?igsh=MXFrdzNodDN3ejQyeg==', '_blank')}
                 >
                   Follow Now
                   <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
