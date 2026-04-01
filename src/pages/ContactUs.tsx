@@ -62,6 +62,7 @@ const contactCards = [
   },
 ];
 
+
 const faqs = [
   {
     q: "How do I place an order?",
