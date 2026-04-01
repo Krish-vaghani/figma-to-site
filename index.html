@@ -58,11 +58,6 @@
     <!-- Performance: preconnect to critical origins -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="preconnect"
-      href="https://vedify-backend-dev.s3.eu-north-1.amazonaws.com"
-      crossorigin
-    />
     <meta name="theme-color" content="#ffffff" />
 
     <!-- Performance: load fonts without render-blocking CSS @import -->
@@ -84,22 +79,7 @@
       />
     </noscript>
 
-    <!-- Performance: warm up critical above-the-fold images -->
-    <link
-      rel="preload"
-      as="image"
-      href="https://acc-image-upload.s3.us-east-1.amazonaws.com/test/c9b423958c13f21731396c6d7f7006af.png"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770360035141_hero-background.png"
-    />
-    <link
-      rel="preload"
-      as="image"
-      href="https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770632691901_Frame_2147225909.png"
-    />
+    <!-- Image preloads removed to avoid cross-origin preload/CORS issues in production -->
 
     <!-- Structured Data -->
     <script type="application/ld+json">
