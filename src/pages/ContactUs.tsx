@@ -61,28 +61,28 @@ const contactCards = [
 
 const faqs = [
   {
-    q: "What are your shipping options?",
-    a: "We offer free standard shipping on orders over ₹500. Express shipping (1-2 business days) is available for ₹149. All orders include tracking.",
+    q: "How do I place an order?",
+    a: "Browse products, choose your preferred item, add it to cart, and proceed to checkout. Enter your shipping details, select a payment method, and confirm your order.",
+  },
+  {
+    q: "How do you use my personal information?",
+    a: "We collect and use your information only to process orders, provide customer support, and improve your shopping experience, as described in our Privacy Policy.",
+  },
+  {
+    q: "Do you share my data with third parties?",
+    a: "We only share information with trusted service providers needed to run our store, such as payment, shipping, and communication partners, under strict confidentiality and security requirements.",
   },
   {
     q: "What is your return policy?",
-    a: "We accept returns within 14 days of delivery. Items must be unused, in original packaging. Return shipping is free for defective products.",
+    a: "Returns are accepted within the eligible return window if items are unused and in original condition. Please check our Return Policy for full eligibility, process, and exceptions.",
   },
   {
     q: "How can I track my order?",
-    a: "Once shipped, you'll receive a tracking link via SMS and email. You can also track from your Orders page after logging in.",
+    a: "Once your order ships, you will receive a tracking link by email or SMS. You can also track shipment status from your account's Orders section.",
   },
   {
-    q: "Do you offer gift wrapping?",
-    a: "Yes! We offer complimentary gift wrapping on all orders. Simply select the gift wrap option during checkout.",
-  },
-  {
-    q: "Can I cancel or modify my order?",
-    a: "Orders can be modified or cancelled within 2 hours of placement. After that, please contact our support team for assistance.",
-  },
-  {
-    q: "Do you ship internationally?",
-    a: "Currently we ship within India only. International shipping is coming soon — subscribe to our newsletter for updates!",
+    q: "Where can I read your Privacy Policy and Terms & Conditions?",
+    a: "You can review both documents from the legal links in the footer. Please read them before placing an order or using our services.",
   },
 ];
 
