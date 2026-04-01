@@ -53,18 +53,31 @@ function mapApiToTestimonial(item: ApiTestimonial): Testimonial {
   };
 }
 
-/** Always 2 rows; distribute evenly (e.g. 3 → [2,1], 4 → [2,2], 5 → [3,2]). */
+/** Always 2 rows; distribute as evenly as possible by alternating items (0,2,4 → row 1; 1,3,5 → row 2). */
 function splitIntoRows(items: Testimonial[]): Testimonial[][] {
-  const n = items.length;
-  if (n === 0) return [];
-  const firstRowSize = Math.ceil(n / 2);
-  return [items.slice(0, firstRowSize), items.slice(firstRowSize)];
+  if (!items.length) return [];
+
+  const row1: Testimonial[] = [];
+  const row2: Testimonial[] = [];
+
+  items.forEach((item, index) => {
+    if (index % 2 === 0) row1.push(item);
+    else row2.push(item);
+  });
+
+  // If we somehow only have one row filled (e.g. single testimonial),
+  // duplicate into the second row so both marquees still run.
+  if (row2.length === 0) {
+    row2.push(...row1);
+  }
+
+  return [row1, row2];
 }
 
 const fallbackRow1: Testimonial[] = [
   {
     id: "1",
-    quote: "Dummy text",
+    quote: "Dummy textt",
     name: "Dummy User 1",
     title: "Dummy Title",
     avatar: avatarFemale,
@@ -140,7 +153,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial }) => {
 
   return (
     <div
-      className="flex-shrink-0 w-[260px] sm:w-[360px] rounded-2xl border border-border/40 shadow-lg select-none flex flex-col overflow-hidden transition-all hover:shadow-xl bg-card"
+      className="flex-shrink-0 w-[260px] sm:w-[360px] rounded-2xl border border-border/40 select-none flex flex-col overflow-hidden bg-card"
     >
       <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 flex-grow flex flex-col">
         <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
@@ -221,7 +234,7 @@ const MarqueeRow = ({
       style={{ scrollBehavior: "auto" }}
       {...handlers}
     >
-      <div className="flex gap-4 w-max">
+      <div className="flex gap-4 px-8 sm:px-12 lg:px-16">
         {items.map((testimonial, index) => (
           <TestimonialCard key={`${direction}-${testimonial.id}-${index}`} testimonial={testimonial} />
         ))}

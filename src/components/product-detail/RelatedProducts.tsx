@@ -80,12 +80,14 @@ const RelatedProductCard = ({ product, onClick }: { product: Product; onClick: (
       <div className="relative overflow-hidden aspect-square">
         {product.badge && <BadgeComponent type={product.badge} />}
         <motion.button
+          type="button"
           className={`absolute top-2 right-2 sm:top-3 sm:right-3 z-10 rounded-full p-1.5 sm:p-2 transition-all duration-300 backdrop-blur-sm ${
             isWishlisted
               ? "bg-coral text-white"
               : "bg-blue-500/20 text-white border border-white/30"
           }`}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleWishlist(product.id, product.name);
           }}

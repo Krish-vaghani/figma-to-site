@@ -77,11 +77,29 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
 
   const [pincodeStatus, setPincodeStatus] = useState<PincodeStatus>("idle");
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const skipClearPincodeRef = useRef(false);
+  const isFirstCityStateRunRef = useRef(true);
 
   // Reset when defaultValues change (edit mode)
   useEffect(() => {
     if (defaultValues) form.reset({ label: "Home", ...defaultValues });
   }, [JSON.stringify(defaultValues)]);
+
+  // When user changes city or state manually, clear pincode (so it stays in sync)
+  const cityValue = form.watch("city");
+  const stateValue = form.watch("state");
+  useEffect(() => {
+    if (isFirstCityStateRunRef.current) {
+      isFirstCityStateRunRef.current = false;
+      return;
+    }
+    if (skipClearPincodeRef.current) {
+      skipClearPincodeRef.current = false;
+      return;
+    }
+    form.setValue("pincode", "");
+    setPincodeStatus("idle");
+  }, [cityValue, stateValue]);
 
   // Watch pincode field and trigger auto-fill
   const pincodeValue = form.watch("pincode");
@@ -96,6 +114,7 @@ const AddressForm = ({ defaultValues, onSubmit, submitLabel = "Save Address", lo
       try {
         const result = await lookupPincode(pincodeValue);
         if (result) {
+          skipClearPincodeRef.current = true;
           form.setValue("city", result.city, { shouldValidate: true });
           form.setValue("state", result.state, { shouldValidate: true });
           setPincodeStatus("success");

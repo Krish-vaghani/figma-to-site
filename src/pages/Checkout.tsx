@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { MapPin, CheckCircle2, ShoppingBag, Truck, Plus, Home, Briefcase, MoreHorizontal, Star, Pencil } from "lucide-react";
+import { MapPin, CheckCircle2, ShoppingBag, Plus, Home, Briefcase, MoreHorizontal, Star, Pencil } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
@@ -48,8 +48,8 @@ const LABEL_ICONS: Record<string, React.ElementType> = {
 };
 
 const PAYMENT_METHODS = [
-  { value: "cod", label: "Cash on Delivery", icon: Truck },
   { value: "online", label: "Pay Online (UPI / Card)", icon: CheckCircle2 },
+  // { value: "cod", label: "Cash on Delivery", icon: Banknote }, // Temporarily disabled
 ] as const;
 
 const addDays = (iso: string, days: number): string => {
@@ -69,12 +69,12 @@ const Checkout = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string | "new">(
     defaultAddr ? defaultAddr.id : addresses.length > 0 ? addresses[0].id : "new"
   );
-  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("cod");
+  const [paymentMethod, setPaymentMethod] = useState<"cod" | "online">("online");
   const [placing, setPlacing] = useState(false);
   const [saveNewAddress, setSaveNewAddress] = useState(true);
   const [newFormData, setNewFormData] = useState<AddressFormData | null>(null);
 
-  const shippingFee = cartTotal >= 999 ? 0 : 79;
+  const shippingFee = cartTotal >= 1000 ? 0 : 79;
   const grandTotal = cartTotal + shippingFee;
 
   const getSelectedAddress = (): DeliveryAddress | null => {
@@ -171,16 +171,18 @@ const Checkout = () => {
       }
       return;
     }
-    setPlacing(true);
-    await new Promise((r) => setTimeout(r, 900));
-    if (selectedAddressId === "new" && saveNewAddress && newFormData) {
-      const { label, ...rest } = newFormData;
-      addAddress(rest as DeliveryAddress, label ?? "Home");
-    }
-    const order = placeOrder(cart, address, paymentMethod, grandTotal);
-    clearCart();
-    setPlacing(false);
-    navigate(`/order-success/${order.id}`);
+    // COD branch — temporarily commented out
+    // setPlacing(true);
+    // await new Promise((r) => setTimeout(r, 900));
+    // if (selectedAddressId === "new" && saveNewAddress && newFormData) {
+    //   const { label, ...rest } = newFormData;
+    //   addAddress(rest as DeliveryAddress, label ?? "Home");
+    // }
+    // const order = placeOrder(cart, address, paymentMethod, grandTotal);
+    // clearCart();
+    // setPlacing(false);
+    // navigate(`/order-success/${order.id}`);
+    showToast.error({ title: "Cash on Delivery is temporarily unavailable. Please use Pay Online." });
   }, [
     cart,
     grandTotal,
@@ -212,7 +214,7 @@ const Checkout = () => {
           <p className="text-muted-foreground text-lg">Your cart is empty.</p>
           <Link to="/purses">
             <button className="bg-foreground text-background px-6 py-3 rounded-full font-medium hover:bg-coral transition-colors">
-              Shop Now
+                Shop Now
             </button>
           </Link>
         </div>
@@ -473,6 +475,9 @@ const Checkout = () => {
 
               <p className="text-xs text-muted-foreground text-center mt-3">
                 By placing this order you agree to our Terms & Conditions.
+              </p>
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                7 days <Link to="/return-policy" className="text-coral hover:underline">return policy</Link>*
               </p>
             </div>
           </div>

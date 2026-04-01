@@ -3,13 +3,16 @@ import { Link } from "react-router-dom";
 import { X, Minus, Plus, Star, Heart, SlidersHorizontal } from "lucide-react";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { products, type Product } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { shopBackground } from "@/lib/assetUrls";
 import { toast } from "@/lib/toast";
-import type { WishlistItem } from "@/types/wishlist";
+import { getWishlistItemImage, type WishlistItem } from "@/types/wishlist";
 import { normalizeRating } from "@/lib/utils";
+import { useGetProductListQuery } from "@/store/services/productApi";
+import { mapApiProductToProduct } from "@/types/product";
 
 type SortOption = "newest" | "price-low" | "price-high";
 
@@ -20,27 +23,41 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 function wishlistItemToProduct(item: WishlistItem): Product {
+  const image = getWishlistItemImage(item);
   return {
+    user_image: image,
     id: item._id,
     name: item.name,
-    description: "",
+    description: item.shortDescription ?? "",
     price: item.salePrice ?? item.price,
     originalPrice: item.price,
-    reviews: "",
-    rating: 0,
-    image: item.image,
-    colors: [],
+    reviews: item.numberOfReviews != null ? `${item.numberOfReviews} Reviews` : "",
+    rating: item.averageRating ?? 0,
+    image,
+    colors: item.colorVariants?.map((v) => v.colorCode ?? "#000").filter(Boolean) ?? [],
     stock: 0,
     slug: item.slug,
   };
 }
 
 const Wishlist = () => {
+  const { isLoggedIn } = useAuth();
   const { wishlist, wishlistItemsFromApi, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [activeSort, setActiveSort] = useState<SortOption | null>(null);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+
+  const shouldLoadGuestCatalog = !isLoggedIn && wishlistItemsFromApi.length === 0 && wishlist.length > 0;
+  const { data: guestCatalogResponse } = useGetProductListQuery(
+    { page: 1, limit: 200, category: "purse" },
+    { skip: !shouldLoadGuestCatalog }
+  );
+
+  const guestCatalogProducts = useMemo(
+    () => (guestCatalogResponse?.data ?? []).map(mapApiProductToProduct),
+    [guestCatalogResponse?.data]
+  );
 
   const wishlistProducts = useMemo(() => {
     const fromApi = wishlistItemsFromApi.length > 0;
@@ -54,12 +71,21 @@ const Wishlist = () => {
         .filter((p): p is Product => p != null);
       items = [...apiProducts, ...fromLocal];
     } else {
-      items = products.filter((p) => wishlist.includes(p.id) || wishlist.includes(String(p.id)));
+      const guestById = new Map(guestCatalogProducts.map((p) => [String(p.id), p] as const));
+      const fromGuestCatalog = wishlist
+        .map((id) => guestById.get(String(id)))
+        .filter((p): p is Product => p != null);
+      const resolvedIds = new Set(fromGuestCatalog.map((p) => String(p.id)));
+      const fromStatic = wishlist
+        .filter((id) => !resolvedIds.has(String(id)))
+        .map((id) => products.find((p) => String(p.id) === String(id)))
+        .filter((p): p is Product => p != null);
+      items = [...fromGuestCatalog, ...fromStatic];
     }
     if (activeSort === "price-low") items = [...items].sort((a, b) => a.price - b.price);
     if (activeSort === "price-high") items = [...items].sort((a, b) => b.price - a.price);
     return items;
-  }, [wishlist, wishlistItemsFromApi, activeSort]);
+  }, [wishlist, wishlistItemsFromApi, guestCatalogProducts, activeSort]);
 
   const getQty = (id: number | string) => quantities[String(id)] || 1;
   const setQty = (id: number | string, q: number) =>

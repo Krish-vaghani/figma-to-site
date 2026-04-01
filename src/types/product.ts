@@ -126,6 +126,8 @@ export interface ProductListParams {
   tag?: string;
 }
 
+import { cacheProductImage } from "@/lib/productImageCache";
+
 /** BadgeType supported by UI (from @/data/products) */
 const VALID_BADGES = ["bestseller", "trending", "new", "hot", "limited", "sale"] as const;
 
@@ -134,11 +136,13 @@ const CATEGORY_TO_LABEL: Record<string, string> = {
   purse: "Handbags",
 };
 
-/** Tag -> collection label (By Collection in ShopFilters) */
+/** Tag -> collection label (By Collection in ShopFilters: Best Collection, Hot, Sale) */
 const TAG_TO_COLLECTION: Record<string, string> = {
-  bestseller: "Best Sellers",
+  bestseller: "Best Collection",
+  best_collection: "Best Collection",
+  hot: "Hot",
+  sale: "Sale",
   trending: "Trending",
-  sale: "On Sale",
   new: "New Arrivals",
 };
 
@@ -150,7 +154,13 @@ export function mapApiProductToProduct(
   const collections = (p.tags ?? [])
     .map((t) => TAG_TO_COLLECTION[t])
     .filter(Boolean);
-  const image = (p.images && p.images[0]) ?? p.image ?? "";
+  // Prefer explicit images array, then primary image, then fall back to first image
+  // from the default (or first) color variant.
+  const variantFallbackImage =
+    p.colorVariants?.find((cv) => cv.default)?.images?.[0] ??
+    p.colorVariants?.[0]?.images?.[0] ??
+    "";
+  const image = (p.images && p.images[0]) ?? p.image ?? variantFallbackImage ?? "";
   const price: number =
     "currentPrice" in p ? (p.currentPrice ?? p.salePrice ?? p.price) : (p.salePrice ?? p.price);
   const originalPrice: number = "originalPrice" in p && typeof (p as { originalPrice?: number }).originalPrice === "number"
@@ -160,7 +170,15 @@ export function mapApiProductToProduct(
     "shortDescription" in p && (p as ProductDetailData).shortDescription
       ? (p as ProductDetailData).shortDescription
       : (p.description ?? "");
+
+  // Cache image by backend _id so cart API (which may not send image) can still show
+  // the correct thumbnail in checkout and cart views.
+  if (image) {
+    cacheProductImage(p._id, image);
+  }
+
   return {
+    user_image: "",
     id: p._id,
     name: p.name,
     description,
@@ -179,5 +197,6 @@ export function mapApiProductToProduct(
     material: "Leather",
     occasion: "Everyday Use",
     collections: collections.length > 0 ? collections : ["New Arrivals"],
+
   };
 }

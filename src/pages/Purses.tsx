@@ -23,6 +23,8 @@ import ProductCardSkeleton from "@/components/ProductCardSkeleton";
 
 const PRODUCTS_PER_PAGE = 10;
 const PURSE_CATEGORY = "purse";
+/** High limit to load all products in background for client-side filter/sort */
+const ALL_PRODUCTS_LIMIT = 500;
 
 const Purses = () => {
   useSeo("Shop Purses & Handbags", "Shop premium designer handbags, totes, clutches and crossbody bags. Free shipping on orders over ₹1,000.");
@@ -32,37 +34,27 @@ const Purses = () => {
   const [sortBy, setSortBy] = useState("featured");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [filters, setFilters] = useState({
-    categories: [] as string[],
-    materials: [] as string[],
-    occasions: [] as string[],
     priceRange: [0, 10000] as [number, number],
-    ratings: [] as number[],
     collections: [] as string[],
+    ratings: [] as number[],
   });
 
-  const { data: listResponse, isLoading, isError } = useGetProductListQuery({
-    page: currentPage,
-    limit: PRODUCTS_PER_PAGE,
+  // Load all products in background for filtering and sorting (not per-page)
+  const { data: allProductsResponse, isLoading, isError } = useGetProductListQuery({
+    page: 1,
+    limit: ALL_PRODUCTS_LIMIT,
     category: PURSE_CATEGORY,
   });
 
-  const allMappedProducts = useMemo(
-    () => (listResponse?.data ?? []).map(mapApiProductToProduct),
-    [listResponse?.data]
-  );
+  // Show API data in reverse order (last from API first on shop page)
+  const allMappedProducts = useMemo(() => {
+    const data = allProductsResponse?.data ?? [];
+    return [...data].reverse().map(mapApiProductToProduct);
+  }, [allProductsResponse?.data]);
 
   const filteredProducts = useMemo(() => {
     let result = [...allMappedProducts];
 
-    if (filters.categories.length > 0) {
-      result = result.filter((p) => p.category && filters.categories.includes(p.category));
-    }
-    if (filters.materials.length > 0) {
-      result = result.filter((p) => p.material && filters.materials.includes(p.material));
-    }
-    if (filters.occasions.length > 0) {
-      result = result.filter((p) => p.occasion && filters.occasions.includes(p.occasion));
-    }
     if (filters.collections.length > 0) {
       result = result.filter(
         (p) => p.collections?.some((c) => filters.collections.includes(c))
@@ -91,12 +83,17 @@ const Purses = () => {
     }
   }, [allMappedProducts, filters, sortBy]);
 
-  // Use API total for overall count; fall back to current page length if missing.
-  const totalFiltered = listResponse?.total ?? filteredProducts.length;
+  const totalFiltered = filteredProducts.length;
   const totalPages = Math.max(1, Math.ceil(totalFiltered / PRODUCTS_PER_PAGE));
 
-  // Backend already paginates by page/limit, so we just use the filtered list on this page.
-  const paginatedProducts = filteredProducts;
+  const paginatedProducts = useMemo(
+    () =>
+      filteredProducts.slice(
+        (currentPage - 1) * PRODUCTS_PER_PAGE,
+        currentPage * PRODUCTS_PER_PAGE
+      ),
+    [filteredProducts, currentPage]
+  );
 
   useEffect(() => {
     setCurrentPage(1);
@@ -169,12 +166,9 @@ const Purses = () => {
 
   const handleClearAllFilters = () => {
     setFilters({
-      categories: [],
-      materials: [],
-      occasions: [],
       priceRange: [0, 10000],
-      ratings: [],
       collections: [],
+      ratings: [],
     });
   };
 

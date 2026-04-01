@@ -3,6 +3,7 @@ import { product1, product2, product3, product4 } from "@/lib/assetUrls";
 export type BadgeType = "bestseller" | "trending" | "new" | "hot" | "limited" | "sale";
 
 export interface Product {
+  user_image?: string;
   id: number | string;
   name: string;
   description: string;

@@ -1,15 +1,11 @@
-import { useState } from "react";
+import { Star } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
-import { Star } from "lucide-react";
 
-interface FilterState {
-  categories: string[];
-  materials: string[];
-  occasions: string[];
+export interface FilterState {
   priceRange: [number, number];
-  ratings: number[];
   collections: string[];
+  ratings: number[];
 }
 
 interface ShopFiltersProps {
@@ -17,38 +13,30 @@ interface ShopFiltersProps {
   onFiltersChange: (filters: FilterState) => void;
 }
 
-const categories = [
-  "Handbags",
-  "Sling Bags",
-  "Tote Bags",
-  "Clutches",
-  "Wallets",
-  "Mini Bags",
-];
-
-const materials = ["Leather", "Vegan Leather", "Fabric", "Canvas", "Denim"];
-
-const occasions = [
-  "Everyday Use",
-  "Office Wear",
-  "Party Wear",
-  "Travel",
-  "Casual Outing",
-];
-
-const collections = ["New Arrivals", "Best Sellers", "Trending", "On Sale"];
+/** Collection tags shown in filter: Best Collection, Hot, Sale, Trending */
+const COLLECTION_TAGS = ["Best Collection", "Hot", "Sale", "Trending"] as const;
 
 const ShopFilters = ({ filters, onFiltersChange }: ShopFiltersProps) => {
-  const toggleFilter = (
-    type: keyof FilterState,
-    value: string | number
-  ) => {
+  const toggleFilter = (type: keyof FilterState, value: string | number) => {
     const current = filters[type] as (string | number)[];
     const updated = current.includes(value)
       ? current.filter((v) => v !== value)
       : [...current, value];
     onFiltersChange({ ...filters, [type]: updated });
   };
+
+  const renderStars = (count: number) => (
+    <div className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <Star
+          key={i}
+          className={`h-4 w-4 ${
+            i < count ? "fill-coral text-coral" : "fill-muted text-muted"
+          }`}
+        />
+      ))}
+    </div>
+  );
 
   const handlePriceChange = (values: number[]) => {
     onFiltersChange({
@@ -74,58 +62,9 @@ const ShopFilters = ({ filters, onFiltersChange }: ShopFiltersProps) => {
     </label>
   );
 
-  const renderStars = (count: number) => (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          className={`h-4 w-4 ${
-            i < count ? "fill-coral text-coral" : "fill-muted text-muted"
-          }`}
-        />
-      ))}
-    </div>
-  );
-
   return (
     <aside className="w-full lg:w-64 flex-shrink-0 space-y-8">
       <h2 className="text-xl font-bold text-foreground">Filter Options</h2>
-
-      {/* By Category */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-foreground">By Category</h3>
-        <div className="space-y-3">
-          {categories.map((cat) =>
-            renderCheckbox(cat, filters.categories.includes(cat), () =>
-              toggleFilter("categories", cat)
-            )
-          )}
-        </div>
-      </div>
-
-      {/* By Material */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-foreground">By Material</h3>
-        <div className="space-y-3">
-          {materials.map((mat) =>
-            renderCheckbox(mat, filters.materials.includes(mat), () =>
-              toggleFilter("materials", mat)
-            )
-          )}
-        </div>
-      </div>
-
-      {/* By Occasion */}
-      <div className="space-y-4">
-        <h3 className="font-semibold text-foreground">By Occasion</h3>
-        <div className="space-y-3">
-          {occasions.map((occ) =>
-            renderCheckbox(occ, filters.occasions.includes(occ), () =>
-              toggleFilter("occasions", occ)
-            )
-          )}
-        </div>
-      </div>
 
       {/* Price Range */}
       <div className="space-y-4">
@@ -149,9 +88,9 @@ const ShopFilters = ({ filters, onFiltersChange }: ShopFiltersProps) => {
         />
       </div>
 
-      {/* Review */}
+      {/* Filter by Review (star rating) */}
       <div className="space-y-4">
-        <h3 className="font-semibold text-foreground">Review</h3>
+        <h3 className="font-semibold text-foreground">Filter by Review</h3>
         <div className="space-y-3">
           {[5, 4, 3, 2, 1].map((rating) => (
             <label
@@ -174,11 +113,12 @@ const ShopFilters = ({ filters, onFiltersChange }: ShopFiltersProps) => {
         </div>
       </div>
 
-      {/* By Collection */}
+      {/* Review / By Collection */}
       <div className="space-y-4">
-        <h3 className="font-semibold text-foreground">By Collection</h3>
+        <h3 className="font-semibold text-foreground">Review</h3>
+        <p className="text-sm text-muted-foreground">By Collection</p>
         <div className="space-y-3">
-          {collections.map((col) =>
+          {COLLECTION_TAGS.map((col) =>
             renderCheckbox(col, filters.collections.includes(col), () =>
               toggleFilter("collections", col)
             )

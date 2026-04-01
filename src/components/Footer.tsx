@@ -8,7 +8,7 @@ const footerNavLinks = [
   { name: "Home", href: "/" },
   { name: "Shop", href: "/purses" },
   { name: "About Us", href: "/about" },
-  { name: "Contact Us", href: "#" },
+  { name: "Contact Us", href: "/contact" },
 ];
 
 const Footer = () => {
@@ -62,8 +62,8 @@ const Footer = () => {
               Crafted With <span className="text-coral">Elegance & Care</span>
             </h2>
             <p className="text-muted-foreground text-sm sm:text-base lg:text-lg mb-6 sm:mb-8 leading-relaxed">
-              Thoughtfully Designed Purses That Blend Style, Quality, And Everyday Comfort —Crafted To Elevate Your Look
-              With Confidence.
+              Thoughtfully designed purses that blend style, quality, and everyday comfort — crafted to elevate your look
+              with confidence.
             </p>
 
             {/* CTA Buttons - Subscribe & Save / Join Our List commented out, not in use */}
@@ -89,7 +89,7 @@ const Footer = () => {
 
       {/* Links Section */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl pb-8 sm:pb-10 lg:pb-12 relative z-10">
-        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-3 lg:gap-12">
+        <div className="grid grid-cols-1 gap-8 sm:gap-6 lg:grid-cols-2 lg:gap-12">
           {/* Explore Column */}
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div>
@@ -116,7 +116,7 @@ const Footer = () => {
             </div>
           </ScrollReveal>
 
-          {/* Categories Column */}
+          {/* Categories / Collections — commented out
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div>
               <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-6">
@@ -135,6 +135,7 @@ const Footer = () => {
               </div>
             </div>
           </ScrollReveal>
+          */}
 
           {/* Contact Card */}
           <ScrollReveal variant="fadeUp" delay={0.3}>
@@ -154,7 +155,6 @@ const Footer = () => {
               {/* Content */}
               <div className="relative z-10">
                 <div className="flex items-center gap-2 mb-2 sm:mb-3 lg:mb-2">
-                  <span className="text-lg sm:text-xl">🇮🇳</span>
                   <span className="text-xs sm:text-sm text-muted-foreground">India</span>
                 </div>
                 <h4 className="text-base sm:text-lg lg:text-xl font-semibold text-foreground mb-3 sm:mb-4 lg:mb-3">
@@ -163,22 +163,22 @@ const Footer = () => {
                 {/* Stacked layout: Email on top, Phone below */}
                 <div className="flex flex-col gap-3 lg:gap-2">
                   <a
-                    href="mailto:Support@Yourbrand.Com"
+                    href="mailto:help.pursolina@gmail.com"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
                   >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span className="break-all">Support@Yourbrand.Com</span>
+                    <span className="break-all">help.pursolina@gmail.com</span>
                   </a>
                   <a
-                    href="tel:+919XXXXXXXXX"
+                    href="tel:+918320574887"
                     className="flex items-center gap-2 text-muted-foreground hover:text-coral transition-colors text-xs sm:text-sm"
                   >
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-coral/10 flex items-center justify-center flex-shrink-0">
                       <Phone className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-coral" />
                     </div>
-                    <span>+91 9XXXXXXXXX</span>
+                    <span>+91 8320574887</span>
                   </a>
                 </div>
               </div>
@@ -194,13 +194,13 @@ const Footer = () => {
             {/* Logo & Compliance */}
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4 lg:gap-6">
               <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 rounded">
-                <img src={logo} alt="Welcome Logo" className="h-7 sm:h-8 lg:h-10" />
+                <img src={logo} alt="Pursolina" className="h-7 sm:h-8 lg:h-10" />
               </Link>
               <div className="flex flex-wrap items-center gap-1 sm:gap-2 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
                 <span className="font-medium">Privacy & Compliance :</span>
                 <span>Secure Payments</span>
                 <span>•</span>
-                <span>Easy Returns</span>
+                <span>Secure Checkout</span>
                 <span>•</span>
                 <span>Customer-First Support</span>
               </div>
@@ -208,17 +208,17 @@ const Footer = () => {
 
             {/* Copyright & Legal Links */}
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4 lg:gap-6 text-[10px] sm:text-xs lg:text-sm text-muted-foreground">
-              <span>© 2026 Your Brand Name. All Rights Reserved.</span>
+              <span>© {new Date().getFullYear()} Pursolina. All rights reserved.</span>
               <div className="flex flex-wrap items-center gap-3 sm:gap-4">
-                <a href="#" className="hover:text-coral transition-colors">
+                <Link to="/privacy" className="hover:text-coral transition-colors">
                   Privacy Policy
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
+                </Link>
+                <Link to="/terms" className="hover:text-coral transition-colors">
                   Terms & Conditions
-                </a>
-                <a href="#" className="hover:text-coral transition-colors">
+                </Link>
+                <Link to="/return-policy" className="hover:text-coral transition-colors">
                   Return Policy
-                </a>
+                </Link>
               </div>
             </div>
           </div>

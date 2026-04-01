@@ -2,9 +2,6 @@ import { X } from "lucide-react";
 
 interface ActiveFiltersProps {
   filters: {
-    categories: string[];
-    materials: string[];
-    occasions: string[];
     collections: string[];
     priceRange: [number, number];
     ratings: number[];
@@ -18,12 +15,9 @@ const ActiveFilters = ({ filters, onRemove, onClearAll }: ActiveFiltersProps) =>
   const hasDefaultPrice = minPrice === 0 && maxPrice === 10000;
 
   const allFilters = [
-    ...filters.categories.map((v) => ({ type: "categories" as const, value: v })),
-    ...filters.materials.map((v) => ({ type: "materials" as const, value: v })),
-    ...filters.occasions.map((v) => ({ type: "occasions" as const, value: v })),
     ...filters.collections.map((v) => ({ type: "collections" as const, value: v })),
-    ...(!hasDefaultPrice ? [{ type: "priceRange" as const, value: "" }] : []),
     ...filters.ratings.map((r) => ({ type: "ratings" as const, value: String(r) })),
+    ...(!hasDefaultPrice ? [{ type: "priceRange" as const, value: "" }] : []),
   ];
 
   if (allFilters.length === 0) return null;

@@ -6,6 +6,7 @@ import { useCart } from "@/contexts/CartContext";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useViewProductMutation } from "@/store/services/productApi";
+import { useViewedToday } from "@/contexts/ViewedTodayContext";
 import { normalizeRating } from "@/lib/utils";
 
 interface ShopProductCardProps {
@@ -82,9 +83,11 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);
   const [viewProduct] = useViewProductMutation();
+  const { incrementViewedToday } = useViewedToday();
   const displayRating = normalizeRating(product.rating);
 
   const handleCardClick = () => {
+    incrementViewedToday(product.id);
     if (typeof product.id === "string") {
       viewProduct(product.id).catch(() => {});
     }
@@ -116,12 +119,14 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
 
         {/* Wishlist Button */}
         <motion.button
+          type="button"
           className={`absolute top-3 right-3 z-10 rounded-full p-2.5 transition-all duration-300 ${
             isWishlisted
               ? "bg-coral text-white"
               : "bg-foreground/40 text-white hover:bg-foreground/60"
           }`}
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             toggleWishlist(product.id, product.name);
           }}

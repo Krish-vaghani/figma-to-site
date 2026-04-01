@@ -1,19 +1,9 @@
 import { ArrowRight } from "lucide-react";
 import { elevate1, elevate2, elevate3, elevate4 } from "@/lib/assetUrls";
 import ScrollReveal from "./ScrollReveal";
+import { Link } from "react-router-dom";
 
-import type { LandingPageData } from "@/types/landing";
-
-interface ElevateSectionProps {
-  data?: LandingPageData["elevate_look"];
-}
-
-const ElevateSection = ({ data }: ElevateSectionProps) => {
-  const items = data ?? [];
-  const mainImage = items[0]?.images?.[0] || elevate1;
-  const image2 = items[1]?.images?.[0] ?? elevate2;
-  const image3 = items[2]?.images?.[0] ?? elevate3;
-  const image4 = items[3]?.images?.[0] ?? elevate4;
+const ElevateSection = () => {
   return (
     <section className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -35,7 +25,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/5]">
               <img
-                src={mainImage}
+                src={elevate1}
                 alt="Brown shoulder bag with gold chain"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -56,15 +46,17 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Refined Silhouettes Crafted To Complement Your Everyday Look, From Casual Moments To Special Outings.
                 </p>
                 <button className="mt-3 bg-foreground text-background px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 w-fit hover:bg-coral transition-all duration-300 group/btn">
-                  Shop Now
-                  <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  <Link to="/purses" className="inline-flex items-center gap-1.5">
+                    Shop Now
+                    <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
                 </button>
               </div>
             </ScrollReveal>
             <ScrollReveal variant="fadeRight" delay={0.2}>
               <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square">
                 <img
-                  src={image3}
+                  src={elevate3}
                   alt="Straw tote bag with white trim"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -78,7 +70,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="fadeLeft" delay={0.1}>
               <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-square">
                 <img
-                  src={image2}
+                  src={elevate2}
                   alt="Green structured handbag"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -96,8 +88,10 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Elegant Purses Designed For Comfort And Durability, Blending Modern Style With Timeless Appeal For Daily Use.
                 </p>
                 <button className="mt-3 bg-foreground text-background px-4 py-2 rounded-full text-xs font-medium inline-flex items-center gap-1.5 w-fit hover:bg-coral transition-all duration-300 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
                   <ArrowRight className="h-3 w-3 transition-transform duration-300 group-hover/btn:translate-x-1" />
+                  </Link>
                 </button>
               </div>
             </ScrollReveal>
@@ -107,7 +101,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-2xl aspect-[4/3]">
               <img
-                src={image4}
+                src={elevate4}
                 alt="Pink bucket bag with tassels"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -122,7 +116,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeLeft" delay={0.1}>
             <div className="relative group cursor-pointer overflow-hidden rounded-3xl row-span-2 h-full">
               <img
-                src={mainImage}
+                src={elevate1}
                 alt="Brown shoulder bag with gold chain"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
@@ -136,7 +130,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="scale" delay={0.2}>
               <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-square">
                 <img
-                  src={image2}
+                  src={elevate2}
                   alt="Green structured handbag"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -156,7 +150,9 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Elegant Purses Designed For Comfort And Durability, Blending Modern Style With Timeless Appeal For Daily Use.
                 </p>
                 <button className="mt-6 bg-foreground text-background px-6 py-3 rounded-full text-sm font-medium inline-flex items-center gap-2 w-fit hover:bg-coral transition-all duration-300 hover:scale-105 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
+                  </Link>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </button>
               </div>
@@ -177,7 +173,9 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
                   Refined Silhouettes Crafted To Complement Your Everyday Look, From Casual Moments To Special Outings.
                 </p>
                 <button className="mt-6 bg-foreground text-background px-6 py-3 rounded-full text-sm font-medium inline-flex items-center gap-2 w-fit hover:bg-coral transition-all duration-300 hover:scale-105 group/btn">
+                <Link to="/purses" className="inline-flex items-center gap-3">
                   Shop Now
+                  </Link>
                   <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover/btn:translate-x-1" />
                 </button>
               </div>
@@ -187,7 +185,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
             <ScrollReveal variant="scale" delay={0.3}>
               <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-square">
                 <img
-                  src={image3}
+                  src={elevate3}
                   alt="Straw tote bag with white trim"
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
@@ -200,7 +198,7 @@ const ElevateSection = ({ data }: ElevateSectionProps) => {
           <ScrollReveal variant="fadeUp" delay={0.2}>
             <div className="relative group cursor-pointer overflow-hidden rounded-3xl aspect-[16/10]">
               <img
-                src={image4}
+                src={elevate4}
                 alt="Pink bucket bag with tassels"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />

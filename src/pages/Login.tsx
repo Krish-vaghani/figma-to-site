@@ -12,12 +12,47 @@ import { toast } from "@/lib/toast";
 import { useSeo } from "@/hooks/useSeo";
 import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
 import { useAuth } from "@/contexts/AuthContext";
+import type { LoginCartItem } from "@/types/auth";
 import { shopBackground } from "@/lib/assetUrls";
-import loginIllustration from "@/assets/login-illustration.png";
-import otpIllustration from "@/assets/otp-illustration.png";
-import loginCardBg from "@/assets/login-card-bg.png";
+
+// CDN image URLs (no local static assets)
+const LOGIN_ILLUSTRATION_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644772525_login-illustration.png";
+const OTP_ILLUSTRATION_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644781018_otp-illustration.png";
+const LOGIN_CARD_BG_URL =
+  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1773644761338_login-card-bg.png";
 
 const OTP_LENGTH = 6;
+
+const GUEST_WISHLIST_KEY = "wishlist";
+const GUEST_CART_KEY = "cart";
+
+function getGuestWishlist(): string[] {
+  try {
+    const raw = localStorage.getItem(GUEST_WISHLIST_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    return Array.isArray(parsed) ? parsed.map((id: unknown) => String(id)) : [];
+  } catch {
+    return [];
+  }
+}
+
+function getGuestCartItems(): LoginCartItem[] {
+  try {
+    const raw = localStorage.getItem(GUEST_CART_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.map((item: { id?: unknown; quantity?: unknown }) => ({
+      productId: String(item.id ?? ""),
+      quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
+    })).filter((c: LoginCartItem) => c.productId);
+  } catch {
+    return [];
+  }
+}
 
 const registerOrLoginSchema = z.object({
   name: z.string().trim().min(1, "Name is required").max(100),
@@ -87,9 +122,12 @@ const Login = () => {
           } as CredentialRequestOptions)
           .then((cred) => {
             if (cred && "code" in cred && typeof (cred as { code: string }).code === "string") {
-              const code = (cred as { code: string }).code.replace(/\D/g, "").slice(0, OTP_LENGTH);
-              if (code.length >= OTP_LENGTH) {
-                const digits = code.split("");
+              const raw = (cred as { code: string }).code;
+              // Extract first 6-digit sequence (handles "#123456", "123456 is your...", etc.)
+              const digitsOnly = raw.replace(/\D/g, "");
+              const sixDigits = digitsOnly.match(/\d{6}/)?.[0] ?? digitsOnly.slice(0, OTP_LENGTH);
+              if (sixDigits.length >= OTP_LENGTH) {
+                const digits = sixDigits.slice(0, OTP_LENGTH).split("");
                 setOtp(digits);
                 doVerify(digits);
               }
@@ -145,7 +183,15 @@ const Login = () => {
       return;
     }
     try {
-      const result = await login({ phone: parsed.data.phone, otp: parsed.data.otp }).unwrap();
+      const wishlist = getGuestWishlist();
+      const cartItems = getGuestCartItems();
+      const result = await login({
+        phone: parsed.data.phone,
+        otp: parsed.data.otp,
+        name: fullName.trim(),
+        cartItems,
+        wishlist,
+      }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
       toast.auth.loginSuccess();
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
@@ -200,7 +246,7 @@ const Login = () => {
         >
           {/* Subtle background image */}
           <img
-            src={loginCardBg}
+            src={LOGIN_CARD_BG_URL}
             alt=""
             className="absolute inset-0 w-full h-full object-cover opacity-30 pointer-events-none"
             aria-hidden="true"
@@ -318,7 +364,7 @@ const Login = () => {
                         }
                       }}
                     />
-                    {/* OTP Inputs */}
+                    {/* OTP Inputs - first has one-time-code so browser/SMS can autofill into it */}
                     <div className="flex gap-2 sm:gap-3 relative">
                       {otp.map((digit, i) => (
                         <input
@@ -335,7 +381,7 @@ const Login = () => {
                             const pasted = e.clipboardData.getData("text").replace(/\D/g, "");
                             handleOtpChange(i, pasted);
                           }}
-                          autoComplete="off"
+                          autoComplete={i === 0 ? "one-time-code" : "off"}
                           className={`w-10 h-12 sm:w-12 sm:h-14 text-center text-lg font-semibold rounded-xl border transition-all duration-200 bg-background/80 focus:outline-none focus:ring-2 focus:ring-coral/50 ${
                             digit ? "border-foreground" : "border-border"
                           }`}
@@ -381,7 +427,7 @@ const Login = () => {
               <AnimatePresence mode="wait">
                 <motion.img
                   key={step}
-                  src={step === "phone" ? loginIllustration : otpIllustration}
+                  src={step === "phone" ? LOGIN_ILLUSTRATION_URL : OTP_ILLUSTRATION_URL}
                   alt="Login illustration"
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -395,7 +441,7 @@ const Login = () => {
             {/* Mobile: illustration first (left/top), left-aligned */}
             <div className="md:hidden flex order-1 justify-start px-6 pt-6 pb-2">
               <img
-                src={step === "phone" ? loginIllustration : otpIllustration}
+                src={step === "phone" ? LOGIN_ILLUSTRATION_URL : OTP_ILLUSTRATION_URL}
                 alt="Login illustration"
                 className="max-h-[250px] w-auto object-contain"
               />

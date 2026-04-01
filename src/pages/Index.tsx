@@ -86,15 +86,17 @@ const Index = () => {
               </ErrorBoundary>
             </Suspense>
 
+            {/* Find Your Perfect Purse — commented out
             <Suspense fallback={<SectionLoader />}>
               <ErrorBoundary section="Categories">
                 <CategoriesSection data={landingData?.find_perfect_purse} />
               </ErrorBoundary>
             </Suspense>
+            */}
 
             <Suspense fallback={<SectionLoader />}>
               <ErrorBoundary section="Elevate">
-                <ElevateSection data={landingData?.elevate_look ?? undefined} />
+                <ElevateSection />
               </ErrorBoundary>
             </Suspense>
 

@@ -113,6 +113,20 @@ const ProductDetail = () => {
     setSelectedColorIndex(defaultIndex >= 0 ? defaultIndex : 0);
   }, [resolvedProductId, detailResponse?.data?.colorVariants]);
 
+  // When a product has multiple colors, preload other color images in the background
+  // so switching colors feels instant (images are already cached).
+  useEffect(() => {
+    const variants = detailResponse?.data?.colorVariants ?? [];
+    if (variants.length <= 1) return;
+    variants.forEach((variant) => {
+      (variant.images ?? []).forEach((src) => {
+        if (!src) return;
+        const img = new Image();
+        img.src = src;
+      });
+    });
+  }, [detailResponse?.data?.colorVariants]);
+
   const isLoading = (isSlug && isLoadingList) || isLoadingDetail;
 
   if (!product) {
@@ -177,23 +191,26 @@ const ProductDetail = () => {
               selectedColorIndex={selectedColorIndex}
               onSelectedColorIndexChange={setSelectedColorIndex}
               selectedImageUrl={selectedImageUrl}
+              fullDescription={detailResponse?.data?.description}
             />
           </div>
         </section>
 
-        {/* Rating Breakdown (real data from product detail API when available) */}
-        <div className="border-t border-border">
-          <RatingBreakdown
-            rating={product.rating}
-            totalReviews={detailResponse?.data?.numberOfReviews ?? 78}
-            starBreakdown={detailResponse?.data?.starBreakdown}
-          />
-        </div>
-
-        {/* Reviews */}
-        <div className="border-t border-border">
-          <ReviewsSection apiReviews={(detailResponse?.reviews ?? undefined) as ReviewsSectionProps["apiReviews"]} />
-        </div>
+        {/* Rating & Reviews: only show when there are real reviews */}
+        {(detailResponse?.data?.numberOfReviews ?? 0) > 0 && (
+          <>
+            <div className="border-t border-border">
+              <RatingBreakdown
+                rating={product.rating}
+                totalReviews={detailResponse?.data?.numberOfReviews ?? 0}
+                starBreakdown={detailResponse?.data?.starBreakdown}
+              />
+            </div>
+            <div className="border-t border-border">
+              <ReviewsSection apiReviews={(detailResponse?.reviews ?? undefined) as ReviewsSectionProps["apiReviews"]} />
+            </div>
+          </>
+        )}
 
         {/* Related Products */}
         <div className="border-t border-border">

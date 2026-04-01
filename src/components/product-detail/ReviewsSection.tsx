@@ -46,33 +46,6 @@ function apiReviewsToReviews(apiReviews: ApiProductReview[] | { list?: ApiProduc
   }));
 }
 
-const mockReviews: Review[] = [
-  {
-    id: 1,
-    name: "Courtney Henry",
-    avatar: avatarFemale,
-    rating: 5.0,
-    time: "2 mins ago",
-    text: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Cursus Tristique In Tellus Diam, Metus Sit. Quis Venenatis, Neque Arcu Accumsan Sollicitudin Aliquet Nunc. Enim, Arcu Non In Aenean Tristique Felis.Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Neque Arcu Accumsan Sollicitudin",
-  },
-  {
-    id: 2,
-    name: "Courtney Henry",
-    avatar: avatarMale,
-    rating: 5.0,
-    time: "2 mins ago",
-    text: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Cursus Tristique In Tellus Diam, Metus Sit. Quis Venenatis, Neque Arcu Accumsan Sollicitudin Aliquet Nunc. Enim, Arcu Non In Aenean Tristique Felis.Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Neque Arcu Accumsan Sollicitudin",
-  },
-  {
-    id: 3,
-    name: "Courtney Henry",
-    avatar: avatar,
-    rating: 5.0,
-    time: "2 mins ago",
-    text: "Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Cursus Tristique In Tellus Diam, Metus Sit. Quis Venenatis, Neque Arcu Accumsan Sollicitudin Aliquet Nunc. Enim, Arcu Non In Aenean Tristique Felis.Lorem Ipsum Dolor Sit Amet, Consectetur Adipiscing Elit. Neque Arcu Accumsan Sollicitudin",
-  },
-];
-
 export interface ReviewsSectionProps {
   apiReviews?: ApiProductReview[] | { list?: ApiProductReview[] };
 }
@@ -80,7 +53,9 @@ export interface ReviewsSectionProps {
 const ReviewsSection: React.FC<ReviewsSectionProps> = ({ apiReviews }) => {
   const [sortBy, setSortBy] = useState<"Newest" | "Oldest">("Newest");
   const [showAll, setShowAll] = useState(false);
-  const reviews = useMemo(() => apiReviewsToReviews(apiReviews) ?? mockReviews, [apiReviews]);
+  const reviews = useMemo(() => apiReviewsToReviews(apiReviews) ?? [], [apiReviews]);
+
+  if (reviews.length === 0) return null;
 
   const sortedReviews = useMemo(() => {
     return [...reviews].sort((a, b) => {
