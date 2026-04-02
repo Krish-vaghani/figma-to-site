@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Mail, MessageCircle, Phone, Send, Clock } from "lucide-react";
+import {
+  Mail,
+  MessageCircle,
+  Phone,
+  Send,
+  Clock,
+  type LucideIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,31 +39,45 @@ const contactSchema = z.object({
 });
 
 // ── Data ────────────────────────────────────────────────────────────────────
-const contactCards = [
+const WHATSAPP_CHAT_URL = "https://wa.me/918320574887";
+
+const contactCards: Array<{
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  action: string;
+  href: string;
+  color: string;
+  bg: string;
+  target?: string;
+  rel?: string;
+}> = [
   {
     icon: Mail,
     title: "Email",
     description: "Our team is here to help",
-    action: "support@purse.com",
-    href: "mailto:support@purse.com",
+    action: "help.pursolina@gmail.com",
+    href: "mailto:help.pursolina@gmail.com",
     color: "text-coral",
     bg: "bg-coral/10",
   },
   {
     icon: MessageCircle,
     title: "Live Chat",
-    description: "Available Mon-Fri, 9am-5pm EST",
-    action: "Start a chat",
-    href: "#",
+    description: "Chat with us on WhatsApp",
+    action: "Open WhatsApp",
+    href: WHATSAPP_CHAT_URL,
     color: "text-coral",
     bg: "bg-coral/10",
+    target: "_blank",
+    rel: "noopener noreferrer",
   },
   {
     icon: Phone,
     title: "Phone",
-    description: "Mon-Fri from 9am to 5pm EST",
-    action: "+1 (555) 123-4567",
-    href: "tel:+15551234567",
+    description: "Mon-Sat from 9am to 9pm IST",
+    action: "+91 8320574887",
+    href: "tel:+918320574887",
     color: "text-coral",
     bg: "bg-coral/10",
   },
@@ -112,9 +133,9 @@ const ContactUs = () => {
         contactPoint: [
           {
             "@type": "ContactPoint",
-            telephone: "+1-555-123-4567",
+            telephone: "+91 8320574887",
             contactType: "customer support",
-            email: "support@purse.com",
+            email: "help.pursolina@gmail.com",
             availableLanguage: "English",
             hoursAvailable: {
               "@type": "OpeningHoursSpecification",
@@ -209,6 +230,8 @@ const ContactUs = () => {
                 <motion.a
                   key={card.title}
                   href={card.href}
+                  target={card.target}
+                  rel={card.rel}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: i * 0.1 }}
