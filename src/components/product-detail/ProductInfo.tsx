@@ -29,6 +29,7 @@ const ProductInfo = ({
   const [internalSelectedColor, setInternalSelectedColor] = useState(0);
   const resolvedSelectedColor = selectedColorIndex ?? internalSelectedColor;
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const { addToCart, setIsCartOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(product.id);

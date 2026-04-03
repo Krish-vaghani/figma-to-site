@@ -7,7 +7,8 @@ import ScrollToTop from "@/components/ScrollToTop";
 import AddressForm, { AddressFormData } from "@/components/AddressForm";
 import { useCart } from "@/contexts/CartContext";
 import { useOrders, DeliveryAddress, buildTrackingTimeline } from "@/contexts/OrderContext";
-import { useAddresses, SavedAddress } from "@/contexts/AddressContext";
+import { useAddresses } from "@/contexts/AddressContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { shopBackground } from "@/lib/assetUrls";
 import { showToast } from "@/lib/toast";
 import { createRazorpayOrder, verifyRazorpayPayment } from "@/store/services/orderApi";
@@ -73,6 +74,7 @@ const Checkout = () => {
   const [placing, setPlacing] = useState(false);
   const [saveNewAddress, setSaveNewAddress] = useState(true);
   const [newFormData, setNewFormData] = useState<AddressFormData | null>(null);
+  const [addressSubmitting, setAddressSubmitting] = useState(false);
 
   const shippingFee = cartTotal >= 1000 ? 0 : 79;
   const grandTotal = cartTotal + shippingFee;
@@ -80,7 +82,13 @@ const Checkout = () => {
   const getSelectedAddress = (): DeliveryAddress | null => {
     if (selectedAddressId === "new") return newFormData as DeliveryAddress | null;
     const found = addresses.find((a) => a.id === selectedAddressId);
-    return found ?? null;
+    if (found) return found;
+    // List may not have refetched yet right after save; use last submitted form
+    if (newFormData) {
+      const { label: _l, ...rest } = newFormData;
+      return rest as DeliveryAddress;
+    }
+    return null;
   };
 
   /** Resolve address and addressId for API. For "new" address, saves it and returns the new id. */
@@ -200,9 +208,32 @@ const Checkout = () => {
     navigate,
   ]);
 
-  const handleNewFormSubmit = (data: AddressFormData) => {
+  /** "Use This Address": persist form, and when logged in call save-address API so checkout has a real address id. */
+  const handleUseThisAddress = async (data: AddressFormData) => {
     setNewFormData(data);
-    handlePlaceOrder();
+    if (!isLoggedIn) return;
+
+    const { label, ...rest } = data;
+    setAddressSubmitting(true);
+    try {
+      const saved = await Promise.resolve(
+        addAddress(rest as DeliveryAddress, label ?? "Home")
+      );
+      if (saved?.id) {
+        setSelectedAddressId(saved.id);
+        showToast.success({
+          title: "Address saved",
+          description: "Continue with payment when you're ready.",
+        });
+      }
+    } catch (e) {
+      showToast.error({
+        title: "Could not save address",
+        description: e instanceof Error ? e.message : "Please try again.",
+      });
+    } finally {
+      setAddressSubmitting(false);
+    }
   };
 
   if (cart.length === 0) {
@@ -331,8 +362,9 @@ const Checkout = () => {
               {selectedAddressId === "new" && (
                 <div className="mt-5 pt-5 border-t border-border">
                   <AddressForm
-                    onSubmit={(data) => setNewFormData(data)}
+                    onSubmit={handleUseThisAddress}
                     submitLabel="Use This Address"
+                    loading={addressSubmitting}
                     defaultValues={newFormData ?? undefined}
                   />
                   {newFormData && (

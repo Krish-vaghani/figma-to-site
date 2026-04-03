@@ -81,6 +81,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
 
 const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart } = useCart();
   const isWishlisted = isInWishlist(product.id);

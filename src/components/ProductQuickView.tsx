@@ -1,11 +1,14 @@
 import { Heart, Star, ShoppingCart, Minus, Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { LOGIN_STATE_FOR_CHECKOUT } from "@/components/ProtectedRoute";
+import { useAuth } from "@/contexts/AuthContext";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -19,6 +22,8 @@ interface ProductQuickViewProps {
 }
 
 const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) => {
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const { isInWishlist, toggleWishlist } = useWishlist();
   const { addToCart, setIsCartOpen } = useCart();
   const isWishlisted = isInWishlist(product.id);
@@ -204,16 +209,23 @@ const ProductQuickView = ({ product, isOpen, onClose }: ProductQuickViewProps) =
                 className="flex-1 border-2 border-foreground text-foreground font-medium px-3 sm:px-6 py-2.5 sm:py-3.5 rounded-full text-xs sm:text-base hover:bg-foreground hover:text-background transition-colors duration-300"
                 whileTap={{ scale: 0.98 }}
                 onClick={() => {
-                  addToCart({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    originalPrice: product.originalPrice,
-                    image: product.image,
-                    color: product.colors[selectedColor],
-                  }, quantity);
+                  addToCart(
+                    {
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      originalPrice: product.originalPrice,
+                      image: product.image,
+                      color: product.colors[selectedColor],
+                    },
+                    quantity
+                  );
                   onClose();
-                  setIsCartOpen(true);
+                  if (isLoggedIn) {
+                    navigate("/checkout");
+                  } else {
+                    navigate("/login", { state: LOGIN_STATE_FOR_CHECKOUT });
+                  }
                 }}
               >
                 Buy Now

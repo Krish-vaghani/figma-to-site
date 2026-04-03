@@ -34,7 +34,7 @@ const AddressContext = createContext<AddressContextType | undefined>(undefined);
 const getStorageKey = (phone: string | undefined) => phone ? `saved_addresses_${phone}` : "saved_addresses";
 
 export const AddressProvider = ({ children }: { children: ReactNode }) => {
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const storageKey = getStorageKey(user?.phone);
 
   const [localAddresses, setLocalAddresses] = useState<SavedAddress[]>(() => {
@@ -44,24 +44,25 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
     } catch { return []; }
   });
 
+  /** Gate on `isLoggedIn` (token), not `user` — if token exists but auth_user is missing, APIs must still run. */
   const { data: listResponse, isLoading: isLoadingAddresses } = useGetAddressListQuery(
     { page: 1, limit: 100 },
-    { skip: !user }
+    { skip: !isLoggedIn }
   );
   const [addAddressMutation] = useAddAddressMutation();
   const [updateAddressMutation] = useUpdateAddressMutation();
   const [deleteAddressMutation] = useDeleteAddressMutation();
 
   const apiAddresses: SavedAddress[] = listResponse?.data?.map(apiAddressToSavedAddress) ?? [];
-  const addresses = user ? apiAddresses : localAddresses;
+  const addresses = isLoggedIn ? apiAddresses : localAddresses;
 
   useEffect(() => {
-    if (user) return;
+    if (isLoggedIn) return;
     try {
       const stored = localStorage.getItem(storageKey);
       setLocalAddresses(stored ? JSON.parse(stored) : []);
     } catch { setLocalAddresses([]); }
-  }, [storageKey, user]);
+  }, [storageKey, isLoggedIn]);
 
   const persist = useCallback(
     (updated: SavedAddress[]) => {
@@ -73,7 +74,7 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
 
   const addAddress = useCallback(
     (address: DeliveryAddress, label: string): SavedAddress | Promise<SavedAddress> => {
-      if (user) {
+      if (isLoggedIn) {
         const isFirst = apiAddresses.length === 0;
         const body = toAddAddressRequest(address, label, isFirst);
         return addAddressMutation(body)
@@ -88,12 +89,12 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
       persist([...localAddresses, newAddr]);
       return newAddr;
     },
-    [user, apiAddresses.length, localAddresses, addAddressMutation, persist]
+    [isLoggedIn, apiAddresses.length, localAddresses, addAddressMutation, persist]
   );
 
   const updateAddress = useCallback(
     (id: string, address: DeliveryAddress, label: string) => {
-      if (user) {
+      if (isLoggedIn) {
         updateAddressMutation({
           id,
           body: toUpdateAddressRequest({ ...address, label }),
@@ -102,12 +103,12 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
       }
       persist(localAddresses.map((a) => (a.id === id ? { ...a, ...address, label } : a)));
     },
-    [user, localAddresses, updateAddressMutation, persist]
+    [isLoggedIn, localAddresses, updateAddressMutation, persist]
   );
 
   const deleteAddress = useCallback(
     (id: string) => {
-      if (user) {
+      if (isLoggedIn) {
         deleteAddressMutation(id);
         return;
       }
@@ -116,18 +117,18 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
       if (hadDefault && remaining.length > 0) remaining[0].isDefault = true;
       persist(remaining);
     },
-    [user, localAddresses, deleteAddressMutation, persist]
+    [isLoggedIn, localAddresses, deleteAddressMutation, persist]
   );
 
   const setDefault = useCallback(
     (id: string) => {
-      if (user) {
+      if (isLoggedIn) {
         updateAddressMutation({ id, body: { is_default: true } });
         return;
       }
       persist(localAddresses.map((a) => ({ ...a, isDefault: a.id === id })));
     },
-    [user, localAddresses, updateAddressMutation, persist]
+    [isLoggedIn, localAddresses, updateAddressMutation, persist]
   );
 
   const getDefault = useCallback(() => addresses.find((a) => a.isDefault), [addresses]);
@@ -141,7 +142,7 @@ export const AddressProvider = ({ children }: { children: ReactNode }) => {
         deleteAddress,
         setDefault,
         getDefault,
-        isLoadingAddresses: user ? isLoadingAddresses : false,
+        isLoadingAddresses: isLoggedIn ? isLoadingAddresses : false,
       }}
     >
       {children}
