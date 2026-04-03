@@ -12,7 +12,8 @@ const ScrollRestoration = () => {
   }, []);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    // "instant" is not in the widely supported ScrollBehavior subset; Safari can mis-handle it.
+    window.scrollTo(0, 0);
   }, [pathname]);
 
   return null;

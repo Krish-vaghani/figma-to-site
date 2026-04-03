@@ -18,7 +18,13 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem(AUTH_TOKEN_KEY));
+  const [token, setToken] = useState<string | null>(() => {
+    try {
+      return localStorage.getItem(AUTH_TOKEN_KEY);
+    } catch {
+      return null;
+    }
+  });
   const [user, setUser] = useState<AuthUser | null>(() => {
     try {
       const stored = localStorage.getItem(AUTH_USER_KEY);
@@ -47,15 +53,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const login = useCallback((newToken: string, newUser: AuthUser) => {
-    localStorage.setItem(AUTH_TOKEN_KEY, newToken);
-    localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
+    try {
+      localStorage.setItem(AUTH_TOKEN_KEY, newToken);
+      localStorage.setItem(AUTH_USER_KEY, JSON.stringify(newUser));
+    } catch {
+      // Storage may be unavailable (e.g. private mode); session still works in memory.
+    }
     setToken(newToken);
     setUser(newUser);
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    localStorage.removeItem(AUTH_USER_KEY);
+    try {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      localStorage.removeItem(AUTH_USER_KEY);
+    } catch {
+      // ignore
+    }
     setToken(null);
     setUser(null);
   }, []);

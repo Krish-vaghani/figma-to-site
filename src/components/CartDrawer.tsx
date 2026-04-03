@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { LOGIN_STATE_FOR_CHECKOUT } from "@/components/ProtectedRoute";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const CartDrawer = () => {
@@ -151,6 +152,7 @@ const CartDrawer = () => {
               <div className="space-y-3">
                 <Link
                   to={isLoggedIn ? "/checkout" : "/login"}
+                  state={isLoggedIn ? undefined : LOGIN_STATE_FOR_CHECKOUT}
                   className="block w-full"
                   onClick={() => setIsCartOpen(false)}
                 >

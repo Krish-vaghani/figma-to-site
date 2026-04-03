@@ -3,7 +3,9 @@ import { Star, Minus, Plus, Heart, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { LOGIN_STATE_FOR_CHECKOUT } from "@/components/ProtectedRoute";
 import type { Product } from "@/data/products";
 
 interface ProductInfoProps {
@@ -55,7 +57,11 @@ const ProductInfo = ({
 
   const handleBuyNow = () => {
     addToCart(getCartItem(), quantity);
-    navigate("/checkout");
+    if (isLoggedIn) {
+      navigate("/checkout");
+    } else {
+      navigate("/login", { state: LOGIN_STATE_FOR_CHECKOUT });
+    }
   };
 
   return (

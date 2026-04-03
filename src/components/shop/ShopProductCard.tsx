@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useWishlist } from "@/contexts/WishlistContext";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { LOGIN_STATE_FOR_CHECKOUT } from "@/components/ProtectedRoute";
 import type { Product, BadgeType } from "@/data/products";
 import { Button } from "@/components/ui/button";
 import { useViewProductMutation } from "@/store/services/productApi";
@@ -104,7 +106,11 @@ const ShopProductCard = ({ product, onClick }: ShopProductCardProps) => {
       image: product.image,
       color: product.colors?.[0] ?? "#374151",
     });
-    navigate("/checkout");
+    if (isLoggedIn) {
+      navigate("/checkout");
+    } else {
+      navigate("/login", { state: LOGIN_STATE_FOR_CHECKOUT });
+    }
   };
 
   return (

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { X, Minus, Plus, Star, ShoppingBag } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { LOGIN_STATE_FOR_CHECKOUT } from "@/components/ProtectedRoute";
 import { products } from "@/data/products";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -8,6 +10,7 @@ import { shopBackground } from "@/lib/assetUrls";
 import { normalizeRating } from "@/lib/utils";
 
 const Cart = () => {
+  const { isLoggedIn } = useAuth();
   const { cart, removeFromCart, updateQuantity, clearCart, cartTotal } = useCart();
 
   const getProduct = (id: number | string) => products.find((p) => p.id === id || String(p.id) === String(id));
@@ -169,7 +172,11 @@ const Cart = () => {
                     Back To Shop
                   </button>
                 </Link>
-                <Link to="/checkout" className="flex-1 sm:flex-initial min-w-0">
+                <Link
+                  to={isLoggedIn ? "/checkout" : "/login"}
+                  state={isLoggedIn ? undefined : LOGIN_STATE_FOR_CHECKOUT}
+                  className="flex-1 sm:flex-initial min-w-0"
+                >
                   <button className="w-full sm:w-auto bg-coral text-white font-medium text-sm sm:text-base px-4 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-coral/90 transition-colors">
                     Checkout
                   </button>

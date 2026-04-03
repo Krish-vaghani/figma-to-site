@@ -1,4 +1,4 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useMemo } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -6,10 +6,13 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import ErrorBoundary from "@/components/ErrorBoundary";
-const heroBgImage =
-  "https://vedify-backend-dev.s3.eu-north-1.amazonaws.com/uploads/uploads/1770632691901_Frame_2147225909.png";
+import {
+  INDEX_HERO_BG,
+  collectLandingCriticalImageUrls,
+} from "@/lib/collectLandingImageUrls";
 import SectionSkeleton from "@/components/SectionSkeleton";
-import HeroSkeleton from "@/components/HeroSkeleton";
+import LandingPageLoader from "@/components/LandingPageLoader";
+import { usePreloadImages } from "@/hooks/use-preload-images";
 
 // Lazy load below-the-fold sections for faster initial paint
 const CollectionsSection = lazy(() => import("@/components/CollectionsSection"));
@@ -41,6 +44,21 @@ const SectionLoader = () => (
 const Index = () => {
   const { data: landingData, isLoading: isLandingLoading } = useGetLandingPageDataQuery();
 
+  const criticalImageUrls = useMemo(
+    () => collectLandingCriticalImageUrls(landingData),
+    [landingData]
+  );
+
+  const { ready: imagesReady } = usePreloadImages(criticalImageUrls, {
+    enabled: !isLandingLoading,
+  });
+
+  const showPage = !isLandingLoading && imagesReady;
+
+  if (!showPage) {
+    return <LandingPageLoader />;
+  }
+
   return (
     <div className="min-h-screen min-w-0 overflow-x-hidden bg-background">
       {/* Skip to main content for accessibility */}
@@ -53,74 +71,60 @@ const Index = () => {
       {/* Header area with shared hero background (Navbar + HeroSection) */}
       <div
         className="hero-header-bg relative overflow-hidden min-h-[50vh] lg:min-h-[780px]"
-        style={{ backgroundImage: `url(${heroBgImage})` }}
+        style={{ backgroundImage: `url(${INDEX_HERO_BG})` }}
       >
         <div className="absolute inset-0 bg-background/40 pointer-events-none z-0" aria-hidden />
         <div className="relative z-10">
           <Navbar className="bg-transparent" />
 
           <ErrorBoundary section="Hero">
-            {isLandingLoading ? (
-              <HeroSkeleton />
-            ) : (
-              <HeroSection data={landingData?.hero} />
-            )}
+            <HeroSection data={landingData?.hero} />
           </ErrorBoundary>
         </div>
       </div>
 
       <main id="main-content">
-        {isLandingLoading ? (
-          <>
-            <SectionSkeleton variant="carousel" count={4} />
-            <SectionLoader />
-            <SectionLoader />
-            <SectionSkeleton variant="carousel" count={5} />
-            <SectionSkeleton variant="testimonials" />
-          </>
-        ) : (
-          <>
-            <Suspense fallback={<SectionSkeleton variant="carousel" count={4} />}>
-              <ErrorBoundary section="Collections">
-                <CollectionsSection landingData={landingData} />
-              </ErrorBoundary>
-            </Suspense>
+        <>
+          <Suspense fallback={<SectionSkeleton variant="carousel" count={4} />}>
+            <ErrorBoundary section="Collections">
+              <CollectionsSection landingData={landingData} />
+            </ErrorBoundary>
+          </Suspense>
 
-            {/* Find Your Perfect Purse — commented out
-            <Suspense fallback={<SectionLoader />}>
-              <ErrorBoundary section="Categories">
-                <CategoriesSection data={landingData?.find_perfect_purse} />
-              </ErrorBoundary>
-            </Suspense>
-            */}
+          {/* Find Your Perfect Purse — commented out
+          <Suspense fallback={<SectionLoader />}>
+            <ErrorBoundary section="Categories">
+              <CategoriesSection data={landingData?.find_perfect_purse} />
+            </ErrorBoundary>
+          </Suspense>
+          */}
 
-            <Suspense fallback={<SectionLoader />}>
-              <ErrorBoundary section="Elevate">
-                <ElevateSection />
-              </ErrorBoundary>
-            </Suspense>
+          <Suspense fallback={<SectionLoader />}>
+            <ErrorBoundary section="Elevate">
+              <ElevateSection />
+            </ErrorBoundary>
+          </Suspense>
 
-            <Suspense fallback={<SectionSkeleton variant="carousel" count={5} />}>
-              <ErrorBoundary section="New Arrivals">
-                <NewArrivalsSection landingData={landingData} />
-              </ErrorBoundary>
-            </Suspense>
+          <Suspense fallback={<SectionSkeleton variant="carousel" count={5} />}>
+            <ErrorBoundary section="New Arrivals">
+              <NewArrivalsSection landingData={landingData} />
+            </ErrorBoundary>
+          </Suspense>
 
-            {/* Bundle section commented out – restore when bundle API is ready
-            <Suspense fallback={<SectionLoader />}>
-              <ErrorBoundary section="Bundle Deals">
-                <BundleDealsSection />
-              </ErrorBoundary>
-            </Suspense>
-            */}
+          {/* Bundle section commented out – restore when bundle API is ready
+          <Suspense fallback={<SectionLoader />}>
+            <ErrorBoundary section="Bundle Deals">
+              <BundleDealsSection />
+            </ErrorBoundary>
+          </Suspense>
+          */}
 
-            <Suspense fallback={<SectionSkeleton variant="testimonials" />}>
-              <ErrorBoundary section="Testimonials">
-                <TestimonialsSection />
-              </ErrorBoundary>
-            </Suspense>
-          </>
-        )}
+          <Suspense fallback={<SectionSkeleton variant="testimonials" />}>
+            <ErrorBoundary section="Testimonials">
+              <TestimonialsSection />
+            </ErrorBoundary>
+          </Suspense>
+        </>
       </main>
 
       {/* <Suspense fallback={null}>
