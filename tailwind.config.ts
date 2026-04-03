@@ -133,6 +133,41 @@ export default {
             transform: "translateY(-8px)",
           },
         },
+        /** Full-page loading overlay (LandingPageLoader) */
+        "loader-aurora": {
+          "0%, 100%": {
+            transform: "translate(0%, 0%) scale(1)",
+            opacity: "0.45",
+          },
+          "50%": {
+            transform: "translate(8%, -6%) scale(1.12)",
+            opacity: "0.65",
+          },
+        },
+        "loader-aurora-slow": {
+          "0%, 100%": {
+            transform: "translate(0%, 0%) scale(1.05)",
+            opacity: "0.35",
+          },
+          "50%": {
+            transform: "translate(-10%, 8%) scale(1)",
+            opacity: "0.5",
+          },
+        },
+        "loader-gradient-shift": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        "loader-dot": {
+          "0%, 80%, 100%": {
+            transform: "scale(0.6)",
+            opacity: "0.4",
+          },
+          "40%": {
+            transform: "scale(1)",
+            opacity: "1",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -143,6 +178,10 @@ export default {
         "skeleton-shimmer": "skeleton-shimmer 1.8s ease-in-out infinite",
         "page-enter": "page-enter 0.3s ease-out",
         "page-exit": "page-exit 0.3s ease-out",
+        "loader-aurora": "loader-aurora 14s ease-in-out infinite",
+        "loader-aurora-slow": "loader-aurora-slow 18s ease-in-out infinite",
+        "loader-gradient-shift": "loader-gradient-shift 10s ease-in-out infinite",
+        "loader-dot": "loader-dot 1.2s ease-in-out infinite",
       },
     },
   },
