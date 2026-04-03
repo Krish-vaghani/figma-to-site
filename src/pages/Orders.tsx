@@ -1,10 +1,13 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Package, MapPin, ShoppingBag, ChevronRight, Clock, CheckCircle2, Truck, Star, Navigation, PartyPopper, XCircle } from "lucide-react";
+import { MapPin, ShoppingBag, ChevronRight, Clock, CheckCircle2, Truck, Star, Navigation, PartyPopper, XCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import { useOrders, Order, OrderStatus } from "@/contexts/OrderContext";
-import { shopBackground } from "@/lib/assetUrls";
+import { OrderStatus } from "@/contexts/OrderContext";
+import { heroProduct, shopBackground } from "@/lib/assetUrls";
+import { getOrdersList, type ApiOrderListItem, type ApiOrderLineList } from "@/store/services/orderApi";
+import { getCachedProductImage } from "@/lib/productImageCache";
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; icon: React.ElementType }> = {
   placed:           { label: "Order Placed",    color: "text-foreground bg-secondary",                              icon: Clock },
@@ -15,8 +18,56 @@ const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; icon: R
   cancelled:        { label: "Cancelled",        color: "text-destructive bg-destructive/10",                       icon: XCircle },
 };
 
+function listItemImageUrl(productId: string): string {
+  const c = getCachedProductImage(productId);
+  if (c?.trim()) {
+    const t = c.trim();
+    if (/^https?:\/\//i.test(t)) return t;
+    const apiBase =
+      import.meta.env.VITE_IMAGE_BASE_URL ??
+      import.meta.env.VITE_ORDER_API_URL ??
+      "https://api.pursolina.com/api/v1";
+    let origin = "https://api.pursolina.com";
+    try {
+      origin = new URL(apiBase).origin;
+    } catch {
+      /* ignore */
+    }
+    return t.startsWith("/") ? `${origin}${t}` : `${origin}/${t}`;
+  }
+  return heroProduct;
+}
+
+function lineItemDisplayTotal(item: ApiOrderLineList): number {
+  const total = item.totalForItem;
+  const per = item.pricePerItem;
+  const qty = item.quantity;
+  if (typeof total === "number" && Number.isFinite(total)) return total;
+  if (typeof per === "number" && typeof qty === "number" && Number.isFinite(per) && Number.isFinite(qty)) return per * qty;
+  return 0;
+}
+
 const Orders = () => {
-  const { orders } = useOrders();
+  const [orders, setOrders] = useState<ApiOrderListItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    getOrdersList(1, 50)
+      .then((res) => {
+        if (!cancelled) setOrders(res.data ?? []);
+      })
+      .catch((e: unknown) => {
+        if (!cancelled) setError(e instanceof Error ? e.message : "Could not load orders");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-background">
@@ -41,7 +92,22 @@ const Orders = () => {
       </div>
 
       <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {orders.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-3 text-center text-muted-foreground text-sm">
+            Loading your orders…
+          </div>
+        ) : error ? (
+          <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
+            <p className="text-destructive text-sm">{error}</p>
+            <button
+              type="button"
+              className="text-coral text-sm font-medium underline"
+              onClick={() => window.location.reload()}
+            >
+              Try again
+            </button>
+          </div>
+        ) : orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-4 text-center">
             <div className="w-20 h-20 rounded-full bg-secondary/50 flex items-center justify-center">
               <ShoppingBag className="h-10 w-10 text-muted-foreground" />
@@ -60,18 +126,19 @@ const Orders = () => {
           <div className="space-y-5">
             <p className="text-muted-foreground text-sm">{orders.length} order{orders.length > 1 ? "s" : ""} found</p>
             {orders.map((order) => {
-              const status = STATUS_CONFIG[order.status];
+              const statusKey = order.status as OrderStatus;
+              const status = STATUS_CONFIG[statusKey] ?? STATUS_CONFIG.placed;
               const StatusIcon = status.icon;
               const placedDate = new Date(order.placedAt).toLocaleDateString("en-IN", {
                 day: "numeric", month: "short", year: "numeric",
               });
 
               return (
-                <div key={order.id} className="bg-card border border-border rounded-2xl overflow-hidden">
+                <div key={order._id} className="bg-card border border-border rounded-2xl overflow-hidden">
                   {/* Order header */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-border bg-secondary/20">
                     <div className="flex flex-col gap-0.5">
-                      <p className="font-mono text-sm font-semibold text-foreground">{order.id}</p>
+                      <p className="font-mono text-sm font-semibold text-foreground">{order.orderId}</p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1">
                         <Clock className="h-3 w-3" /> Placed on {placedDate}
                       </p>
@@ -89,13 +156,21 @@ const Orders = () => {
                   <div className="px-5 py-4">
                     <div className="flex items-center gap-3 flex-wrap">
                       {order.items.slice(0, 3).map((item) => (
-                        <div key={`${item.id}-${item.color}`} className="flex items-center gap-2">
+                        <div key={`${item.product}-${item.productName}`} className="flex items-center gap-2">
                           <div className="w-12 h-12 rounded-lg overflow-hidden bg-secondary/30 flex-shrink-0">
-                            <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                            <img
+                              src={listItemImageUrl(String(item.product))}
+                              alt={item.productName}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-foreground leading-tight line-clamp-1 max-w-[140px]">{item.name}</p>
-                            <p className="text-xs text-muted-foreground">Qty: {item.quantity} · ₹{(item.price * item.quantity).toLocaleString()}</p>
+                            <p className="text-sm font-medium text-foreground leading-tight line-clamp-1 max-w-[140px]">
+                              {item.productName}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              Qty: {item.quantity} · ₹{lineItemDisplayTotal(item).toLocaleString()}
+                            </p>
                           </div>
                         </div>
                       ))}
@@ -108,7 +183,7 @@ const Orders = () => {
                     <div className="flex items-center gap-1.5 mt-3 text-xs text-muted-foreground">
                       <MapPin className="h-3 w-3 flex-shrink-0" />
                       <span className="truncate">
-                        {[order.address.city, order.address.state, order.address.pincode].filter(Boolean).join(", ")}
+                        {[order.deliverTo.city, order.deliverTo.state, order.deliverTo.pincode].filter(Boolean).join(", ")}
                       </span>
                     </div>
 
@@ -125,7 +200,7 @@ const Orders = () => {
                             <Star className="h-3 w-3" /> Rate Order
                           </button>
                         )}
-                        <Link to={`/order/${order.id}`}>
+                        <Link to={`/order/${order._id}`}>
                           <button className="flex items-center gap-1 text-xs text-foreground border border-border rounded-full px-3 py-1.5 hover:bg-secondary/50 transition-colors">
                             Track Order <ChevronRight className="h-3 w-3" />
                           </button>

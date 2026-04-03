@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
   CheckCircle2, Package, MapPin, ShoppingBag, Truck, Clock,
-  ArrowLeft, Star, Navigation, PartyPopper, XCircle,
+  ArrowLeft, Star, Navigation, PartyPopper, XCircle, ExternalLink,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
@@ -10,6 +10,9 @@ import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useOrders, Order, OrderStatus, TrackingEvent } from "@/contexts/OrderContext";
 import { shopBackground } from "@/lib/assetUrls";
+import { getOrderById, mapApiOrderDetailToOrder } from "@/store/services/orderApi";
+
+const MONGO_ORDER_ID_RE = /^[a-f0-9]{24}$/i;
 
 // ── Status config ─────────────────────────────────────────────────────────────
 const STATUS_META: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
@@ -157,12 +160,56 @@ const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getOrder } = useOrders();
-  const order = id ? getOrder(id) : undefined;
+  const [apiOrder, setApiOrder] = useState<Order | null>(null);
+  const [loadingApi, setLoadingApi] = useState(false);
+
+  const isMongoOrderId = Boolean(id && MONGO_ORDER_ID_RE.test(id));
+  const localOrder = !isMongoOrderId && id ? getOrder(id) : undefined;
 
   useEffect(() => {
-    if (!order) navigate("/orders");
-  }, [order, navigate]);
+    if (!id || !isMongoOrderId) return;
+    let cancelled = false;
+    setLoadingApi(true);
+    setApiOrder(null);
+    getOrderById(id)
+      .then((data) => {
+        if (!cancelled) setApiOrder(mapApiOrderDetailToOrder(data));
+      })
+      .catch(() => {
+        if (!cancelled) navigate("/orders");
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingApi(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [id, isMongoOrderId, navigate]);
 
+  useEffect(() => {
+    if (!id) {
+      navigate("/orders");
+      return;
+    }
+    if (isMongoOrderId) return;
+    if (!localOrder) navigate("/orders");
+  }, [id, isMongoOrderId, localOrder, navigate]);
+
+  const order: Order | undefined = isMongoOrderId ? (apiOrder ?? undefined) : localOrder;
+
+  if (!id) return null;
+  if (isMongoOrderId && loadingApi) {
+    return (
+      <div className="min-h-screen bg-background">
+        <ScrollToTop />
+        <Navbar />
+        <div className="max-w-[1100px] mx-auto px-4 py-24 text-center text-muted-foreground text-sm">
+          Loading order…
+        </div>
+        <Footer />
+      </div>
+    );
+  }
   if (!order) return null;
 
   const statusMeta = STATUS_META[order.status];
@@ -295,11 +342,22 @@ const OrderDetail = () => {
               <div className="mt-4 pt-4 border-t border-border space-y-1.5 text-sm">
                 <div className="flex justify-between text-muted-foreground">
                   <span>Subtotal</span>
-                  <span>₹{order.items.reduce((s, i) => s + i.price * i.quantity, 0).toLocaleString()}</span>
+                  <span>
+                    ₹
+                    {(order.subtotal ?? order.items.reduce((s, i) => s + i.price * i.quantity, 0)).toLocaleString()}
+                  </span>
                 </div>
                 <div className="flex justify-between text-muted-foreground">
                   <span>Shipping</span>
-                  <span className="text-[hsl(var(--toast-success))]">FREE</span>
+                  {order.shippingCharge != null ? (
+                    order.shippingCharge === 0 ? (
+                      <span className="text-[hsl(var(--toast-success))]">FREE</span>
+                    ) : (
+                      <span>₹{order.shippingCharge.toLocaleString()}</span>
+                    )
+                  ) : (
+                    <span className="text-[hsl(var(--toast-success))]">FREE</span>
+                  )}
                 </div>
                 <div className="flex justify-between font-bold text-foreground text-base pt-1 border-t border-border">
                   <span>Total</span>

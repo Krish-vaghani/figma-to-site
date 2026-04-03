@@ -34,6 +34,11 @@ export interface Order {
   placedAt: string;
   estimatedDelivery: string;
   trackingEvents: TrackingEvent[];
+  /** From API order list/detail when available */
+  subtotal?: number;
+  shippingCharge?: number;
+  trackingUrl?: string | null;
+  awbCode?: string | null;
 }
 
 const addHours = (iso: string, hours: number): string => {
@@ -58,6 +63,54 @@ export function buildTrackingTimeline(placedAt: string): TrackingEvent[] {
   ];
 }
 
+/** Build timeline from API timestamps and current status (GET /order/:id). */
+export function buildTrackingTimelineFromApi(api: {
+  status: string;
+  placedAt: string;
+  confirmedAt: string | null;
+  shippedAt: string | null;
+  outForDeliveryAt: string | null;
+  deliveredAt: string | null;
+  estimatedDeliveryDate?: string | null;
+  paymentStatus?: string;
+}): TrackingEvent[] {
+  const steps: { status: OrderStatus; label: string; description: string }[] = [
+    { status: "placed", label: "Order Placed", description: "Your order has been received and is being reviewed." },
+    { status: "confirmed", label: "Order Confirmed", description: "Payment confirmed. Your order is being prepared." },
+    { status: "shipped", label: "Shipped", description: "Your package is on its way with our delivery partner." },
+    { status: "out_for_delivery", label: "Out for Delivery", description: "Your package is out for delivery today." },
+    { status: "delivered", label: "Delivered", description: "Package delivered successfully. Enjoy your order!" },
+  ];
+  const orderFlow: OrderStatus[] = ["placed", "confirmed", "shipped", "out_for_delivery", "delivered"];
+  const currentIdx = orderFlow.indexOf(api.status as OrderStatus);
+  const effectiveIdx = currentIdx >= 0 ? currentIdx : 0;
+
+  const ts = (s: OrderStatus): string => {
+    switch (s) {
+      case "placed":
+        return api.placedAt;
+      case "confirmed":
+        return api.confirmedAt ?? (api.paymentStatus === "confirmed" ? api.placedAt : addHours(api.placedAt, 1));
+      case "shipped":
+        return api.shippedAt ?? api.placedAt;
+      case "out_for_delivery":
+        return api.outForDeliveryAt ?? api.shippedAt ?? api.placedAt;
+      case "delivered":
+        return api.deliveredAt ?? api.estimatedDeliveryDate ?? api.placedAt;
+      default:
+        return api.placedAt;
+    }
+  };
+
+  return steps.map((step, i) => ({
+    status: step.status,
+    label: step.label,
+    description: step.description,
+    timestamp: ts(step.status),
+    completed: i <= effectiveIdx,
+  }));
+}
+
 interface OrderContextType {
   orders: Order[];
   placeOrder: (items: CartItem[], address: DeliveryAddress, paymentMethod: "cod" | "online", total: number) => Order;
@@ -78,6 +131,10 @@ function migrateOrder(raw: Partial<Order> & { id: string; placedAt: string }): O
     status: (raw.status as OrderStatus) ?? "placed", placedAt,
     estimatedDelivery: raw.estimatedDelivery ?? addDays(placedAt, 5),
     trackingEvents: raw.trackingEvents ?? buildTrackingTimeline(placedAt),
+    subtotal: raw.subtotal,
+    shippingCharge: raw.shippingCharge,
+    trackingUrl: raw.trackingUrl,
+    awbCode: raw.awbCode,
   };
 }
 
