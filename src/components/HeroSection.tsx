@@ -108,6 +108,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                   alt={`${hero.name} - Premium handbag`}
                   className="w-full aspect-[4/5] object-cover rounded-3xl"
                   loading="eager"
+                  fetchPriority="high"
                 />
 
                 {/* Mobile Product Info Card - Centered half on image, half below */}
@@ -280,7 +281,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                         animate={{ opacity: 1, scale: 1, x: 0 }}
                         transition={{ delay: 0.9 + i * 0.1, duration: 0.4, ease: "easeOut" }}
                       >
-                        <img src={avatar} alt="" className="w-full h-full object-cover" loading="lazy" />
+                        <img src={avatar} alt="" className="w-full h-full object-cover" loading="eager" fetchPriority="low" />
                       </motion.div>
                     ))}
                   </div>
@@ -397,6 +398,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                         className="w-full h-[560px] xl:h-[600px] object-cover will-change-transform"
                         loading="eager"
                         decoding="async"
+                        fetchPriority="high"
                         whileHover={{ scale: 1.03 }}
                         transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                       />

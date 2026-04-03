@@ -73,7 +73,7 @@ const BadgeComponent = ({ type }: { type: BadgeType }) => {
   );
 };
 
-const NewProductCard = ({ product }: { product: Product }) => {
+const NewProductCard = ({ product, index }: { product: Product; index: number }) => {
   const { isInWishlist, toggleWishlist } = useWishlist();
   const isWishlisted = isInWishlist(String(product.id) + "_new");
   const [viewProduct] = useViewProductMutation();
@@ -119,8 +119,9 @@ const NewProductCard = ({ product }: { product: Product }) => {
           src={product.image}
           alt={`${product.name} - New arrival handbag`}
           className="w-full h-full object-cover pointer-events-none will-change-transform"
-          loading="lazy"
+          loading="eager"
           decoding="async"
+          fetchPriority={index < 3 ? "high" : "auto"}
           draggable={false}
         />
       </div>
@@ -204,8 +205,8 @@ const NewArrivalsSection = ({ landingData }: NewArrivalsSectionProps) => {
       {/* Products Carousel */}
       <div className="px-4 sm:px-8 lg:px-16 max-w-7xl mx-auto">
         <ProductCarousel autoplayDelay={3500}>
-          {newArrivalProducts.map((product) => (
-            <NewProductCard key={product.id} product={product} />
+          {newArrivalProducts.map((product, index) => (
+            <NewProductCard key={product.id} product={product} index={index} />
           ))}
         </ProductCarousel>
       </div>

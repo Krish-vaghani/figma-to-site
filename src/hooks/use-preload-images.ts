@@ -1,9 +1,21 @@
 import { useEffect, useMemo, useState } from "react";
 
+/**
+ * Load + decode so the image is ready to paint from cache (reduces pop-in after loader).
+ */
 function loadImage(url: string): Promise<void> {
   return new Promise((resolve) => {
     const img = new Image();
-    img.onload = () => resolve();
+    img.onload = () => {
+      if (typeof img.decode === "function") {
+        img
+          .decode()
+          .then(() => resolve())
+          .catch(() => resolve());
+      } else {
+        resolve();
+      }
+    };
     img.onerror = () => resolve();
     img.src = url;
   });
