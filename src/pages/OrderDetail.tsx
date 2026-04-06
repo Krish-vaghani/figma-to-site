@@ -11,8 +11,24 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { useOrders, Order, OrderStatus, TrackingEvent } from "@/contexts/OrderContext";
 import { shopBackground } from "@/lib/assetUrls";
 import { getOrderById, mapApiOrderDetailToOrder } from "@/store/services/orderApi";
+import { readOrderDetailCache, writeOrderDetailCache } from "@/lib/ordersFetchCache";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const MONGO_ORDER_ID_RE = /^[a-f0-9]{24}$/i;
+
+function OrderDetailSkeleton() {
+  return (
+    <div className="max-w-[1100px] mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6" aria-busy="true" aria-label="Loading order">
+      <div className="flex justify-between items-center mb-6">
+        <Skeleton className="h-5 w-36" />
+        <Skeleton className="h-8 w-28 rounded-full" />
+      </div>
+      <Skeleton className="h-28 w-full rounded-2xl" />
+      <Skeleton className="h-64 w-full rounded-2xl" />
+      <Skeleton className="h-48 w-full rounded-2xl" />
+    </div>
+  );
+}
 
 // ── Status config ─────────────────────────────────────────────────────────────
 const STATUS_META: Record<OrderStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
@@ -160,27 +176,50 @@ const OrderDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getOrder } = useOrders();
-  const [apiOrder, setApiOrder] = useState<Order | null>(null);
-  const [loadingApi, setLoadingApi] = useState(false);
-
   const isMongoOrderId = Boolean(id && MONGO_ORDER_ID_RE.test(id));
+
+  const [apiOrder, setApiOrder] = useState<Order | null>(() => {
+    if (!id || !MONGO_ORDER_ID_RE.test(id)) return null;
+    const c = readOrderDetailCache(id);
+    return c ? mapApiOrderDetailToOrder(c) : null;
+  });
+  const [loadingApi, setLoadingApi] = useState(
+    () => Boolean(id && MONGO_ORDER_ID_RE.test(id) && readOrderDetailCache(id) === null)
+  );
+
   const localOrder = !isMongoOrderId && id ? getOrder(id) : undefined;
 
   useEffect(() => {
     if (!id || !isMongoOrderId) return;
+    const cached = readOrderDetailCache(id);
+    if (cached) {
+      setApiOrder(mapApiOrderDetailToOrder(cached));
+      setLoadingApi(false);
+    } else {
+      setApiOrder(null);
+      setLoadingApi(true);
+    }
+  }, [id, isMongoOrderId]);
+
+  useEffect(() => {
+    if (!id || !isMongoOrderId) return;
     let cancelled = false;
-    setLoadingApi(true);
-    setApiOrder(null);
+    const hadCache = readOrderDetailCache(id) !== null;
+
     getOrderById(id)
       .then((data) => {
-        if (!cancelled) setApiOrder(mapApiOrderDetailToOrder(data));
+        if (!cancelled) {
+          setApiOrder(mapApiOrderDetailToOrder(data));
+          writeOrderDetailCache(id, data);
+        }
       })
       .catch(() => {
-        if (!cancelled) navigate("/orders");
+        if (!cancelled && !hadCache) navigate("/orders");
       })
       .finally(() => {
         if (!cancelled) setLoadingApi(false);
       });
+
     return () => {
       cancelled = true;
     };
@@ -203,9 +242,7 @@ const OrderDetail = () => {
       <div className="min-h-screen bg-background">
         <ScrollToTop />
         <Navbar />
-        <div className="max-w-[1100px] mx-auto px-4 py-24 text-center text-muted-foreground text-sm">
-          Loading order…
-        </div>
+        <OrderDetailSkeleton />
         <Footer />
       </div>
     );

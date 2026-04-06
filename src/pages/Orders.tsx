@@ -8,6 +8,8 @@ import { OrderStatus } from "@/contexts/OrderContext";
 import { heroProduct, shopBackground } from "@/lib/assetUrls";
 import { getOrdersList, type ApiOrderListItem, type ApiOrderLineList } from "@/store/services/orderApi";
 import { getCachedProductImage } from "@/lib/productImageCache";
+import { readOrdersListCache, writeOrdersListCache } from "@/lib/ordersFetchCache";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const STATUS_CONFIG: Record<OrderStatus, { label: string; color: string; icon: React.ElementType }> = {
   placed:           { label: "Order Placed",    color: "text-foreground bg-secondary",                              icon: Clock },
@@ -47,16 +49,50 @@ function lineItemDisplayTotal(item: ApiOrderLineList): number {
   return 0;
 }
 
+function OrdersListSkeleton() {
+  return (
+    <div className="space-y-5" aria-busy="true" aria-label="Loading orders">
+      <Skeleton className="h-4 w-36" />
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-border bg-secondary/20">
+            <div className="space-y-2 flex-1">
+              <Skeleton className="h-4 w-48 max-w-full" />
+              <Skeleton className="h-3 w-36" />
+            </div>
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-7 w-28 rounded-full" />
+              <Skeleton className="h-5 w-14" />
+            </div>
+          </div>
+          <div className="px-5 py-4 flex gap-4">
+            <Skeleton className="h-12 w-12 rounded-lg flex-shrink-0" />
+            <div className="space-y-2 flex-1 pt-1">
+              <Skeleton className="h-4 w-44 max-w-full" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 const Orders = () => {
-  const [orders, setOrders] = useState<ApiOrderListItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [orders, setOrders] = useState<ApiOrderListItem[]>(() => readOrdersListCache() ?? []);
+  const [loading, setLoading] = useState(() => readOrdersListCache() === null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
-    getOrdersList(1, 50)
+    getOrdersList(1, 10)
       .then((res) => {
-        if (!cancelled) setOrders(res.data ?? []);
+        if (!cancelled) {
+          const data = res.data ?? [];
+          setOrders(data);
+          writeOrdersListCache(data);
+          setError(null);
+        }
       })
       .catch((e: unknown) => {
         if (!cancelled) setError(e instanceof Error ? e.message : "Could not load orders");
@@ -92,11 +128,9 @@ const Orders = () => {
       </div>
 
       <div className="max-w-[900px] mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-3 text-center text-muted-foreground text-sm">
-            Loading your orders…
-          </div>
-        ) : error ? (
+        {loading && orders.length === 0 ? (
+          <OrdersListSkeleton />
+        ) : error && orders.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3 text-center">
             <p className="text-destructive text-sm">{error}</p>
             <button
@@ -124,6 +158,14 @@ const Orders = () => {
           </div>
         ) : (
           <div className="space-y-5">
+            {error ? (
+              <div className="rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-2 text-center text-destructive text-sm">
+                {error} — showing cached orders.{" "}
+                <button type="button" className="underline font-medium" onClick={() => window.location.reload()}>
+                  Retry
+                </button>
+              </div>
+            ) : null}
             <p className="text-muted-foreground text-sm">{orders.length} order{orders.length > 1 ? "s" : ""} found</p>
             {orders.map((order) => {
               const statusKey = order.status as OrderStatus;

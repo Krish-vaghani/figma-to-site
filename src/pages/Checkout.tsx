@@ -12,6 +12,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { shopBackground } from "@/lib/assetUrls";
 import { showToast } from "@/lib/toast";
 import { createRazorpayOrder, verifyRazorpayPayment } from "@/store/services/orderApi";
+import { invalidateOrdersListCache } from "@/lib/ordersFetchCache";
 
 const RAZORPAY_SCRIPT = "https://checkout.razorpay.com/v1/checkout.js";
 /** Use test key when set (e.g. VITE_RAZORPAY_KEY_ID=rzp_test_xxx). Test key = test mode. */
@@ -157,6 +158,7 @@ const Checkout = () => {
                 razorpay_signature: payload.razorpay_signature,
               });
               updateOrder(orderId, { status: "confirmed" });
+              invalidateOrdersListCache();
               clearCart();
               navigate(`/order-success/${orderId}`);
             } catch (err) {
