@@ -24,19 +24,21 @@ function loadImage(url: string): Promise<void> {
 export interface UsePreloadImagesOptions {
   /** When false, ready stays false until enabled becomes true. */
   enabled?: boolean;
-  /** After this, show the page even if some images failed (ms). */
+  /** After this, show the page even if images are still loading (ms). */
   timeoutMs?: number;
 }
 
 /**
  * Preloads a list of image URLs in parallel. Uses browser cache so when the
  * page renders, images often resolve from cache immediately.
+ * A timeout caps how long the shell blocks: the page shows when all finish
+ * or when the timeout fires—whichever comes first (images keep loading after).
  */
 export function usePreloadImages(
   urls: string[],
   options?: UsePreloadImagesOptions
 ): { ready: boolean } {
-  const { enabled = true, timeoutMs = 15000 } = options ?? {};
+  const { enabled = true, timeoutMs = 5000 } = options ?? {};
   const [ready, setReady] = useState(false);
 
   const key = useMemo(() => {
