@@ -12,11 +12,42 @@ import {
 } from "@/contexts/OrderContext";
 import { heroProduct } from "@/lib/assetUrls";
 import { getCachedProductImage } from "@/lib/productImageCache";
+import { writeOrdersListCache } from "@/lib/ordersFetchCache";
 import { clearAuthAndRedirect } from "@/store/baseQueryWithAuthLogout";
 
 const AUTH_TOKEN_KEY = "auth_token";
 const ORDER_BASE_URL =
   import.meta.env.VITE_ORDER_API_URL ?? "https://api.pursolina.com/api/v1";
+
+/** Max wait for GET /order/list and GET /order/:id (ms). Override with VITE_ORDER_GET_TIMEOUT_MS. */
+const ORDER_GET_TIMEOUT_MS = Number(import.meta.env.VITE_ORDER_GET_TIMEOUT_MS) || 5000;
+
+function isAbortError(e: unknown): boolean {
+  return (
+    (typeof DOMException !== "undefined" && e instanceof DOMException && e.name === "AbortError") ||
+    (e instanceof Error && e.name === "AbortError")
+  );
+}
+
+/** Abortable GET so slow networks do not sit on a 15s+ loader. */
+async function orderJsonGet(url: string): Promise<Response> {
+  const controller = new AbortController();
+  const timer = window.setTimeout(() => controller.abort(), ORDER_GET_TIMEOUT_MS);
+  try {
+    return await fetch(url, {
+      method: "GET",
+      headers: getAuthHeaders(),
+      signal: controller.signal,
+    });
+  } catch (e) {
+    if (isAbortError(e)) {
+      throw new Error("Request timed out. Check your connection and try again.");
+    }
+    throw e;
+  } finally {
+    window.clearTimeout(timer);
+  }
+}
 
 function getAuthHeaders(): HeadersInit {
   const token = typeof window !== "undefined" ? localStorage.getItem(AUTH_TOKEN_KEY) : null;
@@ -199,32 +230,67 @@ export function mapApiOrderDetailToOrder(data: ApiOrderDetail): Order {
   };
 }
 
-export async function getOrdersList(page = 1, limit = 20): Promise<OrderListResponse> {
-  const q = new URLSearchParams({ page: String(page), limit: String(limit) });
-  const res = await fetch(`${ORDER_BASE_URL}/order/list?${q}`, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    if (res.status === 401) clearAuthAndRedirect();
-    throw new Error(data?.message ?? "Failed to load orders");
-  }
-  return data;
+const ordersListInFlight = new Map<string, Promise<OrderListResponse>>();
+const orderDetailInFlight = new Map<string, Promise<ApiOrderDetail>>();
+
+export async function getOrdersList(page = 1, limit = 10): Promise<OrderListResponse> {
+  const key = `${page}_${limit}`;
+  const existing = ordersListInFlight.get(key);
+  if (existing) return existing;
+
+  const p = (async () => {
+    try {
+      const q = new URLSearchParams({ page: String(page), limit: String(limit) });
+      const res = await orderJsonGet(`${ORDER_BASE_URL}/order/list?${q}`);
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) clearAuthAndRedirect();
+        throw new Error(data?.message ?? "Failed to load orders");
+      }
+      return data as OrderListResponse;
+    } finally {
+      ordersListInFlight.delete(key);
+    }
+  })();
+
+  ordersListInFlight.set(key, p);
+  return p;
+}
+
+/**
+ * Warm session cache after login / on idle so Orders opens without waiting on the network.
+ */
+export function prefetchOrdersList(page = 1, limit = 10): void {
+  if (typeof window === "undefined") return;
+  if (!localStorage.getItem(AUTH_TOKEN_KEY)) return;
+  getOrdersList(page, limit)
+    .then((res) => writeOrdersListCache(res.data ?? []))
+    .catch(() => {
+      /* ignore — Orders page will retry */
+    });
 }
 
 export async function getOrderById(orderMongoId: string): Promise<ApiOrderDetail> {
-  const res = await fetch(`${ORDER_BASE_URL}/order/${encodeURIComponent(orderMongoId)}`, {
-    method: "GET",
-    headers: getAuthHeaders(),
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    if (res.status === 401) clearAuthAndRedirect();
-    throw new Error(typeof data?.message === "string" ? data.message : "Failed to load order");
-  }
-  if (!data?.data) throw new Error("Invalid order response");
-  return data.data as ApiOrderDetail;
+  const existing = orderDetailInFlight.get(orderMongoId);
+  if (existing) return existing;
+
+  const p = (async () => {
+    try {
+      const res = await orderJsonGet(`${ORDER_BASE_URL}/order/${encodeURIComponent(orderMongoId)}`);
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 401) clearAuthAndRedirect();
+        throw new Error(typeof data?.message === "string" ? data.message : "Failed to load order");
+      }
+      if (!data?.data) throw new Error("Invalid order response");
+      return data.data as ApiOrderDetail;
+    } finally {
+      orderDetailInFlight.delete(orderMongoId);
+    }
+  })();
+
+  orderDetailInFlight.set(orderMongoId, p);
+  return p;
 }
 
 export interface CreateRazorpayOrderRequest {

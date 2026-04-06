@@ -2,6 +2,8 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Suspense, lazy, type ReactNode, useEffect } from "react";
+import Orders from "./pages/Orders";
+import OrderDetail from "./pages/OrderDetail";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ViewedTodayProvider } from "@/contexts/ViewedTodayContext";
 import { CartProvider } from "@/contexts/CartContext";
@@ -13,6 +15,7 @@ import CartDrawer from "@/components/CartDrawer";
 import PageTransition from "@/components/PageTransition";
 import ScrollRestoration from "@/components/ScrollRestoration";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import OrdersPrefetch from "@/components/OrdersPrefetch";
 import { initMetaPixel, trackPageView } from "@/lib/metaPixel";
 
 const MetaPixelTracker = () => {
@@ -43,9 +46,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
 const Cart = lazy(() => import("./pages/Cart"));
 const Checkout = lazy(() => import("./pages/Checkout"));
-const Orders = lazy(() => import("./pages/Orders"));
 const OrderSuccess = lazy(() => import("./pages/OrderSuccess"));
-const OrderDetail = lazy(() => import("./pages/OrderDetail"));
 const Addresses = lazy(() => import("./pages/Addresses"));
 const Profile = lazy(() => import("./pages/Profile"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -143,6 +144,7 @@ const App = () => (
             <TooltipProvider>
               <Toaster />
               <BrowserRouter>
+                <OrdersPrefetch />
                 <MetaPixelTracker />
                 <ScrollRestoration />
                 <CartDrawer />

@@ -11,6 +11,7 @@ import ScrollToTop from "@/components/ScrollToTop";
 import { toast } from "@/lib/toast";
 import { useSeo } from "@/hooks/useSeo";
 import { useRegisterOrLoginMutation, useLoginMutation } from "@/store/services/authApi";
+import { prefetchOrdersList } from "@/store/services/orderApi";
 import { useAuth } from "@/contexts/AuthContext";
 import type { LoginCartItem } from "@/types/auth";
 import { shopBackground } from "@/lib/assetUrls";
@@ -193,6 +194,7 @@ const Login = () => {
         wishlist,
       }).unwrap();
       auth.login(result.data.token, { name: fullName.trim(), phone: mobile.trim() });
+      prefetchOrdersList(1, 10);
       toast.auth.loginSuccess();
       const from = (location.state as { from?: { pathname: string } })?.from?.pathname;
       const safePath = getSafeRedirectPath(from, "/");
