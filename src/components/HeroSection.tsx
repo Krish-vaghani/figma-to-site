@@ -171,7 +171,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                 >
                   <Sparkles className="h-4 w-4" />
                 </motion.div>
-                <span>New Collection 2024</span>
+                <span>New Collection 2026</span>
               </motion.div>
 
               <div className="space-y-4">
@@ -295,7 +295,7 @@ const HeroSection = ({ data }: HeroSectionProps) => {
                     ))}
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-foreground font-semibold text-sm">4.5/5</span>
+                    <span className="text-foreground font-semibold text-sm">4.8/5</span>
                     <span className="text-muted-foreground text-xs">Based on 1.2k reviews</span>
                   </div>
                 </div>
