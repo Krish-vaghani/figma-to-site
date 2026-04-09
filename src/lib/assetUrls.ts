@@ -9,7 +9,8 @@ import urls from "@/generated-asset-urls.json";
 
 const byKey = (urls as { byKey: Record<string, string> }).byKey;
 
-export const logo = byKey.logo;
+export const logo =
+  "https://krish-pursolina.s3.ap-south-1.amazonaws.com/test/38418f3c17142f966897b966d4f20f24.png";
 export const footerBackground = byKey.footerBackground;
 export const heroBackground = byKey.heroBackground;
 export const heroProduct = byKey.heroProduct;
