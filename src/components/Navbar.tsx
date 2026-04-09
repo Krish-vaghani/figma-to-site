@@ -18,7 +18,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import SearchModal from "./SearchModal";
 import WishlistShareDialog from "./WishlistShareDialog";
-import { logo } from "@/lib/assetUrls";
 import { showToast } from "@/lib/toast";
 
 type NavbarProps = {
@@ -32,6 +31,9 @@ const navLinks = [
   { label: "My Orders", href: "/orders" },
   { label: "Contact Us", href: "/contact" },
 ];
+
+const HEADER_LOGO_URL =
+  "https://krish-pursolina.s3.ap-south-1.amazonaws.com/test/38418f3c17142f966897b966d4f20f24.png";
 
 const Navbar = ({ className }: NavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -75,7 +77,14 @@ const Navbar = ({ className }: NavbarProps) => {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-coral focus-visible:ring-offset-2 rounded">
-            <img src={logo} alt="Welcome" className="h-6 sm:h-8" />
+            <img
+              src={HEADER_LOGO_URL}
+              alt="Welcome"
+              className="h-6 sm:h-8"
+              loading="eager"
+              decoding="async"
+              fetchPriority="high"
+            />
           </Link>
 
           {/* Navigation Links - Desktop */}
