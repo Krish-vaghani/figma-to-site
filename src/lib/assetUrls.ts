@@ -6,11 +6,11 @@
  * any large static PNGs from `src/assets` here.
  */
 import urls from "@/generated-asset-urls.json";
+import localLogo from "@/assets/IMG_20260314_110118_242.webp";
 
 const byKey = (urls as { byKey: Record<string, string> }).byKey;
 
-export const logo =
-  "https://krish-pursolina.s3.ap-south-1.amazonaws.com/test/38418f3c17142f966897b966d4f20f24.png";
+export const logo = localLogo;
 export const footerBackground = byKey.footerBackground;
 export const heroBackground = byKey.heroBackground;
 export const heroProduct = byKey.heroProduct;
