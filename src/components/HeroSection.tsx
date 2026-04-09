@@ -2,7 +2,6 @@ import { ArrowRight, Sparkles, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
-import { avatar } from "@/lib/assetUrls";
 import { normalizeRating } from "@/lib/utils";
 
 import { getHeroDisplay, type LandingSection } from "@/types/landing";
@@ -272,19 +271,6 @@ const HeroSection = ({ data }: HeroSectionProps) => {
               >
                 {/* Happy Customers */}
                 <div className="flex items-center gap-3">
-                  <div className="flex -space-x-2">
-                    {[...Array(4)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="w-9 h-9 rounded-full bg-muted border-2 border-background overflow-hidden shadow-md"
-                        initial={{ opacity: 0, scale: 0.5, x: -10 }}
-                        animate={{ opacity: 1, scale: 1, x: 0 }}
-                        transition={{ delay: 0.9 + i * 0.1, duration: 0.4, ease: "easeOut" }}
-                      >
-                        <img src={avatar} alt="" className="w-full h-full object-cover" loading="eager" fetchPriority="low" />
-                      </motion.div>
-                    ))}
-                  </div>
                   <div className="flex flex-col">
                     <span className="text-foreground font-semibold text-sm">2,500+</span>
                     <span className="text-muted-foreground text-xs">Happy Customers</span>
